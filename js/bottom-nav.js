@@ -25,6 +25,10 @@ class BottomNavigation {
                 <i class="fas fa-home"></i>
                 <span>Inicio</span>
             </a>
+            <a href="chat-global.html" class="bottom-nav-item" data-page="chat-global.html">
+                <i class="fas fa-comments"></i>
+                <span>Chat</span>
+            </a>
             <a href="ULTRA/index.html" class="bottom-nav-item" data-page="ULTRA/index.html" target="_blank">
                 <i class="fas fa-tv"></i>
                 <span>Transmisiones</span>
@@ -76,10 +80,6 @@ class BottomNavigation {
                     <a href="donaciones.html" class="settings-item">
                         <i class="fas fa-heart"></i>
                         <span>Donaciones</span>
-                    </a>
-                    <a href="chat-global.html" class="settings-item">
-                        <i class="fas fa-comments"></i>
-                        <span>Chat Global</span>
                     </a>
                     <a href="team-profile.html" class="settings-item">
                         <i class="fas fa-user-circle"></i>
