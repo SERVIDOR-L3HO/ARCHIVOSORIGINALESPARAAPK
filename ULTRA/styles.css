@@ -3565,3 +3565,25 @@ html {
 .login-btn {
     display: none !important;
 }
+
+/* ================ MODO APP - Solo Transmisiones en Vivo ================ */
+/* Ocultar aviso importante */
+.warning-notice {
+    display: none !important;
+}
+
+/* Ocultar botones de navegación excepto Transmisiones */
+.nav-btn[data-section="live-stream"],
+.nav-btn[data-section="subir"],
+.nav-btn[data-section="mis-streams"],
+.nav-btn[data-section="perfil"] {
+    display: none !important;
+}
+
+/* Ocultar todas las secciones excepto transmisiones */
+#live-stream,
+#subir,
+#mis-streams,
+#perfil {
+    display: none !important;
+}
