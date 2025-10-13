@@ -3100,3 +3100,14 @@ body {
         display: none;
     }
 }
+
+/* ================ MODO APLICACIÓN - Ocultar elementos de web ================ */
+/* Ocultar sección de autenticación */
+.auth-section {
+    display: none !important;
+}
+
+/* Ocultar botón de iniciar sesión */
+.login-btn {
+    display: none !important;
+}
