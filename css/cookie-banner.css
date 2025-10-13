@@ -1,6 +1,8 @@
 /* Banner de Consentimiento de Cookies - UltraGol */
+/* OCULTO - Modo Aplicación */
 
 .cookie-banner {
+    display: none !important;
     position: fixed;
     bottom: 0;
     left: 0;
