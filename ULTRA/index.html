@@ -7,231 +7,249 @@
     <title>ULTRAGOL - Transmisiones Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="stars"></div>
-    <div class="twinkling"></div>
-    
-    <div class="grain-overlay"></div>
+    <div class="animated-bg"></div>
 
-    <header class="main-header">
-        <div class="logo-container">
-            <img src="../attached_assets/1001721720-removebg-preview_1759196407381.png" alt="ULTRAGOL" class="main-logo">
-            <div class="logo-glow"></div>
+    <header class="hero-header">
+        <div class="container">
+            <div class="logo-wrapper">
+                <img src="../attached_assets/1001721720-removebg-preview_1759196407381.png" alt="ULTRAGOL" class="brand-logo">
+            </div>
+            <h1 class="hero-title">ULTRA<span class="highlight">GOL</span></h1>
+            <p class="hero-subtitle">Plataforma Premium de Transmisiones en Vivo</p>
         </div>
-        <h1 class="site-title">ULTRA<span class="highlight">GOL</span></h1>
-        <p class="site-subtitle">Plataforma Premium de Transmisiones</p>
     </header>
 
-    <main class="main-content">
-        <section class="collaboration-section">
-            <div class="collab-card">
-                <div class="card-glow card-glow-left"></div>
-                <div class="card-glow card-glow-right"></div>
-                
-                <div class="collab-header">
-                    <i class="fas fa-handshake collab-icon"></i>
-                    <h2>Colaboración Oficial</h2>
-                    <div class="header-line"></div>
+    <main class="main-wrapper">
+        <div class="container">
+            <section class="collaboration-section">
+                <div class="section-title-wrapper">
+                    <i class="fas fa-handshake section-icon"></i>
+                    <h2 class="section-title">Colaboración Oficial</h2>
                 </div>
 
-                <div class="collab-content">
-                    <div class="partner-info">
-                        <h3>ULTRAGOL <span class="x-symbol">×</span> GOLAZOZ</h3>
-                        <p>Dos plataformas unidas por la misma pasión: ofrecerte la mejor experiencia de fútbol en vivo. Accede a múltiples opciones de transmisión de alta calidad para que nunca te pierdas ningún partido importante.</p>
+                <div class="collab-card">
+                    <div class="collab-image-wrapper">
+                        <img src="golazoz-banner.jpg" alt="ULTRAGOL x GOLAZOZ Colaboración" class="collab-image">
+                        <div class="image-overlay"></div>
                     </div>
 
-                    <a href="https://golazoz.com/" target="_blank" rel="noopener noreferrer" class="partner-link">
-                        <span class="link-text">Visitar GOLAZOZ.com</span>
-                        <i class="fas fa-arrow-right link-arrow"></i>
-                        <div class="link-shine"></div>
-                    </a>
+                    <div class="collab-content">
+                        <h3 class="collab-heading">
+                            ULTRAGOL <span class="separator">×</span> GOLAZOZ
+                        </h3>
+                        <p class="collab-description">
+                            Dos plataformas unidas por la misma pasión: brindarte la mejor experiencia de fútbol en vivo. 
+                            Accede a múltiples opciones de transmisión de alta calidad para que nunca te pierdas ningún 
+                            partido importante. Juntos, te ofrecemos cobertura completa y confiable.
+                        </p>
+                        <a href="https://golazoz.com/" target="_blank" rel="noopener noreferrer" class="btn-partner">
+                            <span>Visitar GOLAZOZ.com</span>
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="streams-section">
-            <div class="section-header">
-                <h2>Selecciona Tu Canal</h2>
-                <p>Elige entre nuestras opciones premium de transmisión</p>
-            </div>
-
-            <div class="channels-grid">
-                <div class="channel-card" data-channel="1" onclick="selectChannel(1, 'https://servidor-l3ho.github.io/ULTRACANALES.2/index.html')">
-                    <div class="channel-number">01</div>
-                    <div class="channel-icon-wrapper">
-                        <i class="fas fa-satellite-dish"></i>
-                    </div>
-                    <h3 class="channel-name">ULTRACANALES</h3>
-                    <p class="channel-desc">Canales en vivo de alta definición</p>
-                    <div class="channel-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">En Vivo</span>
-                    </div>
-                    <div class="card-shine"></div>
+            <section class="channels-section">
+                <div class="section-title-wrapper">
+                    <i class="fas fa-tv section-icon"></i>
+                    <h2 class="section-title">Elige entre nuestras opciones premium de transmisión</h2>
                 </div>
 
-                <div class="channel-card" data-channel="2" onclick="selectChannel(2, 'https://panel.donromans.com/')">
-                    <div class="channel-number">02</div>
-                    <div class="channel-icon-wrapper">
-                        <i class="fas fa-tv"></i>
+                <div class="channels-container">
+                    <div class="channel-option" onclick="selectChannel(1, 'https://servidor-l3ho.github.io/ULTRACANALES.2/index.html')">
+                        <div class="channel-badge">01</div>
+                        <div class="channel-icon-bg">
+                            <i class="fas fa-satellite-dish"></i>
+                        </div>
+                        <h3 class="channel-title">ULTRACANALES</h3>
+                        <p class="channel-description">Canales en vivo de alta definición con múltiples opciones deportivas</p>
+                        <div class="channel-live-status">
+                            <span class="live-dot"></span>
+                            <span>Transmitiendo en Vivo</span>
+                        </div>
+                        <button class="btn-select">
+                            <span>Ver Ahora</span>
+                            <i class="fas fa-play"></i>
+                        </button>
                     </div>
-                    <h3 class="channel-name">PANEL PREMIUM</h3>
-                    <p class="channel-desc">Transmisiones exclusivas premium</p>
-                    <div class="channel-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">En Vivo</span>
-                    </div>
-                    <div class="card-shine"></div>
-                </div>
-            </div>
-        </section>
 
-        <section class="player-section" id="playerSection" style="display: none;">
-            <div class="player-container">
-                <div class="player-header">
-                    <div class="player-title">
-                        <span class="live-badge">
-                            <span class="pulse-dot"></span>
-                            EN VIVO
-                        </span>
-                        <h3 id="currentChannelName">ULTRACANALES</h3>
+                    <div class="channel-option" onclick="selectChannel(2, 'https://panel.donromans.com/')">
+                        <div class="channel-badge">02</div>
+                        <div class="channel-icon-bg">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <h3 class="channel-title">PANEL PREMIUM</h3>
+                        <p class="channel-description">Transmisiones exclusivas premium con calidad superior garantizada</p>
+                        <div class="channel-live-status">
+                            <span class="live-dot"></span>
+                            <span>Transmitiendo en Vivo</span>
+                        </div>
+                        <button class="btn-select">
+                            <span>Ver Ahora</span>
+                            <i class="fas fa-play"></i>
+                        </button>
                     </div>
-                    <button class="close-player" onclick="closePlayer()">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
+            </section>
 
-                <div class="iframe-wrapper">
-                    <div class="loading-screen" id="loadingScreen">
-                        <div class="loader"></div>
-                        <p>Cargando transmisión...</p>
+            <section class="stream-player-section" id="streamPlayerSection" style="display: none;">
+                <div class="player-wrapper">
+                    <div class="player-header">
+                        <div class="player-info">
+                            <span class="live-indicator">
+                                <span class="pulse-ring"></span>
+                                <span class="live-text">EN VIVO</span>
+                            </span>
+                            <h3 class="player-channel-name" id="playerChannelName">ULTRACANALES</h3>
+                        </div>
+                        <button class="btn-close-player" onclick="closePlayer()">
+                            <i class="fas fa-times"></i>
+                            <span>Cerrar</span>
+                        </button>
                     </div>
-                    <iframe 
-                        id="streamIframe"
-                        frameborder="0" 
-                        allowfullscreen
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        title="Stream ULTRAGOL">
-                    </iframe>
-                </div>
 
-                <div class="player-controls">
-                    <button class="control-btn" onclick="refreshStream()" title="Actualizar">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button class="control-btn" onclick="toggleFullscreen()" title="Pantalla Completa">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    <button class="control-btn" onclick="openInNewTab()" title="Abrir en nueva pestaña">
-                        <i class="fas fa-external-link-alt"></i>
-                    </button>
+                    <div class="player-container">
+                        <div class="loader-container" id="loaderContainer">
+                            <div class="loader-spinner"></div>
+                            <p>Cargando transmisión...</p>
+                        </div>
+                        <iframe 
+                            id="playerIframe"
+                            frameborder="0" 
+                            allowfullscreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            title="Transmisión ULTRAGOL">
+                        </iframe>
+                    </div>
+
+                    <div class="player-actions">
+                        <button class="action-btn" onclick="refreshPlayer()" title="Actualizar">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Actualizar</span>
+                        </button>
+                        <button class="action-btn" onclick="toggleFullscreen()" title="Pantalla Completa">
+                            <i class="fas fa-expand"></i>
+                            <span>Pantalla Completa</span>
+                        </button>
+                        <button class="action-btn" onclick="openInNewWindow()" title="Nueva Ventana">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Nueva Ventana</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
-    <footer class="main-footer">
-        <p>&copy; 2025 ULTRAGOL - L3HO. Todos los derechos reservados.</p>
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 ULTRAGOL - L3HO. Todos los derechos reservados.</p>
+        </div>
     </footer>
 
     <script>
         let currentStreamUrl = '';
+        const channelNames = {
+            1: 'ULTRACANALES',
+            2: 'PANEL PREMIUM'
+        };
 
-        function selectChannel(channelNum, url) {
+        function selectChannel(channelId, url) {
             currentStreamUrl = url;
-            const channelNames = {
-                1: 'ULTRACANALES',
-                2: 'PANEL PREMIUM'
-            };
-
-            document.getElementById('currentChannelName').textContent = channelNames[channelNum];
-            document.getElementById('playerSection').style.display = 'block';
             
-            const iframe = document.getElementById('streamIframe');
-            const loadingScreen = document.getElementById('loadingScreen');
+            const playerSection = document.getElementById('streamPlayerSection');
+            const channelName = document.getElementById('playerChannelName');
+            const iframe = document.getElementById('playerIframe');
+            const loader = document.getElementById('loaderContainer');
             
-            loadingScreen.style.display = 'flex';
+            channelName.textContent = channelNames[channelId];
+            
+            playerSection.style.display = 'block';
+            loader.style.display = 'flex';
+            
             iframe.src = url;
             
             iframe.onload = () => {
                 setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
+                    loader.style.display = 'none';
+                }, 600);
             };
-
+            
             setTimeout(() => {
-                document.getElementById('playerSection').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-
-            document.querySelectorAll('.channel-card').forEach(card => {
-                card.classList.remove('selected');
+                playerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+            
+            document.querySelectorAll('.channel-option').forEach(option => {
+                option.classList.remove('active');
             });
-            document.querySelector(`[data-channel="${channelNum}"]`).classList.add('selected');
+            document.querySelectorAll('.channel-option')[channelId - 1].classList.add('active');
         }
 
         function closePlayer() {
-            document.getElementById('playerSection').style.display = 'none';
-            document.getElementById('streamIframe').src = '';
-            document.querySelectorAll('.channel-card').forEach(card => {
-                card.classList.remove('selected');
+            const playerSection = document.getElementById('streamPlayerSection');
+            const iframe = document.getElementById('playerIframe');
+            
+            playerSection.style.display = 'none';
+            iframe.src = '';
+            
+            document.querySelectorAll('.channel-option').forEach(option => {
+                option.classList.remove('active');
             });
         }
 
-        function refreshStream() {
-            const iframe = document.getElementById('streamIframe');
-            const loadingScreen = document.getElementById('loadingScreen');
-            loadingScreen.style.display = 'flex';
+        function refreshPlayer() {
+            const iframe = document.getElementById('playerIframe');
+            const loader = document.getElementById('loaderContainer');
+            
+            loader.style.display = 'flex';
             iframe.src = currentStreamUrl;
+            
+            iframe.onload = () => {
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 600);
+            };
         }
 
         function toggleFullscreen() {
-            const iframe = document.getElementById('streamIframe');
+            const iframe = document.getElementById('playerIframe');
+            
             if (iframe.requestFullscreen) {
                 iframe.requestFullscreen();
             } else if (iframe.webkitRequestFullscreen) {
                 iframe.webkitRequestFullscreen();
             } else if (iframe.mozRequestFullScreen) {
                 iframe.mozRequestFullScreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
             }
         }
 
-        function openInNewTab() {
+        function openInNewWindow() {
             if (currentStreamUrl) {
-                window.open(currentStreamUrl, '_blank');
-            }
-        }
-
-        function createStars() {
-            const starsContainer = document.querySelector('.stars');
-            const numStars = 200;
-            
-            for (let i = 0; i < numStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.width = Math.random() * 2 + 'px';
-                star.style.height = star.style.width;
-                starsContainer.appendChild(star);
+                window.open(currentStreamUrl, '_blank', 'width=1200,height=800');
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-
-            document.querySelectorAll('.channel-card').forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px) scale(1.02)';
+            const options = document.querySelectorAll('.channel-option');
+            
+            options.forEach(option => {
+                option.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.transform = 'translateY(-8px)';
+                    }
                 });
                 
-                card.addEventListener('mouseleave', function() {
-                    if (!this.classList.contains('selected')) {
-                        this.style.transform = 'translateY(0) scale(1)';
+                option.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.transform = 'translateY(0)';
                     }
                 });
             });
