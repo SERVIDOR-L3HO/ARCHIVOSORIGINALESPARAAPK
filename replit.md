@@ -15,6 +15,13 @@ The application consists of two main components:
   - Removed cookie consent banner (`.cookie-banner` - hidden via CSS)
   - Removed app download banners (`.app-download-banner` - hidden via CSS)
   - Removed authentication UI elements (`.auth-section`, `.login-btn` - hidden on both main and ULTRA pages)
+  
+- **Simplified ULTRA platform to streams-only view**:
+  - Removed warning notice banner (`.warning-notice` - hidden via CSS)
+  - Removed navigation buttons except "Transmisiones" (`[data-section]` selectors - hidden via CSS)
+  - Removed all sections except "Transmisiones en Vivo" (`#live-stream`, `#subir`, `#mis-streams`, `#perfil` - hidden via CSS)
+  - Interface now shows only: logo, Transmisiones button, and live streams section with search/filters
+  
 - All changes implemented through CSS `display: none !important;` declarations
 - No functionality was removed, only visual UI elements were hidden
 - Changes applied to: `css/cookie-banner.css`, `css/app-download-banner.css`, `css/main.css`, `ULTRA/styles.css`
