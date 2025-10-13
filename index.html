@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/app-download-banner.css?v=2025091201">
     <link rel="stylesheet" href="css/professional-hero.css?v=2025091401">
     <link rel="stylesheet" href="css/gemini-chat.css">
+    <link rel="stylesheet" href="css/splash-screen.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
@@ -32,6 +33,35 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <!-- Animated Background -->
+        <div class="splash-particles" id="splashParticles"></div>
+        
+        <!-- Energy Lines -->
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        
+        <!-- Wave Circles -->
+        <div class="splash-wave"></div>
+        <div class="splash-wave"></div>
+        <div class="splash-wave"></div>
+        
+        <!-- Logo Container -->
+        <div class="splash-logo-container">
+            <img src="attached_assets/IMG_20250908_185312_(512_x_512_píxel)_1760333939937.png" alt="UltraGol" class="splash-logo">
+        </div>
+        
+        <!-- Loading Text -->
+        <div class="splash-text">ULTRAGOL</div>
+        
+        <!-- Loading Bar -->
+        <div class="splash-loading-bar">
+            <div class="splash-loading-progress"></div>
+        </div>
+    </div>
+
     <!-- Header Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -1048,6 +1078,35 @@
         // Inicializar carrusel cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
             new DanzCarousel();
+        });
+    </script>
+    
+    <!-- Splash Screen Animation Script -->
+    <script>
+        // Create animated particles
+        function createSplashParticles() {
+            const particlesContainer = document.getElementById('splashParticles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (2 + Math.random() * 2) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize splash screen
+        document.addEventListener('DOMContentLoaded', () => {
+            createSplashParticles();
+            
+            // Remove splash screen after animation
+            setTimeout(() => {
+                const splashScreen = document.getElementById('splashScreen');
+                splashScreen.style.display = 'none';
+            }, 3800);
         });
     </script>
     
