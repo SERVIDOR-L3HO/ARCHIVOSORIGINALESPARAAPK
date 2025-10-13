@@ -3158,14 +3158,15 @@ body::before {
 
 /* ================ EFECTOS CREATIVOS ADICIONALES ================ */
 
-/* Animación de entrada para las secciones */
-.section {
+/* Animación de entrada para las secciones - DESACTIVADA PARA MODO APP */
+/*.section {
     opacity: 0;
     animation: sectionFadeIn 0.8s ease-out forwards;
-}
+}*/
 
 .section.active {
-    opacity: 1;
+    display: block !important;
+    opacity: 1 !important;
 }
 
 @keyframes sectionFadeIn {
@@ -3566,24 +3567,30 @@ html {
     display: none !important;
 }
 
-/* ================ MODO APP - Solo Transmisiones en Vivo ================ */
+/* ================ MODO APP - Solo Stream En Vivo ================ */
 /* Ocultar aviso importante */
 .warning-notice {
     display: none !important;
 }
 
-/* Ocultar botones de navegación excepto Transmisiones */
-.nav-btn[data-section="live-stream"],
+/* Ocultar botones de navegación excepto Stream En Vivo */
+.nav-btn[data-section="transmisiones"],
 .nav-btn[data-section="subir"],
 .nav-btn[data-section="mis-streams"],
 .nav-btn[data-section="perfil"] {
     display: none !important;
 }
 
-/* Ocultar todas las secciones excepto transmisiones */
-#live-stream,
+/* Ocultar todas las secciones excepto Stream En Vivo */
+#transmisiones,
 #subir,
 #mis-streams,
 #perfil {
     display: none !important;
+}
+
+/* Forzar mostrar Stream En Vivo cuando está activo */
+#live-stream.active {
+    display: block !important;
+    opacity: 1 !important;
 }
