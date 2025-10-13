@@ -1,0 +1,220 @@
+/* Bottom Navigation Bar */
+.bottom-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 12px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    z-index: 1000;
+    max-width: 90%;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #666;
+    min-width: 50px;
+}
+
+.bottom-nav-item i {
+    font-size: 22px;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-item span {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0;
+    max-height: 0;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-item:hover {
+    background: rgba(255, 100, 50, 0.1);
+    color: #ff6432;
+}
+
+.bottom-nav-item.active {
+    background: linear-gradient(135deg, #ff6432, #ff8c5a);
+    color: white;
+    box-shadow: 0 5px 15px rgba(255, 100, 50, 0.3);
+}
+
+.bottom-nav-item.active i {
+    transform: scale(1.1);
+}
+
+/* Settings Modal */
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.settings-modal.active {
+    display: flex;
+}
+
+.settings-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.settings-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+}
+
+.settings-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #666;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.settings-close:hover {
+    background: #f0f0f0;
+    color: #ff6432;
+}
+
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    background: #f8f8f8;
+}
+
+.settings-item:hover {
+    background: linear-gradient(135deg, #ff6432, #ff8c5a);
+    color: white;
+    transform: translateX(5px);
+}
+
+.settings-item i {
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+}
+
+.settings-item span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bottom-nav {
+        bottom: 10px;
+        padding: 10px 15px;
+        gap: 8px;
+    }
+
+    .bottom-nav-item {
+        padding: 6px 12px;
+        min-width: 45px;
+    }
+
+    .bottom-nav-item i {
+        font-size: 20px;
+    }
+
+    .settings-content {
+        padding: 20px;
+    }
+}
+
+/* Hide hamburger menu */
+.hamburger {
+    display: none !important;
+}
+
+/* Adjust navbar for mobile when bottom nav is present */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none !important;
+    }
+    
+    body {
+        padding-bottom: 80px;
+    }
+}
