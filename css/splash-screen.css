@@ -1,4 +1,4 @@
-/* ==================== SIMPLE PROFESSIONAL SPLASH SCREEN ==================== */
+/* ==================== DIAGONAL SPLASH SCREEN ==================== */
 
 .splash-screen {
     position: fixed;
@@ -6,7 +6,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    background: #ff9933;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -23,27 +23,79 @@
     }
 }
 
-/* Simple animated background */
+/* Fondo naranja desenfocado */
 .splash-screen::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(255, 153, 51, 0.15) 0%, transparent 70%);
-    animation: pulse 2s ease-in-out infinite;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, #ff9933 0%, #ff6600 50%, #ff9933 100%);
+    filter: blur(60px);
+    animation: moveBackground 3s ease-in-out infinite alternate;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
+@keyframes moveBackground {
+    0% {
+        transform: translate(0, 0) scale(1);
     }
-    50% {
-        transform: translate(-50%, -50%) scale(1.1);
-        opacity: 0.8;
+    100% {
+        transform: translate(20px, -20px) scale(1.05);
+    }
+}
+
+/* Barra diagonal naranja */
+.splash-rings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.splash-rings .ring:nth-child(1) {
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 150%;
+    height: 40%;
+    background: linear-gradient(135deg, transparent 0%, #ff6600 50%, transparent 100%);
+    transform: rotate(-45deg);
+    animation: slideInLeft 1s ease-out;
+}
+
+/* Barra diagonal negra */
+.splash-rings .ring:nth-child(2) {
+    position: absolute;
+    bottom: -20%;
+    right: -10%;
+    width: 150%;
+    height: 40%;
+    background: linear-gradient(135deg, transparent 0%, #000000 50%, transparent 100%);
+    transform: rotate(-45deg);
+    animation: slideInRight 1s ease-out;
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: rotate(-45deg) translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(-45deg) translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    0% {
+        transform: rotate(-45deg) translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(-45deg) translateX(0);
+        opacity: 1;
     }
 }
 
@@ -52,79 +104,115 @@
     position: relative;
     z-index: 10;
     margin-bottom: 30px;
-    animation: logoFadeIn 0.8s ease-out;
+    animation: logoZoom 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes logoFadeIn {
+@keyframes logoZoom {
     0% {
         opacity: 0;
-        transform: scale(0.8);
+        transform: scale(0) rotate(-180deg);
     }
     100% {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) rotate(0deg);
     }
 }
 
-/* Logo with simple glow */
+/* Logo */
 .splash-logo {
     width: 180px;
     height: 180px;
-    filter: drop-shadow(0 0 30px rgba(255, 153, 51, 0.6));
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
 }
 
 /* Text */
 .splash-text {
-    color: #ffffff;
-    font-size: 2.2rem;
-    font-weight: 800;
+    color: #000000;
+    font-size: 2.5rem;
+    font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 8px;
+    letter-spacing: 10px;
     margin-bottom: 40px;
     animation: textFadeIn 0.8s ease-out 0.3s backwards;
-    text-shadow: 0 0 20px rgba(255, 153, 51, 0.5);
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 10;
 }
 
 @keyframes textFadeIn {
     0% {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
+        letter-spacing: 20px;
     }
     100% {
         opacity: 1;
         transform: translateY(0);
+        letter-spacing: 10px;
     }
 }
 
 /* Percentage Counter */
 .splash-percentage {
-    color: #ff9933;
-    font-size: 1.1rem;
-    font-weight: 700;
+    color: #000000;
+    font-size: 1.2rem;
+    font-weight: 800;
     margin-bottom: 15px;
     animation: textFadeIn 0.5s ease-out 0.5s backwards;
+    position: relative;
+    z-index: 10;
 }
 
-/* Simple Loading Bar */
+/* Barra de carga con animaciones */
 .splash-loading-bar {
-    width: 300px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.15);
+    width: 350px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     overflow: hidden;
     position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .splash-loading-progress {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #ff6600 0%, #ff9933 50%, #ff6600 100%);
+    background: linear-gradient(90deg, 
+        #000000 0%, 
+        #ff6600 25%, 
+        #ff9933 50%, 
+        #ff6600 75%, 
+        #000000 100%);
     background-size: 200% 100%;
     border-radius: 10px;
     animation: 
         loadProgress 2s cubic-bezier(0.4, 0, 0.2, 1) forwards,
-        shimmer 1.5s linear infinite;
-    box-shadow: 0 0 15px rgba(255, 153, 51, 0.6);
+        shimmerBar 1.5s linear infinite;
+    box-shadow: 
+        0 0 20px rgba(255, 102, 0, 0.8),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+/* Efecto de brillo en la barra */
+.splash-loading-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.6) 50%, 
+        transparent 100%);
+    animation: slideShine 1.5s ease-in-out infinite;
 }
 
 @keyframes loadProgress {
@@ -132,51 +220,74 @@
     100% { width: 100%; }
 }
 
-@keyframes shimmer {
+@keyframes shimmerBar {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
 
-/* Remove unused elements */
+@keyframes slideShine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+/* Partículas decorativas */
 .splash-particles,
-.splash-rings,
 .energy-burst {
     display: none;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    .splash-logo-container {
+        padding: 15px;
+    }
+    
     .splash-logo {
         width: 140px;
         height: 140px;
     }
     
     .splash-text {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
         letter-spacing: 6px;
     }
     
     .splash-loading-bar {
-        width: 250px;
+        width: 280px;
     }
     
     .splash-percentage {
         font-size: 1rem;
     }
+    
+    .splash-rings .ring:nth-child(1),
+    .splash-rings .ring:nth-child(2) {
+        height: 35%;
+    }
 }
 
 @media (max-width: 480px) {
+    .splash-logo-container {
+        padding: 12px;
+    }
+    
     .splash-logo {
         width: 120px;
         height: 120px;
     }
     
     .splash-text {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         letter-spacing: 4px;
     }
     
     .splash-loading-bar {
-        width: 200px;
+        width: 240px;
+        height: 5px;
+    }
+    
+    .splash-rings .ring:nth-child(1),
+    .splash-rings .ring:nth-child(2) {
+        height: 30%;
     }
 }
