@@ -35,18 +35,27 @@
 <body>
     <!-- Splash Screen -->
     <div class="splash-screen" id="splashScreen">
-        <!-- Animated Background -->
+        <!-- Animated Particles Background -->
         <div class="splash-particles" id="splashParticles"></div>
         
-        <!-- Energy Lines -->
-        <div class="energy-line"></div>
-        <div class="energy-line"></div>
-        <div class="energy-line"></div>
+        <!-- Orbiting Rings -->
+        <div class="splash-rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
         
-        <!-- Wave Circles -->
-        <div class="splash-wave"></div>
-        <div class="splash-wave"></div>
-        <div class="splash-wave"></div>
+        <!-- Energy Burst Rays -->
+        <div class="energy-burst">
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+            <div class="burst-ray"></div>
+        </div>
         
         <!-- Logo Container -->
         <div class="splash-logo-container">
@@ -56,7 +65,10 @@
         <!-- Loading Text -->
         <div class="splash-text">ULTRAGOL</div>
         
-        <!-- Loading Bar -->
+        <!-- Percentage Counter -->
+        <div class="splash-percentage" id="splashPercentage">0%</div>
+        
+        <!-- Premium Loading Bar -->
         <div class="splash-loading-bar">
             <div class="splash-loading-progress"></div>
         </div>
@@ -1083,24 +1095,42 @@
     
     <!-- Splash Screen Animation Script -->
     <script>
-        // Create animated particles
+        // Create animated particles with orange and white colors
         function createSplashParticles() {
             const particlesContainer = document.getElementById('splashParticles');
-            const particleCount = 50;
+            const particleCount = 60;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 3 + 's';
-                particle.style.animationDuration = (2 + Math.random() * 2) + 's';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 3) + 's';
                 particlesContainer.appendChild(particle);
             }
+        }
+        
+        // Animate percentage counter
+        function animatePercentage() {
+            const percentageElement = document.getElementById('splashPercentage');
+            let currentPercent = 0;
+            const duration = 3000; // 3 seconds
+            const increment = 100 / (duration / 30); // Update every 30ms
+            
+            const interval = setInterval(() => {
+                currentPercent += increment;
+                if (currentPercent >= 100) {
+                    currentPercent = 100;
+                    clearInterval(interval);
+                }
+                percentageElement.textContent = Math.floor(currentPercent) + '%';
+            }, 30);
         }
         
         // Initialize splash screen
         document.addEventListener('DOMContentLoaded', () => {
             createSplashParticles();
+            animatePercentage();
             
             // Remove splash screen after animation
             setTimeout(() => {
