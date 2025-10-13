@@ -8,6 +8,17 @@ The application consists of two main components:
 1. **Main Website** - Liga MX information portal with team data, standings, calendars, and statistics
 2. **ULTRA Platform** - Live streaming discovery and sharing platform with user-generated content
 
+## Recent Changes
+
+### October 13, 2025 - App Mode Implementation
+- **Converted web interface to app-like experience** by hiding web-specific UI elements:
+  - Removed cookie consent banner (`.cookie-banner` - hidden via CSS)
+  - Removed app download banners (`.app-download-banner` - hidden via CSS)
+  - Removed authentication UI elements (`.auth-section`, `.login-btn` - hidden on both main and ULTRA pages)
+- All changes implemented through CSS `display: none !important;` declarations
+- No functionality was removed, only visual UI elements were hidden
+- Changes applied to: `css/cookie-banner.css`, `css/app-download-banner.css`, `css/main.css`, `ULTRA/styles.css`
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
