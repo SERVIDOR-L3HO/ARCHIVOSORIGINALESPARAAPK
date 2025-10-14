@@ -75,6 +75,10 @@ const ULTRAGOL_API = {
         return await this.fetchWithCache('/todo');
     },
 
+    // Nota: La API de UltraGol actualmente no proporciona un endpoint de fixtures/partidos
+    // Los fixtures se siguen cargando desde el archivo JSON local data/fixtures.json
+    // Cuando la API agregue un endpoint de fixtures, se puede integrar aquí
+
     transformTablaData(apiData) {
         if (!apiData || !apiData.tabla) return [];
         
