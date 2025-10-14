@@ -6,48 +6,52 @@
     <link rel="icon" type="image/png" href="../favicon.png">
     <title>ULTRAGOL LIVE - Transmisiones Premium</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/bottom-nav.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo-container">
-            <a href="../index.html">
-                <img src="../attached_assets/1001721720-removebg-preview_1759201879566.png" alt="ULTRAGOL" class="logo">
-            </a>
-            <span class="logo-subtitle">by L3HO</span>
+    <!-- Header Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../attached_assets/1001721720-removebg-preview_1759201879566.png" alt="UltraGol" class="logo">
+                <span class="company-tag">by L3HO</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../standings.html" class="nav-link">Tabla de Posiciones</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../teams.html" class="nav-link">Equipos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../calendario.html" class="nav-link">Calendario</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../estadisticas.html" class="nav-link">Estadísticas</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../donaciones.html" class="nav-link">
+                        <i class="fas fa-heart"></i> Donaciones
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link live-link active">
+                        <i class="fas fa-play-circle"></i> UltraGol LIVE
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
-        <button class="menu-toggle" id="menuToggle">
-            <i class="fas fa-bars"></i>
-        </button>
-    </header>
-
-    <!-- Navigation Menu -->
-    <nav class="nav-menu" id="navMenu">
-        <a href="../teams.html" class="nav-item">
-            <i class="fas fa-users"></i>
-            <span>Equipos</span>
-        </a>
-        <a href="../chat-global.html" class="nav-item">
-            <i class="fas fa-comments"></i>
-            <span>Chat</span>
-        </a>
-        <a href="../historias.html" class="nav-item">
-            <i class="fas fa-play"></i>
-            <span>Noticias</span>
-        </a>
-        <a href="index.html" class="nav-item active">
-            <i class="fas fa-broadcast-tower"></i>
-            <span>Envivo</span>
-        </a>
-        <a href="../standings.html" class="nav-item">
-            <i class="fas fa-trophy"></i>
-            <span>Tabla</span>
-        </a>
-        <a href="../index.html" class="nav-item">
-            <i class="fas fa-ellipsis-h"></i>
-            <span>Más</span>
-        </a>
     </nav>
 
     <!-- Main Content -->
@@ -252,5 +256,35 @@
             }
         }
     </script>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="../index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </a>
+        <a href="../chat-global.html" class="bottom-nav-item">
+            <i class="fas fa-comments"></i>
+            <span>Chat</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-tv"></i>
+            <span>Live</span>
+        </a>
+        <a href="../calendario.html" class="bottom-nav-item">
+            <i class="fas fa-calendar"></i>
+            <span>Partidos</span>
+        </a>
+        <a href="../standings.html" class="bottom-nav-item">
+            <i class="fas fa-table"></i>
+            <span>Tabla</span>
+        </a>
+        <a href="../index.html" class="bottom-nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Más</span>
+        </a>
+    </nav>
+
+    <script src="../js/main.js"></script>
 </body>
 </html>
