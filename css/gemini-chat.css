@@ -11,7 +11,7 @@
 
 .gemini-chat-button {
     position: fixed;
-    bottom: 30px;
+    bottom: 100px;
     right: 30px;
     width: 70px;
     height: 70px;
@@ -62,7 +62,7 @@
 /* Contenedor flotante mejorado - Más grande y glassmorphism */
 .gemini-chat-container {
     position: fixed;
-    bottom: 120px;
+    bottom: 190px;
     right: 30px;
     width: 520px;
     height: 720px;
