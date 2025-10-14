@@ -167,12 +167,17 @@ async function loadInitialData() {
 
 async function loadTeamsData() {
     try {
-        const response = await fetch('data/teams.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if (window.ULTRAGOL_API) {
+            teamsData = await window.ULTRAGOL_API.getEquipos();
+            console.log('✅ Teams data loaded from API:', teamsData.length, 'teams');
+        } else {
+            const response = await fetch('data/teams.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            teamsData = await response.json();
+            console.log('✅ Teams data loaded from JSON:', teamsData.length, 'teams');
         }
-        teamsData = await response.json();
-        console.log('✅ Teams data loaded:', teamsData.length, 'teams');
         return teamsData;
     } catch (error) {
         console.error('Error loading teams data:', error);
@@ -182,12 +187,17 @@ async function loadTeamsData() {
 
 async function loadStandingsData() {
     try {
-        const response = await fetch('data/standings.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if (window.ULTRAGOL_API) {
+            standingsData = await window.ULTRAGOL_API.getTabla();
+            console.log('✅ Standings data loaded from API:', standingsData.length, 'teams');
+        } else {
+            const response = await fetch('data/standings.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            standingsData = await response.json();
+            console.log('✅ Standings data loaded from JSON:', standingsData.length, 'teams');
         }
-        standingsData = await response.json();
-        console.log('✅ Standings data loaded:', standingsData.length, 'teams');
         return standingsData;
     } catch (error) {
         console.error('Error loading standings data:', error);

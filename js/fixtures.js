@@ -133,6 +133,10 @@ async function getTeamsData() {
         return window.ligaMXApp.teamsData();
     }
 
+    if (window.ULTRAGOL_API) {
+        return await window.ULTRAGOL_API.getEquipos();
+    }
+
     const response = await fetch('data/teams.json');
     return await response.json();
 }
