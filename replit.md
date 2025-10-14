@@ -10,6 +10,26 @@ The application consists of two main components:
 
 ## Recent Changes
 
+### October 14, 2025 - UltraGol API Integration
+- **Integrated live external API** from https://ultragol-api3.onrender.com/
+  - Created centralized API module (`js/ultragol-api.js`) with caching and fallback support
+  - Connected `/tabla` endpoint for real-time standings data (18 teams)
+  - Connected `/equipos` endpoint for team information with enriched metadata
+  - Connected `/noticias` endpoint for Liga MX news
+  - Connected `/goleadores` endpoint for top scorers data
+  - Data automatically updates every 30 minutes via API scraping
+  
+- **Updated data loading across the platform**:
+  - `js/main.js` - Loads teams and standings from API with fallback to local JSON
+  - `js/standings.js` - Real-time standings table from API
+  - `js/teams.js` - Team information from API
+  - Fixtures continue to use local JSON (API endpoint not available)
+  
+- **Smart caching system**:
+  - 30-minute cache duration matches API update frequency
+  - Automatic fallback to stale cache if API fails
+  - Graceful degradation to local JSON files if API module unavailable
+
 ### October 13, 2025 - App Mode Implementation
 - **Converted web interface to app-like experience** by hiding web-specific UI elements:
   - Removed cookie consent banner (`.cookie-banner` - hidden via CSS)
