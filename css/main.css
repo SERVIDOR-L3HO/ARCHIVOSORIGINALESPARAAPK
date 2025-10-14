@@ -2721,6 +2721,155 @@ body {
     color: #666;
 }
 
+/* Líderes de Goleo - Nueva sección creativa */
+.full-width-card {
+    grid-column: 1 / -1;
+}
+
+.scorers-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.scorers-header h3 {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #ff9933, #ffaa44, #ff6600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.scorers-subtitle {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.lideres-goleo-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.loading-scorers {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #ff9933;
+}
+
+.loading-scorers i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.scorer-card {
+    background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.scorer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff9933, #ffaa44);
+}
+
+.scorer-card:hover {
+    transform: translateY(-5px);
+    border-color: #ff9933;
+    box-shadow: 0 15px 35px rgba(255, 153, 51, 0.2);
+}
+
+.scorer-rank {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #ff9933, #ffaa44);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 5px 15px rgba(255, 153, 51, 0.3);
+}
+
+.scorer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.scorer-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+
+.scorer-team {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.scorer-team i {
+    color: #ff9933;
+}
+
+.scorer-stats {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scorer-goals {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.goals-number {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff9933, #ff6600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.goals-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.scorer-icon {
+    font-size: 2rem;
+    color: #ff9933;
+    opacity: 0.3;
+}
+
 .featured-match .importance {
     color: #ff9933;
 }

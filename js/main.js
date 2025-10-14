@@ -159,6 +159,9 @@ async function loadInitialData() {
         if (document.getElementById('recentMatches')) {
             loadRecentMatches();
         }
+        if (document.getElementById('lideresGoleo')) {
+            loadLideresGoleo();
+        }
     } catch (error) {
         console.error('Error loading initial data:', error);
         showErrorMessage('Error al cargar los datos. Por favor, recarga la página.');
@@ -272,6 +275,70 @@ function loadRecentMatches() {
             </div>
         </div>
     `).join('');
+}
+
+// Load Líderes de Goleo from API
+async function loadLideresGoleo() {
+    const container = document.getElementById('lideresGoleo');
+    if (!container) return;
+
+    try {
+        if (!window.ULTRAGOL_API) {
+            container.innerHTML = `
+                <div class="loading-scorers">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>API no disponible</p>
+                </div>
+            `;
+            return;
+        }
+
+        const goleadores = await window.ULTRAGOL_API.getGoleadores();
+        
+        if (!goleadores || goleadores.length === 0) {
+            container.innerHTML = `
+                <div class="loading-scorers">
+                    <i class="fas fa-info-circle"></i>
+                    <p>No hay datos de goleadores disponibles</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Mostrar top 6 goleadores
+        const topScorers = goleadores.slice(0, 6);
+        
+        container.innerHTML = topScorers.map((scorer, index) => `
+            <div class="scorer-card" style="animation-delay: ${index * 0.1}s">
+                <div class="scorer-rank">${index + 1}</div>
+                <div class="scorer-info">
+                    <div class="scorer-name">${scorer.jugador || scorer.nombre || 'N/A'}</div>
+                    <div class="scorer-team">
+                        <i class="fas fa-shield-alt"></i>
+                        ${scorer.equipo || scorer.team || 'N/A'}
+                    </div>
+                </div>
+                <div class="scorer-stats">
+                    <div class="scorer-goals">
+                        <span class="goals-number">${scorer.goles || scorer.goals || 0}</span>
+                        <span class="goals-label">Goles</span>
+                    </div>
+                    <div class="scorer-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('Error loading goleadores:', error);
+        container.innerHTML = `
+            <div class="loading-scorers">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Error al cargar los goleadores</p>
+            </div>
+        `;
+    }
 }
 
 // Utility functions
