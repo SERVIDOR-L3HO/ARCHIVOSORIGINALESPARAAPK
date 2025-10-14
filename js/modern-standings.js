@@ -66,15 +66,24 @@ function switchView(view) {
 
 async function loadStandingsData() {
     try {
+        // Priorizar la API de UltraGol para datos actualizados
+        if (window.ULTRAGOL_API) {
+            modernStandingsData = await window.ULTRAGOL_API.getTabla();
+            console.log('✅ Standings loaded from API:', modernStandingsData.length, 'teams');
+            renderStandings();
+            return;
+        }
+        
+        // Fallback al archivo JSON si la API no está disponible
         const response = await fetch('data/standings.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         modernStandingsData = await response.json();
-        console.log('✅ Standings data loaded:', modernStandingsData.length, 'teams');
+        console.log('📁 Standings loaded from JSON:', modernStandingsData.length, 'teams');
         renderStandings();
     } catch (error) {
-        console.error('Error loading standings:', error);
+        console.error('❌ Error loading standings:', error);
         showErrorState();
     }
 }
