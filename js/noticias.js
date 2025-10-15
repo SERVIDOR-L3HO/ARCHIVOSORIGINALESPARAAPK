@@ -12,6 +12,7 @@ async function initializeNews() {
     setupSearchFunctionality();
     displayNews();
     updateFeaturedNews();
+    updateHeroImages();
 }
 
 async function loadNewsData() {
@@ -317,6 +318,36 @@ function updateFeaturedNews() {
             </button>
         </div>
     `;
+}
+
+function updateHeroImages() {
+    const heroImagesContainer = document.getElementById('heroImages');
+    if (!heroImagesContainer) return;
+    
+    const newsWithImages = newsData.filter(news => news.image);
+    
+    if (newsWithImages.length === 0) {
+        console.log('No hay imágenes de noticias disponibles para el hero');
+        return;
+    }
+    
+    const imagesToShow = 10;
+    const selectedImages = [];
+    
+    for (let i = 0; i < imagesToShow; i++) {
+        const randomIndex = Math.floor(Math.random() * newsWithImages.length);
+        selectedImages.push(newsWithImages[randomIndex].image);
+    }
+    
+    heroImagesContainer.innerHTML = selectedImages.map((image, index) => `
+        <img src="${image}" 
+             alt="Noticia ${index + 1}" 
+             class="news-hero-image"
+             style="animation-delay: ${index * 0.1}s"
+             onerror="this.style.display='none'">
+    `).join('');
+    
+    console.log(`✅ Hero actualizado con ${selectedImages.length} imágenes de noticias`);
 }
 
 function animateNewsCards() {
