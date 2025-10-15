@@ -25,9 +25,9 @@ class BottomNavigation {
                 <i class="fas fa-home"></i>
                 <span>Inicio</span>
             </a>
-            <a href="chat-global.html" class="bottom-nav-item" data-page="chat-global.html">
-                <i class="fas fa-comments"></i>
-                <span>Chat</span>
+            <a href="noticias.html" class="bottom-nav-item" data-page="noticias.html">
+                <i class="fas fa-newspaper"></i>
+                <span>Noticias</span>
             </a>
             <a href="ULTRA/index.html" class="bottom-nav-item" data-page="ULTRA/index.html" target="_blank">
                 <i class="fas fa-tv"></i>
@@ -73,9 +73,9 @@ class BottomNavigation {
                         <i class="fas fa-chart-bar"></i>
                         <span>Estadísticas</span>
                     </a>
-                    <a href="noticias.html" class="settings-item">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Noticias</span>
+                    <a href="chat-global.html" class="settings-item">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat Global</span>
                     </a>
                     <a href="donaciones.html" class="settings-item">
                         <i class="fas fa-heart"></i>
