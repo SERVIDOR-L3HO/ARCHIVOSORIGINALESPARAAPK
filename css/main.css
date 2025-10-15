@@ -853,6 +853,7 @@ body {
 .logo {
     height: 60px;
     width: auto;
+    transform: translateY(-8px);
 }
 
 .logo-text {
