@@ -142,7 +142,7 @@ function renderCardsView() {
                 
                 <div class="team-info">
                     <div class="team-logo">
-                        <img src="${team.logo}" alt="${team.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <img src="${team.logo}" alt="${team.name}" style="width: 100%; height: 100%; object-fit: contain; padding: 8px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="logo-fallback" style="display: none; background: ${team.colors?.primary || '#666'}; color: ${team.colors?.secondary || '#fff'}; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: bold;">
                             ${team.shortName || team.name.substring(0, 2).toUpperCase()}
                         </div>
