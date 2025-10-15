@@ -10,6 +10,30 @@ The application consists of two main components:
 
 ## Recent Changes
 
+### October 15, 2025 - News API Integration Complete
+- **Fully integrated news section with UltraGol API**:
+  - Connected `/noticias` endpoint to `noticias.html` page
+  - Automatic loading of 15 real-time Liga MX news articles
+  - Dynamic categorization system based on article content
+  - Smart image handling with fallback to gradient backgrounds
+  - Featured news automatically updates with latest API data
+  
+- **News categorization system**:
+  - Automatic classification into: Traspasos, Partidos, Equipos, Jugadores, Liga
+  - Keyword-based analysis of titles and descriptions
+  - Filter and search functionality fully integrated
+  
+- **Error handling and resilience**:
+  - Fallback to sample news if API unavailable
+  - Graceful degradation without breaking UI
+  - Leverages 30-minute cache from ultragol-api.js module
+  
+- **User features**:
+  - Click to view full article with modal display
+  - Social sharing (Facebook, Twitter, WhatsApp)
+  - Link to original news source when available
+  - Responsive design with animations
+
 ### October 14, 2025 - UltraGol API Integration
 - **Integrated live external API** from https://ultragol-api3.onrender.com/
   - Created centralized API module (`js/ultragol-api.js`) with caching and fallback support
