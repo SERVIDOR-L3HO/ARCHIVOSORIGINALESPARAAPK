@@ -127,24 +127,25 @@ const ULTRAGOL_API = {
 
     getTeamLogo(teamName) {
         const logos = {
-            'América': 'https://ssl.gstatic.com/onebox/media/sports/logos/udQ6ns69PctCv143h-GeYw_96x96.png',
-            'Guadalajara': 'https://ssl.gstatic.com/onebox/media/sports/logos/5A9erdn1fNjNl4R3hbwMdQ_96x96.png',
-            'Cruz Azul': 'https://ssl.gstatic.com/onebox/media/sports/logos/Yn68m8yBPJL2nnW37k39Bw_96x96.png',
-            'Monterrey': 'https://ssl.gstatic.com/onebox/media/sports/logos/3B8r6NhCJQiEDqn3dZqsqw_96x96.png',
-            'Tigres': 'https://ssl.gstatic.com/onebox/media/sports/logos/mK0P_MHk7TST8zGz91NjPg_96x96.png',
-            'Pumas': 'https://ssl.gstatic.com/onebox/media/sports/logos/WMO8N3RLE_R2IAo-RU1JIQ_96x96.png',
-            'León': 'https://ssl.gstatic.com/onebox/media/sports/logos/XFMZC8YuOHJwqbVtPeTiMg_96x96.png',
-            'Santos': 'https://ssl.gstatic.com/onebox/media/sports/logos/Y0kIuG87E_fHxu5A1_4Bfw_96x96.png',
-            'Toluca': 'https://ssl.gstatic.com/onebox/media/sports/logos/kgw4xDCUDpjkLW-jWWwkAw_96x96.png',
-            'Atlas': 'https://ssl.gstatic.com/onebox/media/sports/logos/yxT2zCgGN7bBEwufzQHOew_96x96.png',
-            'Pachuca': 'https://ssl.gstatic.com/onebox/media/sports/logos/Nx-gMF1BO5OwrZE8TaRFGQ_96x96.png',
-            'Tijuana': 'https://ssl.gstatic.com/onebox/media/sports/logos/KqvsgQKqPPmJT0GKFrKJHw_96x96.png',
-            'Querétaro': 'https://ssl.gstatic.com/onebox/media/sports/logos/eNvFe0xTOTnIBOe-TiZyAQ_96x96.png',
-            'Puebla': 'https://ssl.gstatic.com/onebox/media/sports/logos/3kMbOJ9eL1W0OjKQD4y3hQ_96x96.png',
-            'Necaxa': 'https://ssl.gstatic.com/onebox/media/sports/logos/Nm4qf5uMUnusLkUCTGo7tA_96x96.png',
-            'Juárez': 'https://ssl.gstatic.com/onebox/media/sports/logos/Z-dMnBbNHnOxiwOyBAQw6Q_96x96.png',
-            'Mazatlán': 'https://ssl.gstatic.com/onebox/media/sports/logos/VBB_mDydE6vhCTmhHWBFaA_96x96.png',
-            'Atlético de San Luis': 'https://ssl.gstatic.com/onebox/media/sports/logos/1W0QsOt0wCIqjzY6Sg6nWw_96x96.png'
+            'América': 'assets/logos/america.png',
+            'Guadalajara': 'assets/logos/chivas.png',
+            'Cruz Azul': 'assets/logos/cruz-azul.png',
+            'Monterrey': 'assets/logos/monterrey.png',
+            'Tigres': 'assets/logos/tigres.png',
+            'Pumas': 'assets/logos/pumas.png',
+            'León': 'assets/logos/leon.png',
+            'Santos': 'assets/logos/santos.png',
+            'Toluca': 'assets/logos/toluca.png',
+            'Atlas': 'assets/logos/atlas.png',
+            'Pachuca': 'assets/logos/pachuca.png',
+            'Tijuana': 'assets/logos/tijuana.png',
+            'Querétaro': 'assets/logos/queretaro.png',
+            'Puebla': 'assets/logos/puebla.png',
+            'Necaxa': 'assets/logos/necaxa.png',
+            'Juárez': 'assets/logos/fc-juarez.png',
+            'Mazatlán': 'assets/logos/mazatlan.png',
+            'Atlético de San Luis': 'assets/logos/atletico-san-luis.png',
+            'Atl. San Luis': 'assets/logos/atletico-san-luis.png'
         };
         return logos[teamName] || '';
     },

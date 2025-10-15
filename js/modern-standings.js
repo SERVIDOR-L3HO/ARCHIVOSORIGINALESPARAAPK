@@ -66,21 +66,42 @@ function switchView(view) {
 
 async function loadStandingsData() {
     try {
+        // Cargar datos de equipos para obtener los logos
+        let teamsData = [];
+        if (window.ULTRAGOL_API) {
+            teamsData = await window.ULTRAGOL_API.getEquipos();
+        } else {
+            const teamsResponse = await fetch('data/teams.json');
+            if (teamsResponse.ok) {
+                teamsData = await teamsResponse.json();
+            }
+        }
+        
         // Priorizar la API de UltraGol para datos actualizados
         if (window.ULTRAGOL_API) {
             modernStandingsData = await window.ULTRAGOL_API.getTabla();
             console.log('✅ Standings loaded from API:', modernStandingsData.length, 'teams');
-            renderStandings();
-            return;
+        } else {
+            // Fallback al archivo JSON si la API no está disponible
+            const response = await fetch('data/standings.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            modernStandingsData = await response.json();
+            console.log('📁 Standings loaded from JSON:', modernStandingsData.length, 'teams');
         }
         
-        // Fallback al archivo JSON si la API no está disponible
-        const response = await fetch('data/standings.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        modernStandingsData = await response.json();
-        console.log('📁 Standings loaded from JSON:', modernStandingsData.length, 'teams');
+        // Combinar datos de standings con datos de equipos para obtener logos
+        modernStandingsData = modernStandingsData.map(standing => {
+            const teamData = teamsData.find(t => t.id === standing.id || t.name === standing.name);
+            return {
+                ...standing,
+                logo: teamData?.logo || '',
+                colors: teamData?.colors || { primary: '#666', secondary: '#fff' },
+                shortName: teamData?.shortName || standing.name.substring(0, 3).toUpperCase()
+            };
+        });
+        
         renderStandings();
     } catch (error) {
         console.error('❌ Error loading standings:', error);
@@ -121,7 +142,10 @@ function renderCardsView() {
                 
                 <div class="team-info">
                     <div class="team-logo">
-                        ${team.name.substring(0, 2).toUpperCase()}
+                        <img src="${team.logo}" alt="${team.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="logo-fallback" style="display: none; background: ${team.colors?.primary || '#666'}; color: ${team.colors?.secondary || '#fff'}; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: bold;">
+                            ${team.shortName || team.name.substring(0, 2).toUpperCase()}
+                        </div>
                     </div>
                     <div class="team-name">
                         <h3>${team.name}</h3>
@@ -197,7 +221,10 @@ function renderTableView() {
                 <td class="team-col">
                     <div class="team-cell">
                         <div class="team-logo-small">
-                            ${team.name.substring(0, 2).toUpperCase()}
+                            <img src="${team.logo}" alt="${team.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" style="width: 100%; height: 100%; object-fit: contain;">
+                            <div class="logo-fallback" style="display: none; background: ${team.colors?.primary || '#666'}; color: ${team.colors?.secondary || '#fff'}; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+                                ${team.shortName || team.name.substring(0, 2).toUpperCase()}
+                            </div>
                         </div>
                         <span class="team-name-text">${team.name}</span>
                     </div>
