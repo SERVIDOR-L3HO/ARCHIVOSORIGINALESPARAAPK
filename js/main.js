@@ -476,6 +476,10 @@ function setupCarousel() {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
     
+    if (slides.length === 0 || indicators.length === 0) {
+        return;
+    }
+    
     let currentSlide = 0;
     let isTransitioning = false;
     let autoSlideInterval;
@@ -492,7 +496,7 @@ function setupCarousel() {
     }
     
     function showSlide(index) {
-        if (isTransitioning) return;
+        if (isTransitioning || !slides.length) return;
         isTransitioning = true;
         
         // Remove active class from all slides and indicators
@@ -513,8 +517,10 @@ function setupCarousel() {
         
         // Show new slide
         setTimeout(() => {
-            slides[currentSlide].classList.add('active');
-            indicators[currentSlide].classList.add('active');
+            if (slides[currentSlide] && indicators[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+                indicators[currentSlide].classList.add('active');
+            }
             isTransitioning = false;
         }, 100);
     }

@@ -18,21 +18,19 @@ class VideosCarousel {
 
     async loadVideos() {
         try {
-            console.log('📺 Cargando videos desde UltraGol API...');
+            console.log('📺 Cargando videos desde servidor local...');
             
-            if (window.ULTRAGOL_API) {
-                this.videosData = await window.ULTRAGOL_API.getVideos();
-                
-                if (this.videosData && this.videosData.length > 0) {
-                    console.log('✅ Videos de Liga MX cargados desde API:', this.videosData.length);
-                    return;
-                }
+            const response = await fetch('/api/videos');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            console.log('⚠️ API no disponible, usando JSON local como fallback...');
-            const response = await fetch('/api/videos');
             this.videosData = await response.json();
-            console.log('✅ Videos de Liga MX cargados desde JSON:', this.videosData.length);
+            console.log('✅ Videos cargados exitosamente:', this.videosData.length);
+            
+            if (this.videosData.length > 0) {
+                console.log('📹 Primer video:', this.videosData[0]);
+            }
         } catch (error) {
             console.error('❌ Error al cargar videos:', error);
             this.videosData = [];
@@ -41,38 +39,56 @@ class VideosCarousel {
 
     render() {
         const track = document.getElementById('videosCarouselTrack');
-        if (!track || this.videosData.length === 0) return;
+        if (!track || this.videosData.length === 0) {
+            console.warn('⚠️ No hay videos para mostrar o elemento no encontrado');
+            return;
+        }
 
-        track.innerHTML = this.videosData.map(video => `
-            <div class="video-card" data-video-id="${video.id}">
-                <div class="video-content-wrapper" id="video-content-${video.id}">
-                    <div class="video-thumbnail-wrapper">
-                        <img src="${video.thumbnail || 'https://img.youtube.com/vi/default/maxresdefault.jpg'}" 
-                             alt="${video.partido || 'Video'}" 
-                             class="video-thumbnail" 
-                             loading="lazy"
-                             onerror="this.src='https://via.placeholder.com/800x450/1a1f3a/ffffff?text=Video+No+Disponible'">
-                        <div class="video-play-overlay">
-                            <i class="fas fa-play"></i>
+        track.innerHTML = this.videosData.map(video => {
+            const titulo = video.partido || video.title || 'Video de Liga MX';
+            const equipo = video.equipo || video.team || 'Liga MX';
+            const fecha = video.fecha || video.date || 'Temporada 2025';
+            const thumbnail = video.thumbnail || `https://img.youtube.com/vi/${this.extractVideoId(video.link)}/maxresdefault.jpg`;
+            
+            return `
+                <div class="video-card" data-video-id="${video.id}">
+                    <div class="video-content-wrapper" id="video-content-${video.id}">
+                        <div class="video-thumbnail-wrapper">
+                            <img src="${thumbnail}" 
+                                 alt="${titulo}" 
+                                 class="video-thumbnail" 
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/800x450/1a1f3a/ffffff?text=Liga+MX'">
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <span class="video-tipo-badge">${video.tipo === 'video' ? 'YouTube' : 'Externo'}</span>
                         </div>
-                        <span class="video-tipo-badge">${video.tipo === 'video' ? 'YouTube' : 'Externo'}</span>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">${video.partido || 'Sin título'}</h3>
-                        <div class="video-meta">
-                            <span class="video-equipo">
-                                <i class="fas fa-shield-alt"></i>
-                                ${video.equipo || 'Liga MX'}
-                            </span>
-                            <span class="video-fecha">${video.fecha || 'Fecha no disponible'}</span>
+                        <div class="video-info">
+                            <h3 class="video-title">${titulo}</h3>
+                            <div class="video-meta">
+                                <span class="video-equipo">
+                                    <i class="fas fa-shield-alt"></i>
+                                    ${equipo}
+                                </span>
+                                <span class="video-fecha">${fecha}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         this.updateDots();
         this.updateButtons();
+        
+        console.log('✅ Carrusel renderizado con', this.videosData.length, 'videos');
+    }
+
+    extractVideoId(url) {
+        if (!url) return '';
+        const match = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([\w-]{11})/);
+        return match ? match[1] : '';
     }
 
     updateDots() {
@@ -99,6 +115,10 @@ class VideosCarousel {
     moveCarousel(direction) {
         const totalPages = Math.ceil(this.videosData.length / this.cardsPerView);
         
+        if (this.playingVideoId !== null) {
+            this.stopVideoInline(this.playingVideoId);
+        }
+        
         if (direction === 'next' && this.currentIndex < totalPages - 1) {
             this.currentIndex++;
         } else if (direction === 'prev' && this.currentIndex > 0) {
@@ -111,6 +131,10 @@ class VideosCarousel {
     }
 
     goToSlide(index) {
+        if (this.playingVideoId !== null) {
+            this.stopVideoInline(this.playingVideoId);
+        }
+        
         this.currentIndex = index;
         this.updateCarouselPosition();
         this.updateDots();
@@ -147,6 +171,10 @@ class VideosCarousel {
         const contentWrapper = document.getElementById(`video-content-${videoId}`);
         if (!contentWrapper) return;
 
+        const titulo = video.partido || video.title || 'Video de Liga MX';
+        const equipo = video.equipo || video.team || 'Liga MX';
+        const fecha = video.fecha || video.date || 'Temporada 2025';
+
         if (video.tipo === 'video' && video.embed_url) {
             contentWrapper.innerHTML = `
                 <div class="video-player-wrapper">
@@ -163,18 +191,19 @@ class VideosCarousel {
                         <i class="fas fa-times"></i> Cerrar
                     </button>
                     <div class="video-info playing">
-                        <h3 class="video-title">${video.partido || 'Sin título'}</h3>
+                        <h3 class="video-title">${titulo}</h3>
                         <div class="video-meta">
                             <span class="video-equipo">
                                 <i class="fas fa-shield-alt"></i>
-                                ${video.equipo || 'Liga MX'}
+                                ${equipo}
                             </span>
-                            <span class="video-fecha">${video.fecha || 'Fecha no disponible'}</span>
+                            <span class="video-fecha">${fecha}</span>
                         </div>
                     </div>
                 </div>
             `;
             this.playingVideoId = videoId;
+            console.log('▶️ Reproduciendo video:', titulo);
         } else {
             window.open(video.link, '_blank');
         }
@@ -187,31 +216,37 @@ class VideosCarousel {
         const contentWrapper = document.getElementById(`video-content-${videoId}`);
         if (!contentWrapper) return;
 
+        const titulo = video.partido || video.title || 'Video de Liga MX';
+        const equipo = video.equipo || video.team || 'Liga MX';
+        const fecha = video.fecha || video.date || 'Temporada 2025';
+        const thumbnail = video.thumbnail || `https://img.youtube.com/vi/${this.extractVideoId(video.link)}/maxresdefault.jpg`;
+
         contentWrapper.innerHTML = `
             <div class="video-thumbnail-wrapper">
-                <img src="${video.thumbnail || 'https://img.youtube.com/vi/default/maxresdefault.jpg'}" 
-                     alt="${video.partido || 'Video'}" 
+                <img src="${thumbnail}" 
+                     alt="${titulo}" 
                      class="video-thumbnail" 
                      loading="lazy"
-                     onerror="this.src='https://via.placeholder.com/800x450/1a1f3a/ffffff?text=Video+No+Disponible'">
+                     onerror="this.src='https://via.placeholder.com/800x450/1a1f3a/ffffff?text=Liga+MX'">
                 <div class="video-play-overlay">
                     <i class="fas fa-play"></i>
                 </div>
                 <span class="video-tipo-badge">${video.tipo === 'video' ? 'YouTube' : 'Externo'}</span>
             </div>
             <div class="video-info">
-                <h3 class="video-title">${video.partido || 'Sin título'}</h3>
+                <h3 class="video-title">${titulo}</h3>
                 <div class="video-meta">
                     <span class="video-equipo">
                         <i class="fas fa-shield-alt"></i>
-                        ${video.equipo || 'Liga MX'}
+                        ${equipo}
                     </span>
-                    <span class="video-fecha">${video.fecha || 'Fecha no disponible'}</span>
+                    <span class="video-fecha">${fecha}</span>
                 </div>
             </div>
         `;
 
         this.playingVideoId = null;
+        console.log('⏸️ Video cerrado');
     }
 
     setupEventListeners() {
@@ -230,6 +265,11 @@ class VideosCarousel {
         if (track) {
             track.addEventListener('click', (e) => {
                 if (!this.isDragging) {
+                    const closeBtn = e.target.closest('.video-close-btn');
+                    if (closeBtn) {
+                        return;
+                    }
+                    
                     const card = e.target.closest('.video-card');
                     if (card) {
                         const videoId = parseInt(card.dataset.videoId);
