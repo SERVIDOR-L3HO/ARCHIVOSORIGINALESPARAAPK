@@ -6,6 +6,7 @@ class VideosCarousel {
         this.startX = 0;
         this.currentX = 0;
         this.isDragging = false;
+        this.playingVideoId = null;
         this.init();
     }
 
@@ -38,28 +39,33 @@ class VideosCarousel {
         }
     }
 
-
     render() {
         const track = document.getElementById('videosCarouselTrack');
         if (!track || this.videosData.length === 0) return;
 
         track.innerHTML = this.videosData.map(video => `
             <div class="video-card" data-video-id="${video.id}">
-                <div class="video-thumbnail-wrapper">
-                    <img src="${video.thumbnail}" alt="${video.partido}" class="video-thumbnail" loading="lazy">
-                    <div class="video-play-overlay">
-                        <i class="fas fa-play"></i>
+                <div class="video-content-wrapper" id="video-content-${video.id}">
+                    <div class="video-thumbnail-wrapper">
+                        <img src="${video.thumbnail || 'https://img.youtube.com/vi/default/maxresdefault.jpg'}" 
+                             alt="${video.partido || 'Video'}" 
+                             class="video-thumbnail" 
+                             loading="lazy"
+                             onerror="this.src='https://via.placeholder.com/800x450/1a1f3a/ffffff?text=Video+No+Disponible'">
+                        <div class="video-play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <span class="video-tipo-badge">${video.tipo === 'video' ? 'YouTube' : 'Externo'}</span>
                     </div>
-                    <span class="video-tipo-badge">${video.tipo === 'video' ? 'YouTube' : 'Externo'}</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">${video.partido}</h3>
-                    <div class="video-meta">
-                        <span class="video-equipo">
-                            <i class="fas fa-shield-alt"></i>
-                            ${video.equipo}
-                        </span>
-                        <span class="video-fecha">${video.fecha}</span>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.partido || 'Sin título'}</h3>
+                        <div class="video-meta">
+                            <span class="video-equipo">
+                                <i class="fas fa-shield-alt"></i>
+                                ${video.equipo || 'Liga MX'}
+                            </span>
+                            <span class="video-fecha">${video.fecha || 'Fecha no disponible'}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,67 +132,91 @@ class VideosCarousel {
         track.style.transform = `translateX(${offset}px)`;
     }
 
-    openVideoModal(videoId) {
+    playVideoInline(videoId) {
         const video = this.videosData.find(v => v.id === videoId);
         if (!video) return;
 
-        const modal = document.getElementById('videoModal');
-        const modalTitle = document.getElementById('videoModalTitle');
-        const modalDescription = document.getElementById('videoModalDescription');
-        const modalPlayer = document.getElementById('videoModalPlayer');
+        if (this.playingVideoId === videoId) {
+            return;
+        }
 
-        if (modal && modalTitle && modalDescription && modalPlayer) {
-            modalTitle.textContent = video.partido;
-            modalDescription.textContent = video.descripcion;
+        if (this.playingVideoId !== null && this.playingVideoId !== videoId) {
+            this.stopVideoInline(this.playingVideoId);
+        }
 
-            if (video.tipo === 'video' && video.embed_url) {
-                modalPlayer.innerHTML = `
-                    <iframe 
-                        src="${video.embed_url}?autoplay=1" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                `;
-            } else {
-                modalPlayer.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #1a1f3a; color: white;">
-                        <div style="text-align: center;">
-                            <i class="fas fa-external-link-alt" style="font-size: 3rem; margin-bottom: 20px; color: #ff6b35;"></i>
-                            <p style="margin-bottom: 20px;">Este video está disponible en una plataforma externa</p>
-                            <a href="${video.link}" target="_blank" class="hero-btn hero-btn-primary" style="display: inline-block;">
-                                Ver Video <i class="fas fa-arrow-right"></i>
-                            </a>
+        const contentWrapper = document.getElementById(`video-content-${videoId}`);
+        if (!contentWrapper) return;
+
+        if (video.tipo === 'video' && video.embed_url) {
+            contentWrapper.innerHTML = `
+                <div class="video-player-wrapper">
+                    <div class="video-player-container">
+                        <iframe 
+                            src="${video.embed_url}?autoplay=1&rel=0&modestbranding=1" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            class="video-iframe">
+                        </iframe>
+                    </div>
+                    <button class="video-close-btn" onclick="videosCarouselInstance.stopVideoInline(${videoId})">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                    <div class="video-info playing">
+                        <h3 class="video-title">${video.partido || 'Sin título'}</h3>
+                        <div class="video-meta">
+                            <span class="video-equipo">
+                                <i class="fas fa-shield-alt"></i>
+                                ${video.equipo || 'Liga MX'}
+                            </span>
+                            <span class="video-fecha">${video.fecha || 'Fecha no disponible'}</span>
                         </div>
                     </div>
-                `;
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+                </div>
+            `;
+            this.playingVideoId = videoId;
+        } else {
+            window.open(video.link, '_blank');
         }
     }
 
-    closeVideoModal() {
-        const modal = document.getElementById('videoModal');
-        const modalPlayer = document.getElementById('videoModalPlayer');
+    stopVideoInline(videoId) {
+        const video = this.videosData.find(v => v.id === videoId);
+        if (!video) return;
 
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+        const contentWrapper = document.getElementById(`video-content-${videoId}`);
+        if (!contentWrapper) return;
 
-        if (modalPlayer) {
-            modalPlayer.innerHTML = '';
-        }
+        contentWrapper.innerHTML = `
+            <div class="video-thumbnail-wrapper">
+                <img src="${video.thumbnail || 'https://img.youtube.com/vi/default/maxresdefault.jpg'}" 
+                     alt="${video.partido || 'Video'}" 
+                     class="video-thumbnail" 
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/800x450/1a1f3a/ffffff?text=Video+No+Disponible'">
+                <div class="video-play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+                <span class="video-tipo-badge">${video.tipo === 'video' ? 'YouTube' : 'Externo'}</span>
+            </div>
+            <div class="video-info">
+                <h3 class="video-title">${video.partido || 'Sin título'}</h3>
+                <div class="video-meta">
+                    <span class="video-equipo">
+                        <i class="fas fa-shield-alt"></i>
+                        ${video.equipo || 'Liga MX'}
+                    </span>
+                    <span class="video-fecha">${video.fecha || 'Fecha no disponible'}</span>
+                </div>
+            </div>
+        `;
+
+        this.playingVideoId = null;
     }
 
     setupEventListeners() {
         const dotsContainer = document.getElementById('carouselDots');
         const track = document.getElementById('videosCarouselTrack');
-        const modalClose = document.getElementById('videoModalClose');
-        const modal = document.getElementById('videoModal');
-        const wrapper = document.querySelector('.carousel-wrapper');
 
         if (dotsContainer) {
             dotsContainer.addEventListener('click', (e) => {
@@ -203,7 +233,7 @@ class VideosCarousel {
                     const card = e.target.closest('.video-card');
                     if (card) {
                         const videoId = parseInt(card.dataset.videoId);
-                        this.openVideoModal(videoId);
+                        this.playVideoInline(videoId);
                     }
                 }
             });
@@ -218,22 +248,20 @@ class VideosCarousel {
             document.addEventListener('touchend', (e) => this.handleDragEnd(e));
         }
 
-        if (modalClose) modalClose.addEventListener('click', () => this.closeVideoModal());
-        
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) this.closeVideoModal();
-            });
-        }
-
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.closeVideoModal();
+            if (e.key === 'Escape' && this.playingVideoId !== null) {
+                this.stopVideoInline(this.playingVideoId);
+            }
             if (e.key === 'ArrowLeft') this.moveCarousel('prev');
             if (e.key === 'ArrowRight') this.moveCarousel('next');
         });
     }
 
     handleDragStart(e) {
+        if (e.target.closest('.video-close-btn') || e.target.closest('.video-iframe')) {
+            return;
+        }
+        
         this.isDragging = true;
         this.startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
         this.currentX = this.startX;
@@ -272,6 +300,8 @@ class VideosCarousel {
     }
 }
 
+let videosCarouselInstance;
+
 document.addEventListener('DOMContentLoaded', () => {
-    new VideosCarousel();
+    videosCarouselInstance = new VideosCarousel();
 });
