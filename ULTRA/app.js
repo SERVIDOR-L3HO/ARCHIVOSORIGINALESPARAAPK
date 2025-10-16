@@ -1,5 +1,6 @@
 let currentStreamUrl = '';
 let activeTab = 'live';
+let currentLeague = 'Liga MX';
 
 function switchTab(tab, element) {
     activeTab = tab;
@@ -168,7 +169,7 @@ async function loadUpcomingMatches() {
     container.innerHTML = '<div class="loading-spinner">Cargando partidos...</div>';
     
     try {
-        const partidos = await ULTRAGOL_API.getPartidosProximos();
+        const partidos = await ULTRAGOL_API.getPartidosProximos(currentLeague);
         
         if (partidos.length === 0) {
             container.innerHTML = '<div class="no-matches">No hay partidos próximos disponibles</div>';
@@ -183,11 +184,11 @@ async function loadUpcomingMatches() {
                 <div class="match-card-content">
                     <div class="teams">
                         <div class="team">
-                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoLocal)}" alt="${partido.equipoLocal}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoLocal, currentLeague)}" alt="${partido.equipoLocal}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
                             <span>${partido.equipoLocal || 'TBD'}</span>
                         </div>
                         <div class="team">
-                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoVisitante)}" alt="${partido.equipoVisitante}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoVisitante, currentLeague)}" alt="${partido.equipoVisitante}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
                             <span>${partido.equipoVisitante || 'TBD'}</span>
                         </div>
                     </div>
@@ -265,7 +266,7 @@ async function loadLiveMatches() {
     if (!container) return;
     
     try {
-        const partidos = await ULTRAGOL_API.getPartidosEnVivo();
+        const partidos = await ULTRAGOL_API.getPartidosEnVivo(currentLeague);
         
         if (partidos.length === 0) {
             container.innerHTML = '<div class="no-matches">No hay partidos en vivo en este momento</div>';
@@ -280,11 +281,11 @@ async function loadLiveMatches() {
                 <div class="match-card-content">
                     <div class="teams">
                         <div class="team">
-                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoLocal)}" alt="${partido.equipoLocal}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoLocal, currentLeague)}" alt="${partido.equipoLocal}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
                             <span>${partido.equipoLocal || 'TBD'}</span>
                         </div>
                         <div class="team">
-                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoVisitante)}" alt="${partido.equipoVisitante}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoVisitante, currentLeague)}" alt="${partido.equipoVisitante}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
                             <span>${partido.equipoVisitante || 'TBD'}</span>
                         </div>
                     </div>
@@ -324,6 +325,7 @@ async function loadLeagues() {
 }
 
 async function loadMatchesByLeague(leagueName) {
+    currentLeague = leagueName;
     showToast(`Cargando datos de ${leagueName}...`);
     console.log(`Loading data for ${leagueName}`);
     
@@ -331,6 +333,13 @@ async function loadMatchesByLeague(leagueName) {
     const standingsTitle = document.getElementById('standingsLeagueName');
     if (standingsTitle) {
         standingsTitle.textContent = `TABLA DE ${leagueName.toUpperCase()}`;
+    }
+    
+    // Reload matches for current tab
+    if (activeTab === 'live') {
+        await loadLiveMatches();
+    } else if (activeTab === 'upcoming') {
+        await loadUpcomingMatches();
     }
     
     try {

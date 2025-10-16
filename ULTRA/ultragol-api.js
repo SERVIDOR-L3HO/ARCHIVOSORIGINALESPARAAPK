@@ -125,9 +125,10 @@ const ULTRAGOL_API = {
         return todasNoticias;
     },
 
-    async getPartidosEnVivo() {
+    async getPartidosEnVivo(ligaName = 'Liga MX') {
         try {
-            const response = await fetch('/api/fixtures');
+            const leagueKey = this.getLeagueKey(ligaName);
+            const response = await fetch(`/api/fixtures/${leagueKey}`);
             const data = await response.json();
             const fixtures = data.fixtures || [];
             
@@ -148,9 +149,10 @@ const ULTRAGOL_API = {
         }
     },
 
-    async getPartidosProximos() {
+    async getPartidosProximos(ligaName = 'Liga MX') {
         try {
-            const response = await fetch('/api/fixtures');
+            const leagueKey = this.getLeagueKey(ligaName);
+            const response = await fetch(`/api/fixtures/${leagueKey}`);
             const data = await response.json();
             const fixtures = data.fixtures || [];
             const now = new Date();
@@ -181,6 +183,18 @@ const ULTRAGOL_API = {
             console.error('Error loading upcoming matches:', error);
             return [];
         }
+    },
+
+    getLeagueKey(ligaName) {
+        const mapping = {
+            'Liga MX': 'ligamx',
+            'Premier League': 'premier',
+            'La Liga': 'laliga',
+            'Serie A': 'seriea',
+            'Bundesliga': 'bundesliga',
+            'Ligue 1': 'ligue1'
+        };
+        return mapping[ligaName] || 'ligamx';
     },
 
     getTeamLogo(teamName, ligaNombre) {
