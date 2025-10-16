@@ -1,13 +1,14 @@
 let currentStreamUrl = '';
 let activeTab = 'live';
 
-function switchTab(tab) {
+function switchTab(tab, element) {
     activeTab = tab;
     
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     
-    event.target.classList.add('active');
+    const button = element.closest('.tab') || element;
+    button.classList.add('active');
     document.getElementById(tab + 'Content').classList.add('active');
     
     if (tab === 'upcoming') {
@@ -115,9 +116,11 @@ function shareApp() {
     }
 }
 
-function navTo(section) {
+function navTo(section, element) {
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    
+    const button = element.closest('.nav-btn') || element;
+    button.classList.add('active');
     
     if (section === 'search') {
         showSearchModal();

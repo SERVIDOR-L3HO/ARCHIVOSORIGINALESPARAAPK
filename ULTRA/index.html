@@ -65,9 +65,9 @@
 
         <div class="tabs-container">
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('live')">EN VIVO</button>
-                <button class="tab" onclick="switchTab('upcoming')">UPCOMING</button>
-                <button class="tab" onclick="switchTab('replays')">REPETICIONES</button>
+                <button class="tab active" onclick="switchTab('live', this)">EN VIVO</button>
+                <button class="tab" onclick="switchTab('upcoming', this)">UPCOMING</button>
+                <button class="tab" onclick="switchTab('replays', this)">REPETICIONES</button>
             </div>
         </div>
 
@@ -242,19 +242,19 @@
         </div>
 
         <nav class="bottom-nav">
-            <button class="nav-btn active" onclick="navTo('home')">
+            <button class="nav-btn active" onclick="navTo('home', this)">
                 <i class="fas fa-home"></i>
             </button>
-            <button class="nav-btn" onclick="navTo('search')">
+            <button class="nav-btn" onclick="navTo('search', this)">
                 <i class="fas fa-search"></i>
             </button>
-            <button class="nav-btn" onclick="navTo('calendar')">
+            <button class="nav-btn" onclick="navTo('calendar', this)">
                 <i class="fas fa-calendar"></i>
             </button>
-            <button class="nav-btn" onclick="navTo('edit')">
+            <button class="nav-btn" onclick="navTo('edit', this)">
                 <i class="fas fa-edit"></i>
             </button>
-            <button class="nav-btn" onclick="navTo('profile')">
+            <button class="nav-btn" onclick="navTo('profile', this)">
                 <i class="fas fa-user"></i>
             </button>
         </nav>
