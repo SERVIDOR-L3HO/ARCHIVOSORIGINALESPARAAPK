@@ -327,6 +327,12 @@ async function loadMatchesByLeague(leagueName) {
     showToast(`Cargando datos de ${leagueName}...`);
     console.log(`Loading data for ${leagueName}`);
     
+    // Actualizar el título de la tabla
+    const standingsTitle = document.getElementById('standingsLeagueName');
+    if (standingsTitle) {
+        standingsTitle.textContent = `TABLA DE ${leagueName.toUpperCase()}`;
+    }
+    
     try {
         const [tabla, goleadores, noticias] = await Promise.all([
             ULTRAGOL_API.getTablaPorLiga(leagueName),
@@ -336,6 +342,17 @@ async function loadMatchesByLeague(leagueName) {
         
         console.log(`Datos de ${leagueName}:`, { tabla, goleadores, noticias });
         
+        // Actualizar tabla de posiciones
+        if (tabla && tabla.length > 0) {
+            displayStandings(tabla, leagueName);
+        } else {
+            const standingsTable = document.getElementById('standingsTable');
+            if (standingsTable) {
+                standingsTable.innerHTML = '<div class="standings-loading">No hay datos de tabla disponibles</div>';
+            }
+        }
+        
+        // Actualizar noticias
         if (noticias.length > 0) {
             const newsGrid = document.querySelector('.news-grid');
             if (newsGrid) {
@@ -352,6 +369,37 @@ async function loadMatchesByLeague(leagueName) {
     } catch (error) {
         console.error(`Error loading data for ${leagueName}:`, error);
     }
+}
+
+function displayStandings(tabla, leagueName) {
+    const standingsTable = document.getElementById('standingsTable');
+    if (!standingsTable) return;
+    
+    const standingsHTML = `
+        <div class="standings-row standings-header">
+            <div class="standings-pos">#</div>
+            <div class="standings-team">EQUIPO</div>
+            <div class="standings-stat">PJ</div>
+            <div class="standings-stat">DG</div>
+            <div class="standings-stat">GD</div>
+            <div class="standings-pts">PTS</div>
+        </div>
+        ${tabla.slice(0, 10).map((team, index) => `
+            <div class="standings-row">
+                <div class="standings-pos">${team.posicion || index + 1}</div>
+                <div class="standings-team">
+                    <img src="${ULTRAGOL_API.getTeamLogo(team.equipo, leagueName)}" alt="${team.equipo}" class="standings-team-logo" onerror="this.style.display='none'">
+                    <span class="standings-team-name">${team.equipo}</span>
+                </div>
+                <div class="standings-stat">${team.estadisticas?.pj || team.pj || 0}</div>
+                <div class="standings-stat">${team.estadisticas?.dif || team.dif || 0}</div>
+                <div class="standings-stat">${team.estadisticas?.gd || team.gd || 0}</div>
+                <div class="standings-pts">${team.estadisticas?.pts || team.pts || 0}</div>
+            </div>
+        `).join('')}
+    `;
+    
+    standingsTable.innerHTML = standingsHTML;
 }
 
 async function loadNews() {
@@ -418,6 +466,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadLeagues();
     await loadLiveMatches();
     await loadNews();
+    await loadMatchesByLeague('Liga MX'); // Cargar tabla de Liga MX por defecto
 });
 
 document.addEventListener('click', (e) => {

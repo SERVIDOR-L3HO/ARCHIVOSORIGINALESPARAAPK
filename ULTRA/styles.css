@@ -830,3 +830,81 @@ input:checked + .slider:before {
         max-width: 100%;
     }
 }
+
+/* Tabla de Posiciones */
+.standings-section {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.standings-table {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.standings-loading {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+}
+
+.standings-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px 40px 40px 50px;
+    gap: 10px;
+    padding: 12px 15px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+}
+
+.standings-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.standings-row:last-child {
+    border-bottom: none;
+}
+
+.standings-header {
+    background: rgba(255, 69, 0, 0.1);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.standings-pos {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.standings-team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.standings-team-logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.standings-team-name {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.standings-stat {
+    text-align: center;
+    font-size: 13px;
+}
+
+.standings-pts {
+    font-weight: 700;
+    color: var(--primary);
+}

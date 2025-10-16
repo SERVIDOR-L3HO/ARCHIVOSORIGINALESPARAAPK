@@ -10,6 +10,28 @@ The application consists of two main components:
 
 ## Recent Changes
 
+### October 16, 2025 - ULTRA Platform International Leagues Integration
+- **Integrated international league data** in ULTRA platform (/ULTRA/):
+  - Created API module (`ULTRA/ultragol-api.js`) with support for 6 leagues
+  - Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Liga MX
+  - Connected to https://ultragol-api3.onrender.com with league-specific endpoints
+  
+- **Added dynamic standings table**:
+  - Displays below "PRINCIPALES LIGAS" section
+  - Updates automatically when user selects different league
+  - Shows top 10 teams with position, matches played, goal difference, and points
+  - Real-time data from API with 5-minute caching
+  
+- **News integration**:
+  - Loads news from all leagues simultaneously
+  - Displays in "NOTICIAS Y RESÚMENES" section
+  - Dynamic filtering by selected league
+  
+- **League switching functionality**:
+  - Interactive league buttons change active league
+  - Updates standings table, news, and top scorers data
+  - Toast notifications for user feedback
+
 ### October 15, 2025 - News API Integration Complete
 - **Fully integrated news section with UltraGol API**:
   - Connected `/noticias` endpoint to `noticias.html` page
