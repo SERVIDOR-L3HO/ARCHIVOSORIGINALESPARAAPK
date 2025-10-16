@@ -77,6 +77,11 @@ app.get('/api/videos', (req, res) => {
     res.json(videos);
 });
 
+app.get('/api/fixtures', (req, res) => {
+    const fixtures = require('./data/fixtures.json');
+    res.json({ fixtures });
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });

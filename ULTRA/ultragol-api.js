@@ -126,11 +126,61 @@ const ULTRAGOL_API = {
     },
 
     async getPartidosEnVivo() {
-        return [];
+        try {
+            const response = await fetch('/api/fixtures');
+            const data = await response.json();
+            const fixtures = data.fixtures || [];
+            
+            return fixtures
+                .filter(f => f.status === 'live' || f.status === 'in_progress')
+                .map(f => ({
+                    id: f.id,
+                    equipoLocal: f.homeTeam,
+                    equipoVisitante: f.awayTeam,
+                    marcador: `${f.homeScore || 0} - ${f.awayScore || 0}`,
+                    minuto: f.minute || '0',
+                    fecha: f.date,
+                    hora: new Date(f.date).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+                }));
+        } catch (error) {
+            console.error('Error loading live matches:', error);
+            return [];
+        }
     },
 
     async getPartidosProximos() {
-        return [];
+        try {
+            const response = await fetch('/api/fixtures');
+            const data = await response.json();
+            const fixtures = data.fixtures || [];
+            const now = new Date();
+            
+            return fixtures
+                .filter(f => {
+                    const matchDate = new Date(f.date);
+                    return f.status === 'scheduled' && matchDate > now;
+                })
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map(f => ({
+                    id: f.id,
+                    equipoLocal: f.homeTeam,
+                    equipoVisitante: f.awayTeam,
+                    fecha: new Date(f.date).toLocaleDateString('es-MX', { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    }),
+                    hora: new Date(f.date).toLocaleTimeString('es-MX', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    }),
+                    jornada: f.jornada,
+                    estadio: f.stadium
+                }));
+        } catch (error) {
+            console.error('Error loading upcoming matches:', error);
+            return [];
+        }
     },
 
     getTeamLogo(teamName, ligaNombre) {
