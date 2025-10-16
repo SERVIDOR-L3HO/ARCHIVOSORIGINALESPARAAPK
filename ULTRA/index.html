@@ -2,284 +2,324 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../favicon.png">
-    <title>ULTRAGOL LIVE - Transmisiones Premium</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/bottom-nav.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>ULTRAGOL - Live Streaming</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <img src="../attached_assets/1001721720-removebg-preview_1759201879566.png" alt="UltraGol" class="logo">
-                <span class="company-tag">by L3HO</span>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-left">
+                <button class="icon-btn back-btn" onclick="window.location.href='../index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="score-badge">9:4</div>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="../index.html" class="nav-link">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a href="../standings.html" class="nav-link">Tabla de Posiciones</a>
-                </li>
-                <li class="nav-item">
-                    <a href="../teams.html" class="nav-link">Equipos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="../calendario.html" class="nav-link">Calendario</a>
-                </li>
-                <li class="nav-item">
-                    <a href="../estadisticas.html" class="nav-link">Estadísticas</a>
-                </li>
-                <li class="nav-item">
-                    <a href="../donaciones.html" class="nav-link">
-                        <i class="fas fa-heart"></i> Donaciones
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link live-link active">
-                        <i class="fas fa-play-circle"></i> UltraGol LIVE
-                    </a>
-                </li>
-            </ul>
             
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="header-center">
+                <h1 class="app-title">ULTRAGOL</h1>
+            </div>
+            
+            <div class="header-right">
+                <button class="icon-btn share-btn" onclick="shareApp()">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <button class="icon-btn settings-btn" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="featured-match">
+            <div class="match-overlay"></div>
+            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800" alt="Stadium" class="match-bg">
+            
+            <div class="match-score">
+                <div class="team-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg" alt="Team 1">
+                </div>
+                <div class="score-display">
+                    <span class="score">1 - 1</span>
+                </div>
+                <div class="team-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg" alt="Team 2">
+                </div>
+            </div>
+            
+            <div class="match-info">
+                <h2 class="match-title">MAN. UNITED vs. LIVERPOOL</h2>
+                <div class="match-badges">
+                    <span class="badge-icon"><i class="fas fa-circle"></i></span>
+                    <span class="badge-icon"><i class="fas fa-users"></i></span>
+                    <span class="badge-icon"><i class="fas fa-wifi"></i></span>
+                </div>
+            </div>
+            
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                <span>LIVE</span>
             </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Collaboration Section -->
-        <section class="collab-section">
-            <div class="section-icon">
-                <i class="fas fa-handshake"></i>
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('live')">EN VIVO</button>
+                <button class="tab" onclick="switchTab('upcoming')">UPCOMING</button>
+                <button class="tab" onclick="switchTab('replays')">REPETICIONES</button>
             </div>
-            <h2 class="section-title">Colaboración Oficial</h2>
-            
-            <div class="collab-card">
-                <div class="banner-wrapper">
-                    <img src="golazoz-banner.jpg" alt="ULTRAGOL x GOLAZOZ" class="banner-image">
+        </div>
+
+        <div class="content-container">
+            <div id="liveContent" class="tab-content active">
+                <div class="matches-grid" id="liveMatches">
+                    <div class="match-card">
+                        <div class="match-card-bg">
+                            <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600" alt="Match">
+                        </div>
+                        <div class="match-card-content">
+                            <div class="teams">
+                                <div class="team">
+                                    <img src="https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg" alt="Chelsea" class="team-badge">
+                                    <span>CHEL</span>
+                                </div>
+                                <div class="team">
+                                    <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal" class="team-badge">
+                                    <span>ARSENAL</span>
+                                </div>
+                            </div>
+                            <div class="match-score-mini">
+                                0 - 2 - 1
+                                <span class="match-time">MT</span>
+                            </div>
+                            <button class="watch-btn" onclick="watchMatch('chelsea-arsenal')">
+                                <span>WATCH NOW</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="match-card">
+                        <div class="match-card-bg">
+                            <img src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=600" alt="Match">
+                        </div>
+                        <div class="match-card-content">
+                            <div class="teams">
+                                <div class="team">
+                                    <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg" alt="City" class="team-badge">
+                                    <span>MAN. CITY</span>
+                                </div>
+                                <div class="team">
+                                    <img src="https://upload.wikimedia.org/wikipedia/en/6/6d/West_Ham_United_FC_logo.svg" alt="West Ham" class="team-badge">
+                                    <span>WEST HAM</span>
+                                </div>
+                            </div>
+                            <div class="match-score-mini">
+                                3 - 3 - 1
+                                <span class="match-time">HT</span>
+                            </div>
+                            <button class="watch-btn" onclick="watchMatch('city-westham')">
+                                <span>WATCH NOW</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="collab-content">
-                    <h3 class="collab-title">ULTRAGOL <span class="separator">×</span> GOLAZOZ</h3>
-                    <p class="collab-desc">
-                        Dos plataformas unidas por la misma pasión: brindarte la mejor experiencia de fútbol en vivo. 
-                        Accede a múltiples opciones de transmisión de alta calidad para que nunca te pierdas ningún 
-                        partido importante. Juntos, te ofrecemos cobertura completa y confiable.
-                    </p>
-                    <a href="https://golazoz.com/" target="_blank" class="btn-visit">
-                        Visitar GOLAZOZ.com
-                        <i class="fas fa-external-link-alt"></i>
-                    </a>
+            </div>
+
+            <div id="upcomingContent" class="tab-content">
+                <div class="matches-grid" id="upcomingMatches"></div>
+            </div>
+
+            <div id="replaysContent" class="tab-content">
+                <div class="matches-grid" id="replayMatches"></div>
+            </div>
+        </div>
+
+        <section class="leagues-section">
+            <div class="section-header">
+                <h3>PRINCIPALES LIGAS</h3>
+                <button class="crown-btn">
+                    <i class="fas fa-crown"></i>
+                </button>
+            </div>
+            <div class="leagues-container">
+                <button class="league-btn active">
+                    <div class="league-icon liga-mx">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <span>Liga MX</span>
+                </button>
+                <button class="league-btn">
+                    <div class="league-icon premier">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <span>Premier</span>
+                </button>
+                <button class="league-btn">
+                    <div class="league-icon laliga">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span>La Liga</span>
+                </button>
+                <button class="league-btn">
+                    <div class="league-icon serie-a">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span>Serie A</span>
+                </button>
+                <button class="league-btn">
+                    <div class="league-icon bundesliga">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <span>Bundesliga</span>
+                </button>
+                <button class="league-btn">
+                    <div class="league-icon ligue1">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <span>Ligue 1</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="news-section">
+            <div class="section-header">
+                <h3>NOTICIAS Y RESÚMENES</h3>
+                <button class="crown-btn">
+                    <i class="fas fa-crown"></i>
+                </button>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600" alt="News">
+                    <div class="news-content">
+                        <h4>Haaland's hat-trick: City dominates!</h4>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1614632537239-fa46907f6e44?w=600" alt="News">
+                    <div class="news-content">
+                        <h4>Rumores de rumores? Transfer saga Mbappé continúa</h4>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=600" alt="News">
+                    <div class="news-content">
+                        <h4>Champions League: Las mejores jugadas de la semana</h4>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1551958219-acbc608c6377?w=600" alt="News">
+                    <div class="news-content">
+                        <h4>Liga MX: Análisis de la jornada</h4>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Channels Section -->
-        <section class="channels-section">
+        <div class="streaming-section">
+            <h3 class="section-title">Canales de Transmisión</h3>
             <div class="channels-grid">
-                <!-- Channel 1 -->
-                <div class="channel-card" onclick="selectChannel(1, 'https://servidor-l3ho.github.io/ULTRACANALES.2/index.html')">
-                    <div class="card-badge">01</div>
-                    
-                    <div class="channel-icon">
+                <div class="channel-card-mini" onclick="openStream('https://servidor-l3ho.github.io/ULTRACANALES.2/index.html')">
+                    <div class="channel-icon-mini">
                         <i class="fas fa-satellite-dish"></i>
                     </div>
-
-                    <h3 class="channel-title">ULTRACANALES</h3>
-                    <p class="channel-text">
-                        Canales en vivo de alta definición con múltiples opciones deportivas
-                    </p>
-
-                    <div class="status-live">
-                        <span class="dot-live"></span>
-                        <span>Transmitiendo en Vivo</span>
-                    </div>
-
-                    <button class="btn-channel">
-                        Ver Ahora
-                        <i class="fas fa-play"></i>
-                    </button>
+                    <h4>ULTRACANALES</h4>
+                    <span class="status-live-mini">
+                        <span class="dot"></span>EN VIVO
+                    </span>
                 </div>
-
-                <!-- Channel 2 -->
-                <div class="channel-card" onclick="selectChannel(2, 'https://panel.donromans.com/')">
-                    <div class="card-badge">02</div>
-                    
-                    <div class="channel-icon">
+                <div class="channel-card-mini" onclick="openStream('https://panel.donromans.com/')">
+                    <div class="channel-icon-mini">
                         <i class="fas fa-tv"></i>
                     </div>
-
-                    <h3 class="channel-title">PANEL PREMIUM</h3>
-                    <p class="channel-text">
-                        Transmisiones exclusivas premium con calidad superior garantizada
-                    </p>
-
-                    <div class="status-live">
-                        <span class="dot-live"></span>
-                        <span>Transmitiendo en Vivo</span>
-                    </div>
-
-                    <button class="btn-channel">
-                        Ver Ahora
-                        <i class="fas fa-play"></i>
-                    </button>
+                    <h4>PANEL PREMIUM</h4>
+                    <span class="status-live-mini">
+                        <span class="dot"></span>EN VIVO
+                    </span>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Player Section -->
-        <section class="player-section" id="playerSection" style="display: none;">
-            <div class="player-box">
-                <div class="player-top">
-                    <div class="player-live">
-                        <span class="live-pulse"></span>
-                        <span>EN VIVO</span>
-                    </div>
-                    <h3 id="playerTitle" class="player-name">ULTRACANALES</h3>
-                    <button class="btn-close" onclick="closePlayer()">
-                        <i class="fas fa-times"></i>
-                        Cerrar
-                    </button>
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="navTo('home')">
+                <i class="fas fa-home"></i>
+            </button>
+            <button class="nav-btn" onclick="navTo('search')">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="nav-btn" onclick="navTo('calendar')">
+                <i class="fas fa-calendar"></i>
+            </button>
+            <button class="nav-btn" onclick="navTo('edit')">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="nav-btn" onclick="navTo('profile')">
+                <i class="fas fa-user"></i>
+            </button>
+        </nav>
+    </div>
+
+    <div id="playerModal" class="player-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Transmisión en Vivo</h3>
+                <button class="close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="loading-spinner" id="modalLoader">
+                    <div class="spinner"></div>
                 </div>
+                <iframe id="modalIframe" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" onclick="refreshStream()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="modal-btn" onclick="fullscreenStream()">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
-                <div class="player-frame">
-                    <div class="loading" id="loading">
-                        <div class="loader"></div>
-                        <p>Cargando transmisión...</p>
-                    </div>
-                    <iframe id="playerIframe" frameborder="0" allowfullscreen></iframe>
+    <div id="settingsPanel" class="settings-panel">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>Configuración</h3>
+                <button onclick="toggleSettings()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-item">
+                    <span>Calidad de video</span>
+                    <select class="setting-select">
+                        <option>Auto</option>
+                        <option>HD</option>
+                        <option>SD</option>
+                    </select>
                 </div>
-
-                <div class="player-bottom">
-                    <button class="player-btn" onclick="refreshPlayer()">
-                        <i class="fas fa-sync-alt"></i>
-                        Actualizar
-                    </button>
-                    <button class="player-btn" onclick="fullscreenPlayer()">
-                        <i class="fas fa-expand"></i>
-                        Pantalla Completa
-                    </button>
-                    <button class="player-btn" onclick="newWindowPlayer()">
-                        <i class="fas fa-external-link-alt"></i>
-                        Nueva Ventana
-                    </button>
+                <div class="setting-item">
+                    <span>Notificaciones</span>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>Modo oscuro</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 
-    <script>
-        let currentUrl = '';
-        const channelNames = {
-            1: 'ULTRACANALES',
-            2: 'PANEL PREMIUM'
-        };
-
-        const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-
-        function selectChannel(id, url) {
-            currentUrl = url;
-            const playerSection = document.getElementById('playerSection');
-            const playerTitle = document.getElementById('playerTitle');
-            const iframe = document.getElementById('playerIframe');
-            const loading = document.getElementById('loading');
-
-            playerTitle.textContent = channelNames[id];
-            playerSection.style.display = 'block';
-            loading.style.display = 'flex';
-
-            iframe.src = url;
-
-            iframe.onload = () => {
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                }, 500);
-            };
-
-            setTimeout(() => {
-                playerSection.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
-
-        function closePlayer() {
-            const playerSection = document.getElementById('playerSection');
-            const iframe = document.getElementById('playerIframe');
-            playerSection.style.display = 'none';
-            iframe.src = '';
-        }
-
-        function refreshPlayer() {
-            const iframe = document.getElementById('playerIframe');
-            const loading = document.getElementById('loading');
-            loading.style.display = 'flex';
-            iframe.src = currentUrl;
-            iframe.onload = () => {
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                }, 500);
-            };
-        }
-
-        function fullscreenPlayer() {
-            const iframe = document.getElementById('playerIframe');
-            if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
-            } else if (iframe.webkitRequestFullscreen) {
-                iframe.webkitRequestFullscreen();
-            } else if (iframe.mozRequestFullScreen) {
-                iframe.mozRequestFullScreen();
-            }
-        }
-
-        function newWindowPlayer() {
-            if (currentUrl) {
-                window.open(currentUrl, '_blank', 'width=1200,height=800');
-            }
-        }
-    </script>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="../index.html" class="bottom-nav-item">
-            <i class="fas fa-home"></i>
-            <span>Inicio</span>
-        </a>
-        <a href="../chat-global.html" class="bottom-nav-item">
-            <i class="fas fa-comments"></i>
-            <span>Chat</span>
-        </a>
-        <a href="index.html" class="bottom-nav-item active">
-            <i class="fas fa-tv"></i>
-            <span>Live</span>
-        </a>
-        <a href="../calendario.html" class="bottom-nav-item">
-            <i class="fas fa-calendar"></i>
-            <span>Partidos</span>
-        </a>
-        <a href="../standings.html" class="bottom-nav-item">
-            <i class="fas fa-table"></i>
-            <span>Tabla</span>
-        </a>
-        <a href="../index.html" class="bottom-nav-item">
-            <i class="fas fa-cog"></i>
-            <span>Más</span>
-        </a>
-    </nav>
-
-    <script src="../js/main.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
