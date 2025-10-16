@@ -163,56 +163,47 @@ function showToast(message) {
     }, 2000);
 }
 
-function loadUpcomingMatches() {
+async function loadUpcomingMatches() {
     const container = document.getElementById('upcomingMatches');
-    container.innerHTML = `
-        <div class="match-card">
-            <div class="match-card-bg">
-                <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600" alt="Match">
-            </div>
-            <div class="match-card-content">
-                <div class="teams">
-                    <div class="team">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_(crest).svg" alt="Barcelona" class="team-badge">
-                        <span>BARCELONA</span>
-                    </div>
-                    <div class="team">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="Real Madrid" class="team-badge">
-                        <span>R. MADRID</span>
-                    </div>
+    container.innerHTML = '<div class="loading-spinner">Cargando partidos...</div>';
+    
+    try {
+        const partidos = await ULTRAGOL_API.getPartidosProximos();
+        
+        if (partidos.length === 0) {
+            container.innerHTML = '<div class="no-matches">No hay partidos próximos disponibles</div>';
+            return;
+        }
+        
+        container.innerHTML = partidos.slice(0, 6).map(partido => `
+            <div class="match-card">
+                <div class="match-card-bg">
+                    <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600" alt="Match">
                 </div>
-                <div class="match-score-mini">
-                    <span class="match-time">18:00</span>
-                </div>
-                <button class="watch-btn" onclick="showToast('Este partido aún no ha comenzado')">
-                    <span>PRÓXIMAMENTE</span>
-                </button>
-            </div>
-        </div>
-        <div class="match-card">
-            <div class="match-card-bg">
-                <img src="https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=600" alt="Match">
-            </div>
-            <div class="match-card-content">
-                <div class="teams">
-                    <div class="team">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/8/84/Juventus_FC_-_pictogram.svg" alt="Juventus" class="team-badge">
-                        <span>JUVENTUS</span>
+                <div class="match-card-content">
+                    <div class="teams">
+                        <div class="team">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoLocal)}" alt="${partido.equipoLocal}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <span>${partido.equipoLocal || 'TBD'}</span>
+                        </div>
+                        <div class="team">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoVisitante)}" alt="${partido.equipoVisitante}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <span>${partido.equipoVisitante || 'TBD'}</span>
+                        </div>
                     </div>
-                    <div class="team">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/SSC_Napoli_2024.svg" alt="Napoli" class="team-badge">
-                        <span>NAPOLI</span>
+                    <div class="match-score-mini">
+                        <span class="match-time">${partido.hora || 'TBD'}</span>
                     </div>
+                    <button class="watch-btn" onclick="showToast('Este partido aún no ha comenzado')">
+                        <span>PRÓXIMAMENTE</span>
+                    </button>
                 </div>
-                <div class="match-score-mini">
-                    <span class="match-time">20:45</span>
-                </div>
-                <button class="watch-btn" onclick="showToast('Este partido aún no ha comenzado')">
-                    <span>PRÓXIMAMENTE</span>
-                </button>
             </div>
-        </div>
-    `;
+        `).join('');
+    } catch (error) {
+        console.error('Error loading upcoming matches:', error);
+        container.innerHTML = '<div class="error-message">Error al cargar partidos próximos</div>';
+    }
 }
 
 function loadReplays() {
@@ -269,7 +260,59 @@ function loadReplays() {
     `;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+async function loadLiveMatches() {
+    const container = document.getElementById('liveMatches');
+    if (!container) return;
+    
+    try {
+        const partidos = await ULTRAGOL_API.getPartidosEnVivo();
+        
+        if (partidos.length === 0) {
+            container.innerHTML = '<div class="no-matches">No hay partidos en vivo en este momento</div>';
+            return;
+        }
+        
+        container.innerHTML = partidos.map(partido => `
+            <div class="match-card">
+                <div class="match-card-bg">
+                    <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600" alt="Match">
+                </div>
+                <div class="match-card-content">
+                    <div class="teams">
+                        <div class="team">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoLocal)}" alt="${partido.equipoLocal}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <span>${partido.equipoLocal || 'TBD'}</span>
+                        </div>
+                        <div class="team">
+                            <img src="${ULTRAGOL_API.getTeamLogo(partido.equipoVisitante)}" alt="${partido.equipoVisitante}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                            <span>${partido.equipoVisitante || 'TBD'}</span>
+                        </div>
+                    </div>
+                    <div class="match-score-mini">
+                        ${partido.marcador || '0 - 0'}
+                        <span class="match-time live-indicator">LIVE</span>
+                    </div>
+                    <button class="watch-btn" onclick="watchMatch('${partido.id || 'live-match'}')">
+                        <span>WATCH NOW</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading live matches:', error);
+    }
+}
+
+async function loadLeagues() {
+    try {
+        const ligas = await ULTRAGOL_API.getLigas();
+        console.log('Ligas disponibles:', ligas);
+    } catch (error) {
+        console.error('Error loading leagues:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideUp {
@@ -280,6 +323,22 @@ document.addEventListener('DOMContentLoaded', () => {
             from { opacity: 1; transform: translateX(-50%) translateY(0); }
             to { opacity: 0; transform: translateX(-50%) translateY(20px); }
         }
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            color: #fff;
+        }
+        .no-matches, .error-message {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.7);
+        }
+        .live-indicator {
+            background: #ff4500;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
     `;
     document.head.appendChild(style);
     
@@ -287,6 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (darkModeToggle) {
         darkModeToggle.checked = true;
     }
+    
+    await loadLeagues();
+    await loadLiveMatches();
 });
 
 document.addEventListener('click', (e) => {
