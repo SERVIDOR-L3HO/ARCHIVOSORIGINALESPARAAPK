@@ -2,16 +2,17 @@ class VideosCarousel {
     constructor() {
         this.currentIndex = 0;
         this.videosData = [];
-        this.cardsPerView = 3;
+        this.cardsPerView = 1;
+        this.startX = 0;
+        this.currentX = 0;
+        this.isDragging = false;
         this.init();
     }
 
     async init() {
         await this.loadVideos();
-        this.updateCardsPerView();
         this.render();
         this.setupEventListeners();
-        window.addEventListener('resize', () => this.updateCardsPerView());
     }
 
     async loadVideos() {
@@ -37,16 +38,6 @@ class VideosCarousel {
         }
     }
 
-    updateCardsPerView() {
-        const width = window.innerWidth;
-        if (width < 768) {
-            this.cardsPerView = 1;
-        } else if (width < 1200) {
-            this.cardsPerView = 2;
-        } else {
-            this.cardsPerView = 3;
-        }
-    }
 
     render() {
         const track = document.getElementById('videosCarouselTrack');
@@ -120,13 +111,18 @@ class VideosCarousel {
         this.updateButtons();
     }
 
-    updateCarouselPosition() {
+    updateCarouselPosition(smooth = true) {
         const track = document.getElementById('videosCarouselTrack');
         if (!track) return;
 
+        if (!smooth) {
+            track.style.transition = 'none';
+        } else {
+            track.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }
+
         const cardWidth = track.querySelector('.video-card')?.offsetWidth || 0;
-        const gap = 30;
-        const offset = -(this.currentIndex * this.cardsPerView * (cardWidth + gap));
+        const offset = -(this.currentIndex * cardWidth);
         track.style.transform = `translateX(${offset}px)`;
     }
 
@@ -186,15 +182,11 @@ class VideosCarousel {
     }
 
     setupEventListeners() {
-        const prevBtn = document.getElementById('carouselPrev');
-        const nextBtn = document.getElementById('carouselNext');
         const dotsContainer = document.getElementById('carouselDots');
         const track = document.getElementById('videosCarouselTrack');
         const modalClose = document.getElementById('videoModalClose');
         const modal = document.getElementById('videoModal');
-
-        if (prevBtn) prevBtn.addEventListener('click', () => this.moveCarousel('prev'));
-        if (nextBtn) nextBtn.addEventListener('click', () => this.moveCarousel('next'));
+        const wrapper = document.querySelector('.carousel-wrapper');
 
         if (dotsContainer) {
             dotsContainer.addEventListener('click', (e) => {
@@ -207,12 +199,23 @@ class VideosCarousel {
 
         if (track) {
             track.addEventListener('click', (e) => {
-                const card = e.target.closest('.video-card');
-                if (card) {
-                    const videoId = parseInt(card.dataset.videoId);
-                    this.openVideoModal(videoId);
+                if (!this.isDragging) {
+                    const card = e.target.closest('.video-card');
+                    if (card) {
+                        const videoId = parseInt(card.dataset.videoId);
+                        this.openVideoModal(videoId);
+                    }
                 }
             });
+
+            track.addEventListener('mousedown', (e) => this.handleDragStart(e));
+            track.addEventListener('touchstart', (e) => this.handleDragStart(e), { passive: true });
+            
+            document.addEventListener('mousemove', (e) => this.handleDragMove(e));
+            document.addEventListener('touchmove', (e) => this.handleDragMove(e), { passive: false });
+            
+            document.addEventListener('mouseup', (e) => this.handleDragEnd(e));
+            document.addEventListener('touchend', (e) => this.handleDragEnd(e));
         }
 
         if (modalClose) modalClose.addEventListener('click', () => this.closeVideoModal());
@@ -225,7 +228,47 @@ class VideosCarousel {
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.closeVideoModal();
+            if (e.key === 'ArrowLeft') this.moveCarousel('prev');
+            if (e.key === 'ArrowRight') this.moveCarousel('next');
         });
+    }
+
+    handleDragStart(e) {
+        this.isDragging = true;
+        this.startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+        this.currentX = this.startX;
+    }
+
+    handleDragMove(e) {
+        if (!this.isDragging) return;
+
+        this.currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+        const diff = this.currentX - this.startX;
+        
+        if (Math.abs(diff) > 5) {
+            e.preventDefault();
+        }
+    }
+
+    handleDragEnd(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        const diff = this.currentX - this.startX;
+        const threshold = 50;
+
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                this.moveCarousel('prev');
+            } else {
+                this.moveCarousel('next');
+            }
+        } else {
+            this.updateCarouselPosition();
+        }
+
+        this.startX = 0;
+        this.currentX = 0;
     }
 }
 
