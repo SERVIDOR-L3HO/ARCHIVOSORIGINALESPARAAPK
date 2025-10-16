@@ -307,8 +307,49 @@ async function loadLeagues() {
     try {
         const ligas = await ULTRAGOL_API.getLigas();
         console.log('Ligas disponibles:', ligas);
+        
+        const leagueBtns = document.querySelectorAll('.league-btn');
+        leagueBtns.forEach(btn => {
+            btn.addEventListener('click', async function() {
+                leagueBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const leagueName = this.querySelector('span').textContent;
+                await loadMatchesByLeague(leagueName);
+            });
+        });
     } catch (error) {
         console.error('Error loading leagues:', error);
+    }
+}
+
+async function loadMatchesByLeague(leagueName) {
+    showToast(`Cargando partidos de ${leagueName}...`);
+    console.log(`Loading matches for ${leagueName}`);
+}
+
+async function loadNews() {
+    const newsGrid = document.querySelector('.news-grid');
+    if (!newsGrid) return;
+    
+    try {
+        const noticias = await ULTRAGOL_API.getNoticias();
+        
+        if (noticias.length === 0) {
+            console.log('No hay noticias disponibles');
+            return;
+        }
+        
+        newsGrid.innerHTML = noticias.slice(0, 6).map(noticia => `
+            <div class="news-card">
+                <img src="${noticia.imagen || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600'}" alt="${noticia.titulo}" onerror="this.src='https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600'">
+                <div class="news-content">
+                    <h4>${noticia.titulo || noticia.headline || 'Noticia sin título'}</h4>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading news:', error);
     }
 }
 
@@ -349,6 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     await loadLeagues();
     await loadLiveMatches();
+    await loadNews();
 });
 
 document.addEventListener('click', (e) => {
