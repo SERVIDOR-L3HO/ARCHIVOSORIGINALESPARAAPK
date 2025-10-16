@@ -324,8 +324,34 @@ async function loadLeagues() {
 }
 
 async function loadMatchesByLeague(leagueName) {
-    showToast(`Cargando partidos de ${leagueName}...`);
-    console.log(`Loading matches for ${leagueName}`);
+    showToast(`Cargando datos de ${leagueName}...`);
+    console.log(`Loading data for ${leagueName}`);
+    
+    try {
+        const [tabla, goleadores, noticias] = await Promise.all([
+            ULTRAGOL_API.getTablaPorLiga(leagueName),
+            ULTRAGOL_API.getGoleadoresPorLiga(leagueName),
+            ULTRAGOL_API.getNoticiasPorLiga(leagueName)
+        ]);
+        
+        console.log(`Datos de ${leagueName}:`, { tabla, goleadores, noticias });
+        
+        if (noticias.length > 0) {
+            const newsGrid = document.querySelector('.news-grid');
+            if (newsGrid) {
+                newsGrid.innerHTML = noticias.slice(0, 6).map(noticia => `
+                    <div class="news-card">
+                        <img src="${noticia.imagen || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600'}" alt="${noticia.titulo}" onerror="this.src='https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600'">
+                        <div class="news-content">
+                            <h4>${noticia.titulo || noticia.headline || 'Noticia sin título'}</h4>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch (error) {
+        console.error(`Error loading data for ${leagueName}:`, error);
+    }
 }
 
 async function loadNews() {
@@ -333,7 +359,7 @@ async function loadNews() {
     if (!newsGrid) return;
     
     try {
-        const noticias = await ULTRAGOL_API.getNoticias();
+        const noticias = await ULTRAGOL_API.getAllNoticias();
         
         if (noticias.length === 0) {
             console.log('No hay noticias disponibles');
@@ -345,6 +371,7 @@ async function loadNews() {
                 <img src="${noticia.imagen || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600'}" alt="${noticia.titulo}" onerror="this.src='https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600'">
                 <div class="news-content">
                     <h4>${noticia.titulo || noticia.headline || 'Noticia sin título'}</h4>
+                    ${noticia.liga ? `<span class="news-league">${noticia.liga}</span>` : ''}
                 </div>
             </div>
         `).join('');

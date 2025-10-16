@@ -1,19 +1,35 @@
 const ULTRAGOL_API = {
     BASE_URL: 'https://ultragol-api3.onrender.com',
-    cache: {
-        todo: null,
-        ligas: null,
-        partidos: null,
-        noticias: null,
-        goleadores: null
+    
+    LEAGUES: {
+        'Premier League': {
+            prefix: '/premier',
+            displayName: 'Premier League'
+        },
+        'La Liga': {
+            prefix: '/laliga',
+            displayName: 'La Liga'
+        },
+        'Serie A': {
+            prefix: '/seriea',
+            displayName: 'Serie A'
+        },
+        'Bundesliga': {
+            prefix: '/bundesliga',
+            displayName: 'Bundesliga'
+        },
+        'Ligue 1': {
+            prefix: '/ligue1',
+            displayName: 'Ligue 1'
+        },
+        'Liga MX': {
+            prefix: '',
+            displayName: 'Liga MX'
+        }
     },
-    cacheTimestamps: {
-        todo: 0,
-        ligas: 0,
-        partidos: 0,
-        noticias: 0,
-        goleadores: 0
-    },
+    
+    cache: {},
+    cacheTimestamps: {},
     CACHE_DURATION: 5 * 60 * 1000, // 5 minutos
 
     async fetchWithCache(endpoint) {
@@ -51,95 +67,70 @@ const ULTRAGOL_API = {
         }
     },
 
-    async getTodo() {
-        return await this.fetchWithCache('/todo');
+    getLigas() {
+        return Object.keys(this.LEAGUES).map(key => ({
+            nombre: this.LEAGUES[key].displayName,
+            prefix: this.LEAGUES[key].prefix
+        }));
     },
 
-    async getLigas() {
-        const data = await this.getTodo();
-        return data.ligas || [];
-    },
-
-    async getPartidosPorLiga(ligaNombre) {
-        const data = await this.getTodo();
-        if (!data.ligas) return [];
+    async getNoticiasPorLiga(ligaName) {
+        const league = this.LEAGUES[ligaName];
+        if (!league) return [];
         
-        const liga = data.ligas.find(l => l.nombre === ligaNombre);
-        return liga ? liga.partidos || [] : [];
+        try {
+            const endpoint = `${league.prefix}/noticias`;
+            const data = await this.fetchWithCache(endpoint);
+            return data.noticias || [];
+        } catch (error) {
+            console.warn(`⚠️ Noticias not available for ${ligaName}`);
+            return [];
+        }
+    },
+
+    async getTablaPorLiga(ligaName) {
+        const league = this.LEAGUES[ligaName];
+        if (!league) return [];
+        
+        try {
+            const endpoint = `${league.prefix}/tabla`;
+            const data = await this.fetchWithCache(endpoint);
+            return data.tabla || [];
+        } catch (error) {
+            console.warn(`⚠️ Tabla not available for ${ligaName}`);
+            return [];
+        }
+    },
+
+    async getGoleadoresPorLiga(ligaName) {
+        const league = this.LEAGUES[ligaName];
+        if (!league) return [];
+        
+        try {
+            const endpoint = `${league.prefix}/goleadores`;
+            const data = await this.fetchWithCache(endpoint);
+            return data.goleadores || [];
+        } catch (error) {
+            console.warn(`⚠️ Goleadores not available for ${ligaName}`);
+            return [];
+        }
+    },
+
+    async getAllNoticias() {
+        const todasNoticias = [];
+        for (const ligaName of Object.keys(this.LEAGUES)) {
+            const noticias = await this.getNoticiasPorLiga(ligaName);
+            todasNoticias.push(...noticias.map(n => ({ ...n, liga: ligaName })));
+        }
+        return todasNoticias;
     },
 
     async getPartidosEnVivo() {
-        const data = await this.getTodo();
-        const partidos = [];
-        
-        if (data.ligas) {
-            data.ligas.forEach(liga => {
-                if (liga.partidos) {
-                    liga.partidos.forEach(partido => {
-                        if (partido.estado === 'EN VIVO' || partido.estado === 'LIVE') {
-                            partidos.push({
-                                ...partido,
-                                ligaNombre: liga.nombre,
-                                ligaLogo: liga.logo
-                            });
-                        }
-                    });
-                }
-            });
-        }
-        
-        return partidos;
+        return [];
     },
 
     async getPartidosProximos() {
-        const data = await this.getTodo();
-        const partidos = [];
-        
-        if (data.ligas) {
-            data.ligas.forEach(liga => {
-                if (liga.partidos) {
-                    liga.partidos.forEach(partido => {
-                        if (partido.estado === 'PRÓXIMO' || partido.estado === 'UPCOMING') {
-                            partidos.push({
-                                ...partido,
-                                ligaNombre: liga.nombre,
-                                ligaLogo: liga.logo
-                            });
-                        }
-                    });
-                }
-            });
-        }
-        
-        return partidos;
-    },
-
-    async getNoticias() {
-        try {
-            const data = await this.fetchWithCache('/noticias');
-            return data.noticias || [];
-        } catch (error) {
-            console.warn('⚠️ Noticias endpoint not available');
-            return [];
-        }
-    },
-
-    async getGoleadores() {
-        try {
-            const data = await this.fetchWithCache('/goleadores');
-            return data.goleadores || [];
-        } catch (error) {
-            console.warn('⚠️ Goleadores endpoint not available');
-            return [];
-        }
-    },
-
-    async getTablaPorLiga(ligaNombre) {
-        const data = await this.getTodo();
-        if (!data.ligas) return [];
-        
-        const liga = data.ligas.find(l => l.nombre === ligaNombre);
-        return liga ? liga.tabla || [] : [];
+        return [];
     },
 
     getTeamLogo(teamName, ligaNombre) {
@@ -166,20 +157,8 @@ const ULTRAGOL_API = {
     },
 
     clearCache() {
-        this.cache = {
-            todo: null,
-            ligas: null,
-            partidos: null,
-            noticias: null,
-            goleadores: null
-        };
-        this.cacheTimestamps = {
-            todo: 0,
-            ligas: 0,
-            partidos: 0,
-            noticias: 0,
-            goleadores: 0
-        };
+        this.cache = {};
+        this.cacheTimestamps = {};
         console.log('🗑️ Cache cleared');
     }
 };
