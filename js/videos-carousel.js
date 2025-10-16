@@ -16,9 +16,21 @@ class VideosCarousel {
 
     async loadVideos() {
         try {
+            console.log('📺 Cargando videos desde UltraGol API...');
+            
+            if (window.ULTRAGOL_API) {
+                this.videosData = await window.ULTRAGOL_API.getVideos();
+                
+                if (this.videosData && this.videosData.length > 0) {
+                    console.log('✅ Videos de Liga MX cargados desde API:', this.videosData.length);
+                    return;
+                }
+            }
+            
+            console.log('⚠️ API no disponible, usando JSON local como fallback...');
             const response = await fetch('/api/videos');
             this.videosData = await response.json();
-            console.log('✅ Videos de Liga MX cargados:', this.videosData.length);
+            console.log('✅ Videos de Liga MX cargados desde JSON:', this.videosData.length);
         } catch (error) {
             console.error('❌ Error al cargar videos:', error);
             this.videosData = [];

@@ -5,14 +5,16 @@ const ULTRAGOL_API = {
         equipos: null,
         noticias: null,
         goleadores: null,
-        todo: null
+        todo: null,
+        videos: null
     },
     cacheTimestamps: {
         tabla: 0,
         equipos: 0,
         noticias: 0,
         goleadores: 0,
-        todo: 0
+        todo: 0,
+        videos: 0
     },
     CACHE_DURATION: 30 * 60 * 1000,
 
@@ -73,6 +75,16 @@ const ULTRAGOL_API = {
 
     async getTodo() {
         return await this.fetchWithCache('/todo');
+    },
+
+    async getVideos() {
+        try {
+            const data = await this.fetchWithCache('/videos');
+            return data.videos || data || [];
+        } catch (error) {
+            console.warn('⚠️ Videos endpoint not available, using fallback');
+            return [];
+        }
     },
 
     // Nota: La API de UltraGol actualmente no proporciona un endpoint de fixtures/partidos
@@ -348,14 +360,16 @@ const ULTRAGOL_API = {
             equipos: null,
             noticias: null,
             goleadores: null,
-            todo: null
+            todo: null,
+            videos: null
         };
         this.cacheTimestamps = {
             tabla: 0,
             equipos: 0,
             noticias: 0,
             goleadores: 0,
-            todo: 0
+            todo: 0,
+            videos: 0
         };
         console.log('🗑️ Cache cleared');
     }
