@@ -72,6 +72,11 @@ app.use(express.static(path.join(__dirname), {
     }
 }));
 
+app.get('/api/videos', (req, res) => {
+    const videos = require('./data/videos-highlights.json');
+    res.json(videos);
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
