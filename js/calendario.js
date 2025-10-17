@@ -1,4 +1,88 @@
 // Enhanced Multi-League Calendar JavaScript for UltraGol by L3HO
+const CALENDARIO_API = {
+    BASE_URL: 'https://ultragol-api3.onrender.com',
+    
+    LEAGUES: {
+        'ligamx': {
+            prefix: '',
+            displayName: 'Liga MX'
+        },
+        'premier': {
+            prefix: '/premier',
+            displayName: 'Premier League'
+        },
+        'laliga': {
+            prefix: '/laliga',
+            displayName: 'La Liga'
+        },
+        'seriea': {
+            prefix: '/seriea',
+            displayName: 'Serie A'
+        },
+        'bundesliga': {
+            prefix: '/bundesliga',
+            displayName: 'Bundesliga'
+        },
+        'ligue1': {
+            prefix: '/ligue1',
+            displayName: 'Ligue 1'
+        }
+    },
+    
+    cache: {},
+    cacheTimestamps: {},
+    CACHE_DURATION: 5 * 60 * 1000, // 5 minutos
+
+    async fetchWithCache(endpoint) {
+        const now = Date.now();
+        const cacheKey = endpoint.replace(/\//g, '_');
+
+        if (this.cache[cacheKey] && (now - this.cacheTimestamps[cacheKey]) < this.CACHE_DURATION) {
+            console.log(`✅ Using cached data for ${endpoint}`);
+            return this.cache[cacheKey];
+        }
+
+        try {
+            console.log(`🌐 Fetching calendario from API: ${endpoint}`);
+            const response = await fetch(`${this.BASE_URL}${endpoint}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            this.cache[cacheKey] = data;
+            this.cacheTimestamps[cacheKey] = now;
+            
+            return data;
+        } catch (error) {
+            console.error(`❌ Error fetching ${endpoint}:`, error);
+            
+            if (this.cache[cacheKey]) {
+                console.log(`⚠️ Using stale cache for ${endpoint}`);
+                return this.cache[cacheKey];
+            }
+            
+            return { calendario: [] };
+        }
+    },
+
+    async getCalendarioPorLiga(leagueKey) {
+        const league = this.LEAGUES[leagueKey];
+        if (!league) return [];
+        
+        try {
+            const endpoint = `${league.prefix}/calendario`;
+            const data = await this.fetchWithCache(endpoint);
+            return data.calendario || [];
+        } catch (error) {
+            console.warn(`⚠️ Calendario not available for ${leagueKey}`);
+            return [];
+        }
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeCalendar();
 });
@@ -10,7 +94,6 @@ let currentYear = new Date().getFullYear();
 let currentView = 'jornada';
 let currentLeague = 'ligamx';
 let allLeagueMatches = {};
-let calendarTeamsData = [];
 let selectedTeam = '';
 
 const months = [
@@ -20,19 +103,11 @@ const months = [
 
 const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-const leagueNames = {
-    'ligamx': 'Liga MX',
-    'premier': 'Premier League',
-    'laliga': 'La Liga',
-    'seriea': 'Serie A',
-    'bundesliga': 'Bundesliga',
-    'ligue1': 'Ligue 1'
-};
-
 // Inicializar sistema de calendario
 async function initializeCalendar() {
     try {
-        await loadAllLeaguesData();
+        console.log('🚀 Inicializando calendario multi-liga...');
+        await loadLeagueData(currentLeague);
         setupLeagueTabs();
         setupViewControls();
         setupFilters();
@@ -44,32 +119,17 @@ async function initializeCalendar() {
     }
 }
 
-// Cargar datos de todas las ligas
-async function loadAllLeaguesData() {
+// Cargar datos de una liga específica
+async function loadLeagueData(leagueKey) {
     try {
-        const leagues = ['ligamx', 'premier', 'laliga', 'seriea', 'bundesliga', 'ligue1'];
-        
-        for (const league of leagues) {
-            const response = await fetch(`/api/fixtures/${league}`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            const data = await response.json();
-            allLeagueMatches[league] = data.fixtures || [];
-        }
-        
-        console.log('✅ Datos de todas las ligas cargados:', Object.keys(allLeagueMatches));
-        return allLeagueMatches;
+        const data = await CALENDARIO_API.getCalendarioPorLiga(leagueKey);
+        allLeagueMatches[leagueKey] = data;
+        console.log(`✅ Datos de ${leagueKey} cargados:`, data.length, 'partidos');
+        return data;
     } catch (error) {
-        console.error('❌ Error cargando datos de ligas:', error);
-        // Fallback a datos vacíos
-        allLeagueMatches = {
-            ligamx: [],
-            premier: [],
-            laliga: [],
-            seriea: [],
-            bundesliga: [],
-            ligue1: []
-        };
-        return allLeagueMatches;
+        console.error(`❌ Error cargando datos de ${leagueKey}:`, error);
+        allLeagueMatches[leagueKey] = [];
+        return [];
     }
 }
 
@@ -78,7 +138,7 @@ function setupLeagueTabs() {
     const leagueTabs = document.querySelectorAll('.league-tab');
     
     leagueTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', async () => {
             const league = tab.dataset.league;
             if (league && league !== currentLeague) {
                 currentLeague = league;
@@ -86,6 +146,11 @@ function setupLeagueTabs() {
                 // Actualizar tabs activos
                 leagueTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
+                
+                // Cargar datos si no existen
+                if (!allLeagueMatches[currentLeague]) {
+                    await loadLeagueData(currentLeague);
+                }
                 
                 // Resetear a jornada 1
                 currentJornada = 1;
@@ -206,7 +271,7 @@ function getMatchesByJornada(jornadaNum) {
     // Aplicar filtro de equipo si está seleccionado
     if (selectedTeam) {
         jornadaMatches = jornadaMatches.filter(m => 
-            m.homeTeam === selectedTeam || m.awayTeam === selectedTeam
+            m.equipoLocal === selectedTeam || m.equipoVisitante === selectedTeam
         );
     }
     
@@ -232,18 +297,11 @@ function displayJornadaView() {
         currentJornadaElement.textContent = `JORNADA ${currentJornada}`;
     }
     
-    // Actualizar fechas (obtener rango de fechas de los partidos)
+    // Actualizar fechas
     const jornadaDatesElement = document.getElementById('jornadaDates');
     if (jornadaDatesElement && matches.length > 0) {
-        const dates = matches.map(m => new Date(m.date)).sort((a, b) => a - b);
-        const firstDate = dates[0];
-        const lastDate = dates[dates.length - 1];
-        
-        if (firstDate.toDateString() === lastDate.toDateString()) {
-            jornadaDatesElement.textContent = formatDate(firstDate);
-        } else {
-            jornadaDatesElement.textContent = `${formatDate(firstDate)} - ${formatDate(lastDate)}`;
-        }
+        const firstMatch = matches[0];
+        jornadaDatesElement.textContent = firstMatch.fecha || 'Por confirmar';
     } else if (jornadaDatesElement) {
         jornadaDatesElement.textContent = '';
     }
@@ -313,35 +371,32 @@ function createPartidoCard(match) {
     const card = document.createElement('div');
     card.className = 'partido-card';
     
-    const matchDate = new Date(match.date);
-    const dayName = days[matchDate.getDay()];
-    const dateStr = matchDate.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
-    const timeStr = matchDate.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-    
     card.innerHTML = `
         <div class="partido-header">
-            <div class="partido-dia">${dayName} ${dateStr}</div>
-            <div class="partido-hora">${timeStr}</div>
+            <div class="partido-dia">${match.fecha || 'Por confirmar'}</div>
+            <div class="partido-hora">${match.hora || 'TBC'}</div>
         </div>
         <div class="partido-teams">
             <div class="team-partido">
                 <div class="team-logo-small">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="team-name-small">${match.homeTeam}</div>
+                <div class="team-name-small">${match.equipoLocal}</div>
             </div>
             <div class="vs-small">VS</div>
             <div class="team-partido">
                 <div class="team-logo-small">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="team-name-small">${match.awayTeam}</div>
+                <div class="team-name-small">${match.equipoVisitante}</div>
             </div>
         </div>
+        ${match.contador ? `
         <div class="partido-estadio">
-            <i class="fas fa-map-marker-alt"></i>
-            ${match.stadium || 'Estadio por confirmar'}
+            <i class="fas fa-clock"></i>
+            ${match.contador.mensaje || 'Próximamente'}
         </div>
+        ` : ''}
     `;
     
     return card;
@@ -395,14 +450,15 @@ function generateCalendarGrid() {
         
         // Filtrar partidos del día
         let dayMatches = matches.filter(match => {
-            const matchDate = new Date(match.date);
+            if (!match.fechaCompleta) return false;
+            const matchDate = new Date(match.fechaCompleta);
             return matchDate.toDateString() === date.toDateString();
         });
         
         // Aplicar filtro de equipo
         if (selectedTeam) {
             dayMatches = dayMatches.filter(m => 
-                m.homeTeam === selectedTeam || m.awayTeam === selectedTeam
+                m.equipoLocal === selectedTeam || m.equipoVisitante === selectedTeam
             );
         }
         
@@ -443,7 +499,7 @@ function createCalendarDay(day, otherMonth = false, isToday = false, matches = [
         matches.slice(0, 3).forEach(match => {
             const matchElement = document.createElement('div');
             matchElement.className = 'day-match';
-            matchElement.textContent = `${match.homeTeam.substring(0, 3)} vs ${match.awayTeam.substring(0, 3)}`;
+            matchElement.textContent = `${match.equipoLocal.substring(0, 3)} vs ${match.equipoVisitante.substring(0, 3)}`;
             matchesContainer.appendChild(matchElement);
         });
         
@@ -500,8 +556,8 @@ function populateTeamFilter() {
     const teams = new Set();
     
     matches.forEach(match => {
-        teams.add(match.homeTeam);
-        teams.add(match.awayTeam);
+        teams.add(match.equipoLocal);
+        teams.add(match.equipoVisitante);
     });
     
     Array.from(teams).sort().forEach(team => {
@@ -535,16 +591,6 @@ function updateNavButtons() {
         const maxJornada = getMaxJornada();
         nextButton.disabled = currentJornada >= maxJornada;
     }
-}
-
-// Formatear fecha
-function formatDate(date) {
-    return date.toLocaleDateString('es-MX', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
 }
 
 // Mostrar mensaje de error
