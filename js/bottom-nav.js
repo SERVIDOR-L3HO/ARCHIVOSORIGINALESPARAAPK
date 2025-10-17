@@ -22,27 +22,27 @@ class BottomNavigation {
         nav.className = 'bottom-nav';
         nav.innerHTML = `
             <a href="index.html" class="bottom-nav-item" data-page="index.html">
-                <i class="fas fa-home"></i>
+                <i class="fas fa-house"></i>
                 <span>Inicio</span>
             </a>
             <a href="noticias.html" class="bottom-nav-item" data-page="noticias.html">
-                <i class="fas fa-newspaper"></i>
+                <i class="fas fa-rss"></i>
                 <span>Noticias</span>
             </a>
             <a href="standings.html" class="bottom-nav-item" data-page="standings.html">
-                <i class="fas fa-table"></i>
+                <i class="fas fa-trophy"></i>
                 <span>Tabla</span>
             </a>
             <a href="ULTRA/index.html" class="bottom-nav-item live-stream-btn" data-page="ULTRA/index.html" target="_blank">
-                <i class="fas fa-tv"></i>
+                <i class="fas fa-circle-play"></i>
                 <span>Transmisiones</span>
             </a>
             <a href="calendario.html" class="bottom-nav-item" data-page="calendario.html">
-                <i class="fas fa-calendar-alt"></i>
+                <i class="fas fa-calendar-days"></i>
                 <span>Calendario</span>
             </a>
             <div class="bottom-nav-item" id="settingsBtn">
-                <i class="fas fa-cog"></i>
+                <i class="fas fa-ellipsis-vertical"></i>
                 <span>Config</span>
             </div>
         `;
@@ -61,36 +61,36 @@ class BottomNavigation {
         modal.innerHTML = `
             <div class="settings-content">
                 <div class="settings-header">
-                    <h2><i class="fas fa-cog"></i> Configuración</h2>
+                    <h2><i class="fas fa-sliders"></i> Configuración</h2>
                     <button class="settings-close" id="closeSettings">×</button>
                 </div>
                 <div class="settings-list">
                     <a href="teams.html" class="settings-item">
-                        <i class="fas fa-shield-alt"></i>
+                        <i class="fas fa-shield-halved"></i>
                         <span>Equipos</span>
                     </a>
                     <a href="estadisticas.html" class="settings-item">
-                        <i class="fas fa-chart-bar"></i>
+                        <i class="fas fa-chart-line"></i>
                         <span>Estadísticas</span>
                     </a>
                     <a href="chat-global.html" class="settings-item">
-                        <i class="fas fa-comments"></i>
+                        <i class="fas fa-message"></i>
                         <span>Chat Global</span>
                     </a>
                     <a href="donaciones.html" class="settings-item">
-                        <i class="fas fa-heart"></i>
+                        <i class="fas fa-hand-holding-heart"></i>
                         <span>Donaciones</span>
                     </a>
                     <a href="team-profile.html" class="settings-item">
-                        <i class="fas fa-user-circle"></i>
+                        <i class="fas fa-user"></i>
                         <span>Perfil de Equipo</span>
                     </a>
                     <a href="privacy-policy.html" class="settings-item">
-                        <i class="fas fa-shield-alt"></i>
+                        <i class="fas fa-lock"></i>
                         <span>Política de Privacidad</span>
                     </a>
                     <a href="cookie-policy.html" class="settings-item">
-                        <i class="fas fa-cookie-bite"></i>
+                        <i class="fas fa-cookie"></i>
                         <span>Política de Cookies</span>
                     </a>
                 </div>
