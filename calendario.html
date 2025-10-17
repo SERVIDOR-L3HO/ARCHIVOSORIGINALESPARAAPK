@@ -8,111 +8,143 @@
     <meta http-equiv="Expires" content="0">
     <link rel="icon" type="image/png" href="favicon.png">
     <title>Calendario Multi-Liga - UltraGol</title>
-    <link rel="stylesheet" href="css/main.css?v=2024101701">
-    <link rel="stylesheet" href="css/animations.css?v=2024101701">
+    <link rel="stylesheet" href="css/main.css?v=2024101702">
+    <link rel="stylesheet" href="css/animations.css?v=2024101702">
     <link rel="stylesheet" href="css/bottom-nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dark-bg: #0a0e27;
-            --dark-card: #151932;
-            --dark-hover: #1e2342;
-            --accent-primary: #ff9933;
-            --accent-secondary: #ffaa44;
+            --ultra-dark: #0a0a0a;
+            --dark-bg: #121212;
+            --dark-card: #1a1a1a;
+            --dark-hover: #252525;
+            --accent-orange: #ff6b35;
+            --accent-orange-light: #ff8c5a;
             --text-primary: #ffffff;
-            --text-secondary: #b0b8d4;
-            --border-color: #2a2f4f;
+            --text-secondary: #9e9e9e;
+            --border-dark: #2a2a2a;
         }
 
         body {
-            background: var(--dark-bg);
+            background: var(--ultra-dark);
             color: var(--text-primary);
             font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .calendar-hero {
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-            padding: 140px 0 100px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 100px 0 60px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-        
-        .calendar-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(255, 153, 51, 0.1) 0%, transparent 70%);
-            animation: pulse 3s ease-in-out infinite;
+            border-bottom: 1px solid var(--border-dark);
         }
 
         .calendar-hero h1 {
-            font-size: 4rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            text-shadow: 0 0 40px rgba(255, 153, 51, 0.3);
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            letter-spacing: -1px;
         }
 
         .calendar-hero p {
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto;
+            font-weight: 400;
         }
 
         .league-selector {
-            background: var(--dark-card);
-            padding: 30px 0;
-            border-bottom: 2px solid var(--border-color);
+            background: var(--dark-bg);
+            padding: 35px 0;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .league-title {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .league-title i {
+            color: #ffd700;
         }
 
         .league-tabs {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
+            padding: 0 20px;
         }
 
         .league-tab {
             background: transparent;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-weight: 600;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 8px;
+            padding: 10px;
         }
 
-        .league-tab:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-            transform: translateY(-2px);
-        }
-
-        .league-tab.active {
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+        .league-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
             color: white;
-            border-color: transparent;
-            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .league-tab.active .league-icon {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+        }
+
+        .league-tab:hover .league-icon {
+            transform: scale(1.05);
+        }
+
+        .league-icon.ligamx { background: linear-gradient(135deg, #ff6b35, #ff8c5a); }
+        .league-icon.premier { background: linear-gradient(135deg, #37003c, #6c2a8f); }
+        .league-icon.laliga { background: linear-gradient(135deg, #ff6600, #ff9933); }
+        .league-icon.seriea { background: linear-gradient(135deg, #008fd7, #00b4d8); }
+        .league-icon.bundesliga { background: linear-gradient(135deg, #d20515, #ff2836); }
+        .league-icon.ligue1 { background: linear-gradient(135deg, #dae025, #f4f776); }
+
+        .league-name {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .league-tab.active .league-name {
+            color: var(--accent-orange);
+            font-weight: 600;
         }
 
         .calendar-controls {
             background: var(--dark-bg);
-            padding: 40px 0;
-            border-bottom: 1px solid var(--border-color);
+            padding: 25px 0;
+            border-bottom: 1px solid var(--border-dark);
         }
 
         .view-controls {
@@ -126,13 +158,13 @@
         .view-toggle {
             display: flex;
             background: var(--dark-card);
-            border-radius: 12px;
+            border-radius: 30px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-dark);
         }
 
         .view-btn {
-            padding: 14px 24px;
+            padding: 12px 28px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
@@ -142,182 +174,168 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.95rem;
         }
 
         .view-btn.active {
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            background: var(--accent-orange);
             color: white;
         }
 
         .view-btn:hover:not(.active) {
-            background: var(--dark-hover);
-            color: var(--accent-primary);
+            color: var(--accent-orange-light);
         }
 
         .calendar-filters {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .filter-group label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
         .filter-select {
-            padding: 10px 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+            padding: 12px 20px;
+            border: 1px solid var(--border-dark);
+            border-radius: 25px;
             background: var(--dark-card);
             color: var(--text-primary);
-            font-size: 0.95rem;
-            min-width: 180px;
+            font-size: 0.9rem;
+            min-width: 200px;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .filter-select:focus {
             outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px rgba(255, 153, 51, 0.3);
+            border-color: var(--accent-orange);
         }
 
         .clear-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
+            background: transparent;
+            color: var(--accent-orange);
+            border: 1px solid var(--accent-orange);
+            padding: 10px 20px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .clear-btn:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+            background: var(--accent-orange);
+            color: white;
         }
 
         .jornadas-navigation {
-            background: var(--dark-bg);
-            padding: 50px 0;
+            background: var(--ultra-dark);
+            padding: 40px 0 30px;
         }
 
         .jornadas-nav {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 40px;
-            margin-bottom: 40px;
+            gap: 50px;
+            margin-bottom: 35px;
         }
 
         .nav-btn {
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-size: 1.05rem;
+            background: var(--dark-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-dark);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 6px 20px rgba(255, 153, 51, 0.3);
         }
 
         .nav-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 153, 51, 0.5);
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            transform: translateY(-2px);
         }
 
         .nav-btn:disabled {
-            background: #2a2f4f;
+            opacity: 0.3;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         .current-jornada {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 900;
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent-orange);
+            letter-spacing: -1px;
         }
 
         .jornadas-selector {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            padding: 0 20px;
         }
 
         .jornada-btn {
             background: var(--dark-card);
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-dark);
             color: var(--text-secondary);
-            padding: 10px 18px;
-            border-radius: 25px;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            min-width: 50px;
+            text-align: center;
         }
 
         .jornada-btn.active {
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            background: var(--accent-orange);
             color: white;
-            transform: scale(1.1);
-            border-color: transparent;
-            box-shadow: 0 6px 20px rgba(255, 153, 51, 0.4);
+            border-color: var(--accent-orange);
+            transform: scale(1.05);
         }
 
         .jornada-btn:hover:not(.active) {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-            transform: translateY(-2px);
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
         }
 
         .jornada-dates {
             text-align: center;
-            font-size: 1.15rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
         .jornada-matches {
-            padding: 50px 0;
-            background: var(--dark-bg);
+            padding: 40px 0;
+            background: var(--ultra-dark);
         }
 
         .matches-grid {
             display: grid;
-            gap: 25px;
-            max-width: 1000px;
+            gap: 20px;
+            max-width: 900px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         .partido-card {
             background: var(--dark-card);
-            border-radius: 18px;
-            padding: 30px;
-            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--border-dark);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -328,100 +346,108 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 5px;
+            width: 4px;
             height: 100%;
-            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            background: var(--accent-orange);
         }
 
         .partido-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(255, 153, 51, 0.2);
-            border-color: var(--accent-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.15);
+            border-color: var(--accent-orange);
         }
 
         .partido-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .partido-dia {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--accent-orange);
+            padding: 6px 14px;
+            border-radius: 15px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 107, 53, 0.3);
         }
 
         .partido-hora {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: rgba(76, 175, 80, 0.15);
+            color: #4caf50;
+            padding: 6px 14px;
+            border-radius: 15px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
 
         .partido-teams {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .team-partido {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             flex: 1;
         }
 
         .team-logo-small {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             background: var(--dark-hover);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            border: 2px solid var(--border-color);
+            font-size: 1.2rem;
+            border: 1px solid var(--border-dark);
+            color: var(--accent-orange);
         }
 
         .team-name-small {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 1.15rem;
+            font-size: 1.05rem;
         }
 
         .vs-small {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-secondary);
-            padding: 0 20px;
+            padding: 0 15px;
         }
 
         .partido-estadio {
             text-align: center;
             color: var(--text-secondary);
             font-weight: 500;
-            padding: 12px;
-            background: var(--dark-hover);
-            border-radius: 10px;
-            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-top: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .partido-estadio i {
+            color: var(--accent-orange);
         }
 
         .monthly-calendar {
-            padding: 50px 0;
-            background: var(--dark-bg);
+            padding: 40px 0;
+            background: var(--ultra-dark);
             display: none;
         }
 
@@ -433,44 +459,44 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 40px;
+            gap: 50px;
             margin-bottom: 40px;
         }
 
         .current-month {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 900;
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent-orange);
+            letter-spacing: -1px;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-            background: var(--border-color);
-            border-radius: 15px;
+            gap: 2px;
+            background: var(--border-dark);
+            border-radius: 20px;
             overflow: hidden;
             margin: 0 auto;
             max-width: 1000px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         .calendar-header {
-            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            padding: 18px 10px;
+            background: var(--dark-card);
+            color: var(--text-secondary);
+            padding: 15px 10px;
             text-align: center;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .calendar-day {
             background: var(--dark-card);
-            min-height: 110px;
-            padding: 12px;
+            min-height: 100px;
+            padding: 10px;
             position: relative;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -478,23 +504,27 @@
 
         .calendar-day:hover {
             background: var(--dark-hover);
-            box-shadow: 0 5px 20px rgba(255, 153, 51, 0.2);
         }
 
         .calendar-day.other-month {
-            background: #0f1229;
-            color: #4a4f6a;
+            background: #0f0f0f;
+            color: #4a4a4a;
         }
 
         .calendar-day.today {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid var(--accent-orange);
         }
 
         .day-number {
             font-weight: 700;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
+            margin-bottom: 6px;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .calendar-day.today .day-number {
+            color: var(--accent-orange);
         }
 
         .day-matches {
@@ -504,54 +534,63 @@
         }
 
         .day-match {
-            background: rgba(255, 153, 51, 0.2);
-            color: var(--accent-primary);
-            padding: 3px 6px;
-            border-radius: 5px;
-            font-size: 0.75rem;
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--accent-orange);
+            padding: 3px 5px;
+            border-radius: 4px;
+            font-size: 0.7rem;
             font-weight: 600;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            border: 1px solid rgba(255, 107, 53, 0.3);
         }
 
         .day-match:hover {
-            background: var(--accent-primary);
+            background: var(--accent-orange);
             color: white;
+            border-color: var(--accent-orange);
         }
 
         .no-matches {
             text-align: center;
             padding: 60px 20px;
             color: var(--text-secondary);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            background: var(--dark-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-dark);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
+        .no-matches i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            color: var(--accent-orange);
+            opacity: 0.5;
         }
 
         @media (max-width: 768px) {
             .calendar-hero h1 {
-                font-size: 2.8rem;
+                font-size: 2rem;
             }
 
             .league-tabs {
-                gap: 10px;
+                gap: 15px;
             }
 
-            .league-tab {
-                padding: 10px 20px;
-                font-size: 0.9rem;
+            .league-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
+            }
+
+            .league-name {
+                font-size: 0.75rem;
             }
 
             .view-controls {
                 flex-direction: column;
-            }
-
-            .calendar-filters {
-                justify-content: center;
             }
 
             .jornadas-nav {
@@ -560,22 +599,22 @@
             }
 
             .current-jornada {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
 
             .partido-teams {
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
             }
 
             .vs-small {
                 transform: rotate(90deg);
-                padding: 12px 0;
+                padding: 10px 0;
             }
 
             .calendar-day {
-                min-height: 90px;
-                padding: 8px;
+                min-height: 85px;
+                padding: 6px;
             }
 
             .day-match {
@@ -626,31 +665,53 @@
 
     <section class="calendar-hero">
         <div class="container">
-            <h1 class="fade-in">🌍 Calendario Multi-Liga</h1>
+            <h1 class="fade-in">Calendario Multi-Liga</h1>
             <p class="slide-up">Sigue todos los partidos de las mejores ligas del mundo</p>
         </div>
     </section>
 
     <section class="league-selector">
         <div class="container">
+            <div class="league-title">
+                <i class="fas fa-crown"></i>
+                Principales Ligas
+            </div>
             <div class="league-tabs">
                 <button class="league-tab active" data-league="ligamx">
-                    <i class="fas fa-futbol"></i> Liga MX
+                    <div class="league-icon ligamx">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <span class="league-name">Liga MX</span>
                 </button>
                 <button class="league-tab" data-league="premier">
-                    <i class="fas fa-trophy"></i> Premier League
+                    <div class="league-icon premier">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <span class="league-name">Premier</span>
                 </button>
                 <button class="league-tab" data-league="laliga">
-                    <i class="fas fa-star"></i> La Liga
+                    <div class="league-icon laliga">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span class="league-name">La Liga</span>
                 </button>
                 <button class="league-tab" data-league="seriea">
-                    <i class="fas fa-shield-alt"></i> Serie A
+                    <div class="league-icon seriea">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span class="league-name">Serie A</span>
                 </button>
                 <button class="league-tab" data-league="bundesliga">
-                    <i class="fas fa-crown"></i> Bundesliga
+                    <div class="league-icon bundesliga">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <span class="league-name">Bundesliga</span>
                 </button>
                 <button class="league-tab" data-league="ligue1">
-                    <i class="fas fa-flag"></i> Ligue 1
+                    <div class="league-icon ligue1">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <span class="league-name">Ligue 1</span>
                 </button>
             </div>
         </div>
@@ -671,12 +732,9 @@
                 </div>
                 
                 <div class="calendar-filters">
-                    <div class="filter-group">
-                        <label>Filtrar por Equipo:</label>
-                        <select id="teamFilter" class="filter-select">
-                            <option value="">Todos los equipos</option>
-                        </select>
-                    </div>
+                    <select id="teamFilter" class="filter-select">
+                        <option value="">Todos los equipos</option>
+                    </select>
                     <button id="clearFilters" class="clear-btn">
                         <i class="fas fa-times"></i>
                         Limpiar
