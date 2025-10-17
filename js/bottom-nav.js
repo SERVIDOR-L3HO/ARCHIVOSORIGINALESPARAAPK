@@ -29,13 +29,13 @@ class BottomNavigation {
                 <i class="fas fa-newspaper"></i>
                 <span>Noticias</span>
             </a>
-            <a href="ULTRA/index.html" class="bottom-nav-item" data-page="ULTRA/index.html" target="_blank">
-                <i class="fas fa-tv"></i>
-                <span>Transmisiones</span>
-            </a>
             <a href="standings.html" class="bottom-nav-item" data-page="standings.html">
                 <i class="fas fa-table"></i>
                 <span>Tabla</span>
+            </a>
+            <a href="ULTRA/index.html" class="bottom-nav-item live-stream-btn" data-page="ULTRA/index.html" target="_blank">
+                <i class="fas fa-tv"></i>
+                <span>Transmisiones</span>
             </a>
             <a href="calendario.html" class="bottom-nav-item" data-page="calendario.html">
                 <i class="fas fa-calendar-alt"></i>

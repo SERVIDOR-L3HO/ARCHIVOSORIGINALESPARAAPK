@@ -7,13 +7,13 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 30px;
-    padding: 12px 20px;
+    padding: 10px 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     display: flex;
-    gap: 15px;
+    gap: 8px;
     align-items: center;
     z-index: 1000;
-    max-width: 90%;
+    max-width: 95%;
     transition: all 0.3s ease;
 }
 
@@ -22,26 +22,27 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 8px 10px;
     border-radius: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
     color: #666;
-    min-width: 50px;
+    min-width: 55px;
 }
 
 .bottom-nav-item i {
     font-size: 22px;
-    margin-bottom: 4px;
+    margin-bottom: 0;
     transition: all 0.3s ease;
 }
 
 .bottom-nav-item span {
     font-size: 10px;
     font-weight: 500;
-    opacity: 0;
-    max-height: 0;
+    opacity: 1;
+    max-height: 20px;
+    margin-top: 4px;
     transition: all 0.3s ease;
 }
 
@@ -58,6 +59,39 @@
 
 .bottom-nav-item.active i {
     transform: scale(1.1);
+}
+
+/* Special styling for Transmisiones button */
+.bottom-nav-item.live-stream-btn {
+    background: linear-gradient(135deg, #ff0000, #ff3333);
+    color: white;
+    box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+    transform: scale(1.05);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.bottom-nav-item.live-stream-btn i {
+    animation: pulse 2s infinite;
+    font-size: 24px;
+}
+
+.bottom-nav-item.live-stream-btn:hover {
+    background: linear-gradient(135deg, #cc0000, #ff0000);
+    color: white;
+    transform: scale(1.08);
+}
+
+.bottom-nav-item.live-stream-btn span {
+    font-weight: 700;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 /* Settings Modal */
