@@ -10,6 +10,37 @@ The application consists of two main components:
 
 ## Recent Changes
 
+### October 18, 2025 - Live Transmissions Section with API Integration
+- **Integrated live transmissions section** in main website (index.html):
+  - Consumes https://ultragol-api3.onrender.com/transmisiones API endpoint
+  - Displays real-time available matches from all leagues worldwide
+  - Smart filtering: shows only matches within 2 hours before to 3 hours ahead window
+  - Auto-refresh every 2 minutes to keep data current
+  
+- **Creative match card design**:
+  - Live status indicators with animations (EN VIVO, Próximo, Programado)
+  - League badges and match information (date, time, teams)
+  - Visual states for different match statuses (live, upcoming, scheduled)
+  - Responsive grid layout adapting to all screen sizes
+  
+- **Channel integration with ultracanales**:
+  - Automatic extraction of channel numbers from API data (e.g., "156es" → "156")
+  - Complete mapping system (CANAL_ID_MAP) converting 200+ channel numbers to ultracanales IDs
+  - Single-click access: "Ver Ahora" button for single-channel matches
+  - Multi-option dropdown for matches with multiple streaming sources
+  - Direct deep-linking to ULTRA/ultracanales/canales.html with correct channel
+  
+- **Error handling and UX**:
+  - Graceful fallback when no matches are available
+  - Error recovery with retry button
+  - Loading states with spinner animations
+  - Console logging with time windows for debugging
+  
+- **Technical implementation**:
+  - New file: `js/transmisiones-live.js` - Full class-based architecture
+  - New file: `css/transmisiones-live.css` - Modern dark-themed design
+  - Modified: index.html - Replaced static "Live Streams" section with dynamic component
+
 ### October 16, 2025 - ULTRA Platform International Leagues Integration
 - **Integrated international league data** in ULTRA platform (/ULTRA/):
   - Created API module (`ULTRA/ultragol-api.js`) with support for 6 leagues
