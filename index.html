@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/gemini-chat.css">
     <link rel="stylesheet" href="css/splash-screen.css">
     <link rel="stylesheet" href="css/bottom-nav.css">
+    <link rel="stylesheet" href="css/transmisiones-live.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
@@ -239,59 +240,25 @@
         </div>
     </section>
 
-    <!-- Live Streams Section -->
-    <section class="live-streams-hero">
+    <!-- Transmisiones EN VIVO Section -->
+    <section class="transmisiones-live-section">
         <div class="container">
-            <div class="live-streams-card">
-                <div class="live-streams-header">
-                    <h2 class="live-title">
-                        <span class="live-icon">
-                            <i class="fas fa-play-circle"></i>
-                            <span class="pulse"></span>
-                        </span>
-                        🔴 TRANSMISIONES EN VIVO
-                    </h2>
-                    <p class="live-subtitle">Disfruta los partidos de Liga MX en tiempo real</p>
-                </div>
-                
-                <div class="live-streams-content">
-                    <div class="live-feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-broadcast-tower"></i>
-                        </div>
-                        <div class="feature-text">
-                            <h3>Enlaces de Calidad</h3>
-                            <p>Links verificados de transmisiones en vivo</p>
-                        </div>
-                    </div>
-                    
-                    <div class="live-feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="feature-text">
-                            <h3>Comunidad Activa</h3>
-                            <p>Comparte y encuentra los mejores streams</p>
-                        </div>
-                    </div>
-                    
-                    <div class="live-feature">
-                        <div class="feature-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div class="feature-text">
-                            <h3>Multiplataforma</h3>
-                            <p>YouTube, Facebook, Instagram y más</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="live-cta">
-                    <a href="ULTRA/index.html" class="btn btn-live" target="_blank">
-                        <i class="fas fa-play"></i>
-                        <span>ACCEDER A UltraGol LIVE</span>
-                        <div class="btn-glow"></div>
-                    </a>
+            <div class="transmisiones-header">
+                <h2 class="transmisiones-title">
+                    <span class="live-indicator">
+                        <span class="live-dot"></span>
+                        EN VIVO
+                    </span>
+                    Partidos Disponibles
+                </h2>
+                <p class="transmisiones-subtitle">Accede a las transmisiones en vivo con un solo clic</p>
+            </div>
+            
+            <div id="transmisiones-live-container">
+                <!-- Los partidos se cargan dinámicamente desde la API -->
+                <div class="no-transmisiones">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando transmisiones...</p>
                 </div>
             </div>
         </div>
@@ -1426,5 +1393,6 @@
     <script src="js/gemini-chat.js"></script>
     <script src="js/simple-auth.js"></script>
     <script src="js/bottom-nav.js"></script>
+    <script src="js/transmisiones-live.js"></script>
 </body>
 </html>
