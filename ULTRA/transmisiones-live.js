@@ -27,7 +27,7 @@ class TransmisionesLiveUltra {
         this.apiUrl = 'https://ultragol-api3.onrender.com/transmisiones';
         this.transmisiones = [];
         this.transmisionesFiltradas = [];
-        this.ligaActual = 'Liga MX';
+        this.ligaActual = 'todas';
         this.updateInterval = null;
     }
 
@@ -72,12 +72,25 @@ class TransmisionesLiveUltra {
             const dosHorasAtras = new Date(ahora.getTime() - (2 * 60 * 60 * 1000));
             const tresHorasDespues = new Date(ahora.getTime() + (3 * 60 * 60 * 1000));
             
+            console.log('⏰ Ventana de tiempo:', {
+                ahora: ahora.toISOString(),
+                desde: dosHorasAtras.toISOString(),
+                hasta: tresHorasDespues.toISOString()
+            });
+            
             this.transmisiones = data.transmisiones
                 .filter(t => {
                     const fechaPartido = this.parsearFecha(t.fechaHora);
-                    return fechaPartido && 
-                           fechaPartido >= dosHorasAtras && 
-                           fechaPartido <= tresHorasDespues;
+                    if (!fechaPartido) {
+                        console.log('⚠️ Fecha no válida:', t.fechaHora);
+                        return false;
+                    }
+                    
+                    const enVentana = fechaPartido >= dosHorasAtras && fechaPartido <= tresHorasDespues;
+                    if (!enVentana) {
+                        console.log(`❌ Fuera de ventana: ${t.evento} - ${fechaPartido.toISOString()}`);
+                    }
+                    return enVentana;
                 });
             
             this.filtrarPorLiga(this.ligaActual);
