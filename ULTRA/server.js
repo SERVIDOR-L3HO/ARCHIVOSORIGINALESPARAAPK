@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 // Servir archivos estáticos
-app.use(express.static('.', {
+app.use(express.static(path.join(__dirname, '..'), {
     setHeaders: (res, path) => {
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
@@ -30,12 +30,7 @@ app.use(express.static('.', {
 
 // Ruta principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Manejo de rutas SPA
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
