@@ -2,126 +2,7 @@
 
 ## Overview
 
-UltraGol is a comprehensive Spanish-language football platform focused on Liga MX, created by L3HO. The platform combines live streaming capabilities, real-time match information, team statistics, user authentication, and social features. It serves as a centralized hub for football fans to discover streams, track their favorite teams, engage with the community, and support the platform through donations.
-
-The application consists of two main components:
-1. **Main Website** - Liga MX information portal with team data, standings, calendars, and statistics
-2. **ULTRA Platform** - Live streaming discovery and sharing platform with user-generated content
-
-## Recent Changes
-
-### October 18, 2025 - Live Transmissions Section with API Integration
-- **Integrated live transmissions section** in main website (index.html):
-  - Consumes https://ultragol-api3.onrender.com/transmisiones API endpoint
-  - Displays real-time available matches from all leagues worldwide
-  - Smart filtering: shows only matches within 2 hours before to 3 hours ahead window
-  - Auto-refresh every 2 minutes to keep data current
-  
-- **Creative match card design**:
-  - Live status indicators with animations (EN VIVO, Próximo, Programado)
-  - League badges and match information (date, time, teams)
-  - Visual states for different match statuses (live, upcoming, scheduled)
-  - Responsive grid layout adapting to all screen sizes
-  
-- **Channel integration with ultracanales**:
-  - Automatic extraction of channel numbers from API data (e.g., "156es" → "156")
-  - Complete mapping system (CANAL_ID_MAP) converting 200+ channel numbers to ultracanales IDs
-  - Single-click access: "Ver Ahora" button for single-channel matches
-  - Multi-option dropdown for matches with multiple streaming sources
-  - Direct deep-linking to ULTRA/ultracanales/canales.html with correct channel
-  
-- **Error handling and UX**:
-  - Graceful fallback when no matches are available
-  - Error recovery with retry button
-  - Loading states with spinner animations
-  - Console logging with time windows for debugging
-  
-- **Technical implementation**:
-  - New file: `js/transmisiones-live.js` - Full class-based architecture
-  - New file: `css/transmisiones-live.css` - Modern dark-themed design
-  - Modified: index.html - Replaced static "Live Streams" section with dynamic component
-
-### October 16, 2025 - ULTRA Platform International Leagues Integration
-- **Integrated international league data** in ULTRA platform (/ULTRA/):
-  - Created API module (`ULTRA/ultragol-api.js`) with support for 6 leagues
-  - Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Liga MX
-  - Connected to https://ultragol-api3.onrender.com with league-specific endpoints
-  
-- **Added dynamic standings table**:
-  - Displays below "PRINCIPALES LIGAS" section
-  - Updates automatically when user selects different league
-  - Shows top 10 teams with position, matches played, goal difference, and points
-  - Real-time data from API with 5-minute caching
-  
-- **News integration**:
-  - Loads news from all leagues simultaneously
-  - Displays in "NOTICIAS Y RESÚMENES" section
-  - Dynamic filtering by selected league
-  
-- **League switching functionality**:
-  - Interactive league buttons change active league
-  - Updates standings table, news, and top scorers data
-  - Toast notifications for user feedback
-
-### October 15, 2025 - News API Integration Complete
-- **Fully integrated news section with UltraGol API**:
-  - Connected `/noticias` endpoint to `noticias.html` page
-  - Automatic loading of 15 real-time Liga MX news articles
-  - Dynamic categorization system based on article content
-  - Smart image handling with fallback to gradient backgrounds
-  - Featured news automatically updates with latest API data
-  
-- **News categorization system**:
-  - Automatic classification into: Traspasos, Partidos, Equipos, Jugadores, Liga
-  - Keyword-based analysis of titles and descriptions
-  - Filter and search functionality fully integrated
-  
-- **Error handling and resilience**:
-  - Fallback to sample news if API unavailable
-  - Graceful degradation without breaking UI
-  - Leverages 30-minute cache from ultragol-api.js module
-  
-- **User features**:
-  - Click to view full article with modal display
-  - Social sharing (Facebook, Twitter, WhatsApp)
-  - Link to original news source when available
-  - Responsive design with animations
-
-### October 14, 2025 - UltraGol API Integration
-- **Integrated live external API** from https://ultragol-api3.onrender.com/
-  - Created centralized API module (`js/ultragol-api.js`) with caching and fallback support
-  - Connected `/tabla` endpoint for real-time standings data (18 teams)
-  - Connected `/equipos` endpoint for team information with enriched metadata
-  - Connected `/noticias` endpoint for Liga MX news
-  - Connected `/goleadores` endpoint for top scorers data
-  - Data automatically updates every 30 minutes via API scraping
-  
-- **Updated data loading across the platform**:
-  - `js/main.js` - Loads teams and standings from API with fallback to local JSON
-  - `js/standings.js` - Real-time standings table from API
-  - `js/teams.js` - Team information from API
-  - Fixtures continue to use local JSON (API endpoint not available)
-  
-- **Smart caching system**:
-  - 30-minute cache duration matches API update frequency
-  - Automatic fallback to stale cache if API fails
-  - Graceful degradation to local JSON files if API module unavailable
-
-### October 13, 2025 - App Mode Implementation
-- **Converted web interface to app-like experience** by hiding web-specific UI elements:
-  - Removed cookie consent banner (`.cookie-banner` - hidden via CSS)
-  - Removed app download banners (`.app-download-banner` - hidden via CSS)
-  - Removed authentication UI elements (`.auth-section`, `.login-btn` - hidden on both main and ULTRA pages)
-  
-- **Simplified ULTRA platform to streams-only view**:
-  - Removed warning notice banner (`.warning-notice` - hidden via CSS)
-  - Removed navigation buttons except "Transmisiones" (`[data-section]` selectors - hidden via CSS)
-  - Removed all sections except "Transmisiones en Vivo" (`#live-stream`, `#subir`, `#mis-streams`, `#perfil` - hidden via CSS)
-  - Interface now shows only: logo, Transmisiones button, and live streams section with search/filters
-  
-- All changes implemented through CSS `display: none !important;` declarations
-- No functionality was removed, only visual UI elements were hidden
-- Changes applied to: `css/cookie-banner.css`, `css/app-download-banner.css`, `css/main.css`, `ULTRA/styles.css`
+UltraGol is a comprehensive Spanish-language football platform focused on Liga MX, developed by L3HO. It offers live streaming discovery, real-time match information, team statistics, user authentication, and social features. The platform aims to be a central hub for football fans to find streams, follow teams, engage with a community, and support the platform. It comprises a main website for Liga MX information and an "ULTRA Platform" for live streaming and user-generated content. The platform has expanded to include major international leagues like Premier League, La Liga, Serie A, Bundesliga, and Ligue 1, providing multi-league news, videos, and standings.
 
 ## User Preferences
 
@@ -130,184 +11,49 @@ Preferred communication style: Simple, everyday language.
 ## System Architecture
 
 ### Frontend Architecture
-
-**Technology Stack:**
-- Pure HTML5, CSS3, and vanilla JavaScript (no framework dependencies)
-- Modern ES6+ modules for code organization
-- Responsive design with mobile-first approach
-- Progressive Web App (PWA) capabilities
-
-**Design System:**
-- **Main Site**: Orange (#ff9933) and blue gradient theme with professional sports aesthetics
-- **ULTRA Platform**: Black, green (#00ff41), and orange theme with modern dark UI
-- Custom CSS variables for consistent theming
-- Glassmorphism effects and modern animations throughout
-- Typography: Space Grotesk, Inter, and JetBrains Mono fonts
-
-**Key Frontend Components:**
-- Multi-page application with dedicated pages for teams, standings, calendars, statistics, news, and donations
-- Interactive team profiles with detailed statistics and match history
-- Advanced calendar system with jornada (matchday) and monthly views
-- Real-time match tracking with live updates
-- User authentication UI with registration, login, and profile management
-- Comments and social interaction features
-- Picture-in-picture video player for floating stream viewing
-- Cookie consent banner (GDPR compliant)
+UltraGol uses pure HTML5, CSS3, and vanilla JavaScript (ES6+ modules), without frameworks, focusing on a responsive, mobile-first design with PWA capabilities. The main site features an orange and blue gradient theme, while the ULTRA Platform uses a dark black, green, and orange theme, both incorporating modern UI/UX with glassmorphism and custom typography (Space Grotesk, Inter, JetBrains Mono). Key components include interactive team profiles, an advanced calendar system, real-time match tracking, user authentication, social interaction features, and a picture-in-picture video player.
 
 ### Backend Architecture
-
-**Server Framework:**
-- Express.js 5.x for HTTP server
-- Two separate server instances:
-  - Main server (`server.js`) on port 5000 - handles main website
-  - ULTRA server (`ULTRA/server.js`) on port 5000 - handles streaming platform
-- CORS enabled for cross-origin requests
-- Static file serving with cache control headers
-- Session management with express-session
-
-**API Endpoints:**
-- `/api/paypal/orders` - Create PayPal donation orders
-- `/api/paypal/orders/:id/capture` - Capture completed PayPal payments
-- `/api/paypal/config` - Retrieve PayPal configuration
-- `/api/stripe/*` - Stripe payment integration endpoints
-- `/api/cookie-consent` - Cookie consent management
-
-**Security Measures:**
-- Helmet.js for HTTP security headers
-- Cookie parser for secure cookie handling
-- Session secret management via environment variables
-- Content Security Policy configuration
-- HTTPS-only cookies in production
+The backend is built with Express.js 5.x, operating with two separate server instances for the main website and the ULTRA platform. It includes CORS, static file serving, and session management. Core APIs handle PayPal and Stripe payments, as well as cookie consent. Security is managed with Helmet.js, cookie-parser, and secure session management.
 
 ### Data Storage
-
-**Firebase Integration:**
-- **Firestore Database**: Real-time NoSQL database for user data, streams, comments, notifications
-- **Firebase Authentication**: Email/password and Google OAuth authentication
-- **Firebase Storage**: User avatars, team logos, and media uploads
-- **Collections**:
-  - `users` - User profiles with favorite teams and preferences
-  - `streams` - Live stream submissions and metadata
-  - `comments` - User comments on matches and content
-  - `notifications` - User notification queue
-  - `donations` - Donation transaction records
-  - `match_links` - Community-shared streaming links
-
-**Static Data Files (JSON):**
-- `data/standings.json` - League standings and team statistics
-- `data/teams.json` - Team information, colors, logos, history
-- `data/fixtures.json` - Match schedules and results
-- `data/jornadas.json` - Matchday schedules and dates
-- `data/videos-highlights.json` - Video highlights and YouTube embeds
-
-**Data Architecture Decisions:**
-- Static JSON files for relatively stable data (teams, historical records) to reduce database costs
-- Firebase for dynamic, user-generated content requiring real-time updates
-- Local storage for user preferences and session state
-- No SQL database currently in use (architecture supports future PostgreSQL via Drizzle if needed)
+The platform utilizes Firebase for dynamic, real-time data: Firestore for user data, streams, comments, and notifications; Firebase Authentication for user login (email/password, Google OAuth); and Firebase Storage for media uploads. Static data like standings, team info, and fixtures are stored in local JSON files to optimize costs.
 
 ### Authentication System
-
-**Multi-Provider Authentication:**
-- Email/password registration and login
-- Google OAuth integration
-- Session persistence across page reloads
-- Real-time auth state observation
-
-**User Profile System:**
-- Custom user profiles with favorite team selection
-- Avatar upload and management
-- User statistics tracking (posts, likes, comments)
-- Achievement and badge system
-- Follower/following relationships
-
-**Authorization:**
-- Admin role system with privileged access
-- User-specific content (my streams, my profile)
-- Comment ownership verification for edit/delete
-- Protected routes requiring authentication
+UltraGol supports multi-provider authentication (email/password, Google OAuth) with session persistence. It includes a comprehensive user profile system with favorite team selection, avatar management, activity tracking, and an achievement system. Authorization features include an admin role system and user-specific content access.
 
 ### Third-Party Service Integration
-
-**Payment Processing:**
-1. **PayPal Integration** (Primary):
-   - PayPal Server SDK v1.1.0
-   - Sandbox and production environment support
-   - Order creation and capture flow
-   - Dynamic button rendering
-   - Webhook support for payment verification
-
-2. **Stripe Integration** (Alternative):
-   - Stripe SDK v18.5.0
-   - Card payment processing
-   - Subscription management ready
-   - Secure payment intent flow
-
-**Video and Media:**
-- YouTube embedded videos for highlights
-- Custom video player with Picture-in-Picture support
-- Iframe-based live stream embedding
-- Browser popup windows for floating video
-
-**External Links:**
-- UltraGol LIVE external platform integration
-- Social media sharing capabilities
-- External streaming service links
+The platform integrates PayPal (server SDK) and Stripe (SDK) for payment processing, supporting donations and future subscription models. Video and media integration includes YouTube embeds, a custom video player, and iframe-based live stream embedding. It also facilitates external links to UltraGol LIVE and social media sharing.
 
 ## External Dependencies
 
-### NPM Packages (Main Project)
-- `express` (^5.1.0) - Web server framework
-- `cors` (^2.8.5) - Cross-origin resource sharing
-- `helmet` (^8.1.0) - Security middleware
-- `cookie-parser` (^1.4.7) - Cookie parsing
-- `express-session` (^1.18.2) - Session management
-- `@paypal/paypal-server-sdk` (^1.1.0) - PayPal payment processing
-- `stripe` (^18.5.0) - Stripe payment processing
-
-### NPM Packages (ULTRA Platform)
-- `express` (^4.21.2) - Web server
-- `cors` (^2.8.5) - CORS middleware
+### NPM Packages
+- **Main Project**: `express`, `cors`, `helmet`, `cookie-parser`, `express-session`, `@paypal/paypal-server-sdk`, `stripe`.
+- **ULTRA Platform**: `express`, `cors`.
 
 ### CDN Dependencies
-- **Firebase SDK** (v9.22.0 and v10.7.1):
-  - firebase-app-compat.js
-  - firebase-auth-compat.js
-  - firebase-firestore-compat.js
-  - firebase-storage-compat.js
-  - Modular SDK for ULTRA platform
-- **Font Awesome** (v6.0.0) - Icon library
-- **Google Fonts**:
-  - Roboto (multiple weights)
-  - Space Grotesk
-  - Inter
-  - JetBrains Mono
-  - Playfair Display
+- **Firebase SDK**: v9.22.0 and v10.7.1 (firebase-app-compat, firebase-auth-compat, firebase-firestore-compat, firebase-storage-compat, modular SDK).
+- **Font Awesome** (v6.0.0).
+- **Google Fonts**: Roboto, Space Grotesk, Inter, JetBrains Mono, Playfair Display.
 
 ### Firebase Services
-- **Project**: ligamx-daf3d
-- **Authentication**: Email/password, Google OAuth
-- **Firestore**: Real-time database
-- **Storage**: File uploads and media
-- **Hosting**: Authorized domains for authentication
+- **Project**: `ligamx-daf3d`
+- **Services**: Authentication (Email/password, Google OAuth), Firestore, Storage, Hosting.
 
 ### External APIs
-- YouTube API (for video embeds)
+- YouTube API
 - PayPal REST API
 - Stripe API
 - Google OAuth API
+- UltraGol API (`ultragol-api3.onrender.com`) for real-time standings, news, teams, and live transmissions across multiple leagues.
 
 ### Environment Configuration
-Required environment variables:
-- `PORT` - Server port (default: 5000)
-- `SESSION_SECRET` - Session encryption key
-- `PAYPAL_CLIENT_ID` - PayPal client identifier
-- `PAYPAL_CLIENT_SECRET` - PayPal secret key
-- `STRIPE_SECRET_KEY` - Stripe API secret
-- `NODE_ENV` - Environment (development/production)
+- `PORT`
+- `SESSION_SECRET`
+- `PAYPAL_CLIENT_ID`
+- `PAYPAL_CLIENT_SECRET`
+- `STRIPE_SECRET_KEY`
+- `NODE_ENV`
 
 ### Deployment Platform
-- Configured for Replit deployment
-- Autoscale deployment type
-- Host binding to 0.0.0.0 for external access
-- Cache control headers for fresh content delivery
+- Replit (Autoscale deployment type, host binding to 0.0.0.0).

@@ -783,12 +783,14 @@ async function loadStandings() {
         const response = await fetch(`https://ultragol-api3.onrender.com${endpoint}`);
         const data = await response.json();
 
-        if (!data.equipos || data.equipos.length === 0) {
+        console.log('📊 Datos de tabla recibidos:', data);
+
+        if (!data.tabla || data.tabla.length === 0) {
             standingsTable.innerHTML = `<div class="standings-loading">No hay datos de tabla disponibles para ${currentLeague}</div>`;
             return;
         }
 
-        const equipos = data.equipos.sort((a, b) => a.posicion - b.posicion);
+        const equipos = data.tabla.sort((a, b) => a.posicion - b.posicion);
 
         standingsTable.innerHTML = `
             <div class="standings-header">
@@ -803,20 +805,21 @@ async function loadStandings() {
                 </div>
             </div>
             <div class="standings-body">
-                ${equipos.map((equipo, index) => `
+                ${equipos.map((equipo, index) => {
+                    const stats = equipo.estadisticas || {};
+                    return `
                     <div class="standings-row ${index < 4 ? 'playoff-zone' : index >= equipos.length - 4 ? 'relegation-zone' : ''}">
                         <div class="pos">${equipo.posicion}</div>
                         <div class="team-cell">
-                            <img src="${equipo.logo}" alt="${equipo.nombre}" class="team-logo-small" onerror="this.src='https://via.placeholder.com/30'">
-                            <span class="team-name-standings">${equipo.nombreCorto || equipo.nombre}</span>
+                            <span class="team-name-standings">${equipo.equipo}</span>
                         </div>
-                        <div class="stat">${equipo.partidosJugados || 0}</div>
-                        <div class="stat">${equipo.ganados || 0}</div>
-                        <div class="stat">${equipo.empatados || 0}</div>
-                        <div class="stat">${equipo.perdidos || 0}</div>
-                        <div class="stat points">${equipo.puntos || 0}</div>
+                        <div class="stat">${stats.pj || 0}</div>
+                        <div class="stat">${stats.pg || 0}</div>
+                        <div class="stat">${stats.pe || 0}</div>
+                        <div class="stat">${stats.pp || 0}</div>
+                        <div class="stat points">${stats.pts || 0}</div>
                     </div>
-                `).join('')}
+                `}).join('')}
             </div>
         `;
 
