@@ -12,7 +12,9 @@ function switchTab(tab, element) {
     button.classList.add('active');
     document.getElementById(tab + 'Content').classList.add('active');
     
-    if (tab === 'upcoming') {
+    if (tab === 'live' && typeof transmisionesLiveUltra !== 'undefined') {
+        transmisionesLiveUltra.filtrarPorLiga(currentLeague);
+    } else if (tab === 'upcoming') {
         loadUpcomingMatches();
     } else if (tab === 'replays') {
         loadReplays();
@@ -308,17 +310,6 @@ async function loadLeagues() {
     try {
         const ligas = await ULTRAGOL_API.getLigas();
         console.log('Ligas disponibles:', ligas);
-        
-        const leagueBtns = document.querySelectorAll('.league-btn');
-        leagueBtns.forEach(btn => {
-            btn.addEventListener('click', async function() {
-                leagueBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                const leagueName = this.querySelector('span').textContent;
-                await loadMatchesByLeague(leagueName);
-            });
-        });
     } catch (error) {
         console.error('Error loading leagues:', error);
     }
@@ -326,7 +317,6 @@ async function loadLeagues() {
 
 async function loadMatchesByLeague(leagueName) {
     currentLeague = leagueName;
-    showToast(`Cargando datos de ${leagueName}...`);
     console.log(`Loading data for ${leagueName}`);
     
     // Actualizar el título de la tabla
@@ -336,8 +326,8 @@ async function loadMatchesByLeague(leagueName) {
     }
     
     // Reload matches for current tab
-    if (activeTab === 'live') {
-        await loadLiveMatches();
+    if (activeTab === 'live' && typeof transmisionesLiveUltra !== 'undefined') {
+        transmisionesLiveUltra.filtrarPorLiga(leagueName);
     } else if (activeTab === 'upcoming') {
         await loadUpcomingMatches();
     }
@@ -473,9 +463,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     await loadLeagues();
-    await loadLiveMatches();
     await loadNews();
-    await loadMatchesByLeague('Liga MX'); // Cargar tabla de Liga MX por defecto
+    await loadMatchesByLeague('Liga MX');
 });
 
 document.addEventListener('click', (e) => {
