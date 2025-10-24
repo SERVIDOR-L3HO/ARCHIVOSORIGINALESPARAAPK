@@ -306,32 +306,27 @@ function renderLiveMatchCard(partido) {
 
     return `
         <div class="match-card live-match-card">
-            <div class="live-badge-corner">
-                <span class="live-dot"></span>
-                EN VIVO
-            </div>
-            <div class="match-card-bg">
+            <div class="match-card-bg-compact">
                 <img src="assets/ultragol-banner.jpg" alt="ULTRAGOL">
             </div>
-            <div class="match-card-content">
-                <div class="match-clock">${partido.reloj}</div>
-                <div class="teams">
-                    <div class="team">
-                        <img src="${partido.local.logo}" alt="${partido.local.nombreCorto}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+            <div class="match-card-content-modern">
+                <div class="teams-modern">
+                    <div class="team-modern">
+                        <img src="${partido.local.logo}" alt="${partido.local.nombreCorto}" class="team-badge-large" onerror="this.src='https://via.placeholder.com/50'">
                         <span>${partido.local.nombreCorto}</span>
                     </div>
-                    <div class="team">
-                        <img src="${partido.visitante.logo}" alt="${partido.visitante.nombreCorto}" class="team-badge" onerror="this.src='https://via.placeholder.com/50'">
+                    <div class="team-modern">
+                        <img src="${partido.visitante.logo}" alt="${partido.visitante.nombreCorto}" class="team-badge-large" onerror="this.src='https://via.placeholder.com/50'">
                         <span>${partido.visitante.nombreCorto}</span>
                     </div>
                 </div>
-                <div class="match-score-mini">
-                    ${partido.local.marcador} - ${partido.visitante.marcador}
-                    <span class="match-time">${partido.reloj}</span>
+                <div class="match-score-modern">
+                    <span class="score-number">${partido.local.marcador} - ${partido.visitante.marcador}</span>
+                    <span class="match-time-badge">${partido.reloj}</span>
                 </div>
                 ${golesInfo}
-                <button class="watch-btn" onclick="watchMatch('${partido.id}')">
-                    <span>VER AHORA</span>
+                <button class="watch-btn-modern" onclick="watchMatch('${partido.id}')">
+                    VER AHORA
                 </button>
             </div>
         </div>
@@ -348,38 +343,29 @@ function renderGolesInfo(partido) {
     const golesLocal = partido.goles.filter(g => g.equipoId === partido.local.id);
     const golesVisitante = partido.goles.filter(g => g.equipoId === partido.visitante.id);
 
-    let html = '<div class="goles-info">';
+    let html = '<div class="goles-info-modern">';
 
-    // Goles del local
+    // Mostrar solo el primer goleador de cada equipo para mantener las tarjetas compactas
     if (golesLocal.length > 0) {
-        html += '<div class="goles-equipo">';
-        html += `<div class="goles-equipo-nombre">${partido.local.nombreCorto}</div>`;
-        golesLocal.forEach(gol => {
-            html += `
-                <div class="gol-item">
-                    <i class="fas fa-futbol"></i>
-                    <span class="gol-jugador">${gol.jugador || 'Jugador'}</span>
-                    <span class="gol-minuto">${gol.minuto}'</span>
-                </div>
-            `;
-        });
-        html += '</div>';
+        const gol = golesLocal[0];
+        html += `
+            <div class="gol-item-modern">
+                <i class="fas fa-futbol"></i>
+                <span class="gol-jugador-modern">${gol.jugador || 'Jugador'}</span>
+                <span class="gol-minuto-modern">${gol.minuto}'</span>
+            </div>
+        `;
     }
 
-    // Goles del visitante
     if (golesVisitante.length > 0) {
-        html += '<div class="goles-equipo">';
-        html += `<div class="goles-equipo-nombre">${partido.visitante.nombreCorto}</div>`;
-        golesVisitante.forEach(gol => {
-            html += `
-                <div class="gol-item">
-                    <i class="fas fa-futbol"></i>
-                    <span class="gol-jugador">${gol.jugador || 'Jugador'}</span>
-                    <span class="gol-minuto">${gol.minuto}'</span>
-                </div>
-            `;
-        });
-        html += '</div>';
+        const gol = golesVisitante[0];
+        html += `
+            <div class="gol-item-modern">
+                <i class="fas fa-futbol"></i>
+                <span class="gol-jugador-modern">${gol.jugador || 'Jugador'}</span>
+                <span class="gol-minuto-modern">${gol.minuto}'</span>
+            </div>
+        `;
     }
 
     html += '</div>';
