@@ -1407,11 +1407,25 @@ input:checked + .slider:before {
     background: rgba(20, 20, 20, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
-    padding: 20px;
+    padding: 0;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+}
+
+.transmission-image {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+}
+
+.transmission-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .transmission-item::before {
@@ -1441,6 +1455,7 @@ input:checked + .slider:before {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    padding: 20px 20px 0 20px;
 }
 
 .transmission-liga {
@@ -1517,6 +1532,7 @@ input:checked + .slider:before {
 
 .transmission-match {
     margin-bottom: 12px;
+    padding: 0 20px;
 }
 
 .transmission-match h4 {
@@ -1540,7 +1556,7 @@ input:checked + .slider:before {
 
 .transmission-channel {
     margin-top: 15px;
-    padding-top: 15px;
+    padding: 15px 20px 20px 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;

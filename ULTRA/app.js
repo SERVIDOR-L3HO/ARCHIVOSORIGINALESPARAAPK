@@ -1078,6 +1078,9 @@ function createTransmissionCard(transmision) {
     // Obtener liga del evento
     const liga = getLeagueName(transmision.evento);
     
+    // Obtener imagen del deporte
+    const imagenDeporte = getSportImage(transmision.evento);
+    
     // Formatear nombre del partido
     const nombrePartido = formatMatchName(transmision.evento);
     
@@ -1093,6 +1096,9 @@ function createTransmissionCard(transmision) {
     });
     
     card.innerHTML = `
+        <div class="transmission-image">
+            <img src="${imagenDeporte}" alt="${liga}" />
+        </div>
         <div class="transmission-header">
             <span class="transmission-liga">${liga}</span>
             <span class="transmission-status ${estado.clase}">
@@ -1158,6 +1164,25 @@ function formatMatchName(evento) {
     }
     
     return nombre;
+}
+
+function getSportImage(evento) {
+    const eventoLower = evento.toLowerCase();
+    
+    // Detectar motos
+    if (eventoLower.includes('moto') || eventoLower.includes('motogp') || 
+        eventoLower.includes('superbike') || eventoLower.includes('motorcycle')) {
+        return '../assets/motos-banner.jpg';
+    }
+    
+    // Detectar básquetbol
+    if (eventoLower.includes('basket') || eventoLower.includes('nba') || 
+        eventoLower.includes('básquet') || eventoLower.includes('baloncesto')) {
+        return '../assets/basquet-banner.jpg';
+    }
+    
+    // Por defecto, fútbol
+    return '../assets/futbol-banner.jpg';
 }
 
 function watchTransmission(numeroCanal) {
