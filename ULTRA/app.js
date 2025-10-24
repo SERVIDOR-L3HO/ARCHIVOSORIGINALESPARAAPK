@@ -59,14 +59,15 @@ async function loadMarcadores() {
 // Función para cargar transmisiones desde la API
 async function loadTransmisiones() {
     try {
-        const response = await fetch('https://ultragol-api3.onrender.com/transmisiones');
+        const endpoint = leagueEndpoints[currentLeague]?.transmisiones || '/transmisiones';
+        const response = await fetch(`https://ultragol-api3.onrender.com${endpoint}`);
         const data = await response.json();
         transmisionesData = data;
 
-        console.log('✅ Transmisiones cargadas:', data);
+        console.log(`✅ Transmisiones de ${currentLeague} cargadas:`, data);
         return data;
     } catch (error) {
-        console.error('❌ Error cargando transmisiones:', error);
+        console.error(`❌ Error cargando transmisiones de ${currentLeague}:`, error);
         return null;
     }
 }
@@ -923,37 +924,43 @@ const leagueEndpoints = {
         tabla: '/tabla',
         noticias: '/noticias',
         videos: '/videos',
-        marcadores: '/marcadores'
+        marcadores: '/marcadores',
+        transmisiones: '/transmisiones'
     },
     'Premier League': {
         tabla: '/premier/tabla',
         noticias: '/premier/noticias',
         videos: '/premier/mejores-momentos',
-        marcadores: '/premier/marcadores'
+        marcadores: '/premier/marcadores',
+        transmisiones: '/premier/transmisiones'
     },
     'La Liga': {
         tabla: '/laliga/tabla',
         noticias: '/laliga/noticias',
         videos: '/laliga/mejores-momentos',
-        marcadores: '/laliga/marcadores'
+        marcadores: '/laliga/marcadores',
+        transmisiones: '/laliga/transmisiones'
     },
     'Serie A': {
         tabla: '/seriea/tabla',
         noticias: '/seriea/noticias',
         videos: '/seriea/mejores-momentos',
-        marcadores: '/seriea/marcadores'
+        marcadores: '/seriea/marcadores',
+        transmisiones: '/seriea/transmisiones'
     },
     'Bundesliga': {
         tabla: '/bundesliga/tabla',
         noticias: '/bundesliga/noticias',
         videos: '/bundesliga/mejores-momentos',
-        marcadores: '/bundesliga/marcadores'
+        marcadores: '/bundesliga/marcadores',
+        transmisiones: '/bundesliga/transmisiones'
     },
     'Ligue 1': {
         tabla: '/ligue1/tabla',
         noticias: '/ligue1/noticias',
         videos: '/ligue1/mejores-momentos',
-        marcadores: '/ligue1/marcadores'
+        marcadores: '/ligue1/marcadores',
+        transmisiones: '/ligue1/transmisiones'
     }
 };
 
@@ -971,8 +978,9 @@ async function selectLeague(leagueName, element) {
     // Cargar datos de la liga seleccionada
     console.log(`🔄 Cambiando a ${leagueName}...`);
     
-    // Cargar marcadores de la nueva liga
+    // Cargar marcadores y transmisiones de la nueva liga
     await loadMarcadores();
+    await loadTransmisiones();
     
     // Cargar tabla, noticias y videos
     await loadStandings();
