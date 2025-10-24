@@ -311,7 +311,7 @@ function renderLiveMatchCard(partido) {
                 EN VIVO
             </div>
             <div class="match-card-bg">
-                <img src="ultragol-vs-stadium.jpg" alt="Match">
+                <img src="assets/ultragol-banner.jpg" alt="ULTRAGOL">
             </div>
             <div class="match-card-content">
                 <div class="match-clock">${partido.reloj}</div>
@@ -404,7 +404,7 @@ function updateUpcomingMatches(data) {
         return `
         <div class="match-card">
             <div class="match-card-bg">
-                <img src="ultragol-vs-stadium.jpg" alt="Match">
+                <img src="assets/ultragol-banner.jpg" alt="ULTRAGOL">
             </div>
             <div class="match-card-content">
                 <div class="match-time-badge">
