@@ -558,7 +558,7 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
 
         const partidoNombre = partido ? `${partido.local.nombreCorto} vs ${partido.visitante.nombreCorto}` : matchId;
 
-        currentStreamUrl = `../ULTRACANALES/index.html?canal=${urlParam}`;
+        currentStreamUrl = `ultracanales/index.html?canal=${urlParam}`;
         modalTitle.textContent = `Transmisión en Vivo - ${partidoNombre}`;
         modal.classList.add('active');
         loader.style.display = 'flex';
