@@ -1189,26 +1189,9 @@ function watchTransmission(numeroCanal) {
     // Cerrar el modal
     closeAllTransmissionsModal();
     
-    // Abrir el canal en el modal de video
-    const channelUrls = {
-        1: 'https://vod.streams.travelingtoad.com/videos/01JB0NQMSDV88HX3BYV1K6WQE3/master.m3u8',
-        2: 'https://vod.streams.travelingtoad.com/videos/01JB0NRH8TR1JSFPR87PJGG2FP/master.m3u8',
-        3: 'https://vod.streams.travelingtoad.com/videos/01JB0NS91THFXEVR6NYP90QSVN/master.m3u8',
-        4: 'https://vod.streams.travelingtoad.com/videos/01JB0NT2ZZMZTVHB1SD82CE99Q/master.m3u8',
-        5: 'https://vod.streams.travelingtoad.com/videos/01JB0NTQ0N5HN0WQEWVYJ1YB8F/master.m3u8',
-        6: 'https://vod.streams.travelingtoad.com/videos/01JB0NV06HDQATXXFMBNSHPBY2/master.m3u8',
-        7: 'https://vod.streams.travelingtoad.com/videos/01JB0NVK74GGW1X2H27ZPGQTYK/master.m3u8',
-        8: 'https://vod.streams.travelingtoad.com/videos/01JB0NWG7XMZCQ4SE4SNXP9YMR/master.m3u8',
-        9: 'https://vod.streams.travelingtoad.com/videos/01JB0NX4HBKQMNF34ZQH2V22V0/master.m3u8',
-        10: 'https://vod.streams.travelingtoad.com/videos/01JB0NXSQHPJ59RT6ZFCJ5ZRVY/master.m3u8'
-    };
-    
-    const url = channelUrls[numeroCanal];
-    if (url) {
-        openPlayerModal(`Transmisión - Canal ${numeroCanal}`, url);
-    } else {
-        showToast(`Canal ${numeroCanal} no disponible`);
-    }
+    // Abrir ULTRACANALES con el número de canal específico
+    const ultracanalesUrl = `ultracanales/index.html?canal=${numeroCanal}`;
+    openStream(ultracanalesUrl);
 }
 
 function closeAllTransmissionsModal() {

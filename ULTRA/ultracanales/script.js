@@ -304,6 +304,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+    
+    // Detectar si viene un parámetro de canal en la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const numeroCanal = urlParams.get('canal');
+    if (numeroCanal) {
+        // Esperar a que los canales se carguen y luego abrir el canal específico
+        setTimeout(() => {
+            const canalUrl = `https://rereyano.ru/player/3/${numeroCanal}`;
+            const canalData = {
+                name: `Canal ${numeroCanal}`,
+                sources: [canalUrl],
+                live: true,
+                categoryIcon: '📺',
+                categoryName: 'Transmisión'
+            };
+            openChannel(canalData);
+        }, 1000);
+    }
 });
 
 window.closePlayer = closePlayer;
