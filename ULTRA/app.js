@@ -999,6 +999,7 @@ function showLockedLeagueMessage(leagueName) {
 // ===========================================
 
 async function openAllTransmissionsModal() {
+    console.log('🔵 Abriendo modal de todas las transmisiones...');
     const modal = document.getElementById('allTransmissionsModal');
     const loadingDiv = modal.querySelector('.transmissions-loading');
     const gridDiv = document.getElementById('allTransmissionsGrid');
@@ -1012,13 +1013,23 @@ async function openAllTransmissionsModal() {
     
     try {
         // Obtener todas las transmisiones del endpoint
+        console.log('📡 Llamando a la API: https://ultragol-api3.onrender.com/transmisiones');
         const response = await fetch('https://ultragol-api3.onrender.com/transmisiones');
+        
+        console.log('📊 Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('📦 Data recibida:', data);
         
         // Ocultar loading
         loadingDiv.style.display = 'none';
         
         if (!data || data.length === 0) {
+            console.log('⚠️ No hay transmisiones disponibles');
             gridDiv.innerHTML = `
                 <div class="no-transmissions">
                     <i class="fas fa-satellite-dish"></i>
@@ -1030,22 +1041,24 @@ async function openAllTransmissionsModal() {
         }
         
         // Renderizar todas las transmisiones
+        console.log(`🎬 Renderizando ${data.length} transmisiones...`);
         gridDiv.innerHTML = '';
         data.forEach(transmision => {
             const card = createTransmissionCard(transmision);
             gridDiv.appendChild(card);
         });
         
-        console.log(`✅ Transmisiones cargadas: ${data.length} (entre todas las ligas)`);
+        console.log(`✅ Transmisiones cargadas exitosamente: ${data.length} (entre todas las ligas)`);
         
     } catch (error) {
         console.error('❌ Error al cargar transmisiones:', error);
+        console.error('❌ Error detalles:', error.message, error.stack);
         loadingDiv.style.display = 'none';
         gridDiv.innerHTML = `
             <div class="no-transmissions">
                 <i class="fas fa-exclamation-triangle"></i>
                 <h4>Error al cargar transmisiones</h4>
-                <p>Intenta de nuevo más tarde</p>
+                <p>${error.message || 'Intenta de nuevo más tarde'}</p>
             </div>
         `;
     }
