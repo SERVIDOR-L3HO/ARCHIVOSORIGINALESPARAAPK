@@ -807,8 +807,17 @@ async function loadStandings() {
             <div class="standings-body">
                 ${equipos.map((equipo, index) => {
                     const stats = equipo.estadisticas || {};
+                    // Determinar zona de clasificación
+                    let zoneClass = '';
+                    if (index < 6) {
+                        zoneClass = 'playoff-zone'; // Liguilla directa (1-6)
+                    } else if (index >= 6 && index < 10) {
+                        zoneClass = 'playin-zone'; // Play-In (7-10)
+                    } else {
+                        zoneClass = 'relegation-zone'; // Eliminados (11-18)
+                    }
                     return `
-                    <div class="standings-row ${index < 4 ? 'playoff-zone' : index >= equipos.length - 4 ? 'relegation-zone' : ''}">
+                    <div class="standings-row ${zoneClass}">
                         <div class="pos">${equipo.posicion}</div>
                         <div class="team-cell">
                             <span class="team-name-standings">${equipo.equipo}</span>

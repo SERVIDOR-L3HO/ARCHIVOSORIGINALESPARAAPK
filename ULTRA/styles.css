@@ -929,82 +929,193 @@ input:checked + .slider:before {
     }
 }
 
-/* Tabla de Posiciones */
+/* Tabla de Posiciones - Diseño Ultra Profesional */
 .standings-section {
-    padding: 20px;
-    margin-top: 20px;
+    padding: 15px;
+    margin-top: 15px;
 }
 
 .standings-table {
-    background: var(--card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-top: 15px;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+    margin-top: 10px;
 }
 
 .standings-loading {
     text-align: center;
-    padding: 30px;
+    padding: 40px 20px;
     color: var(--text-muted);
+    font-size: 14px;
+}
+
+.standings-header {
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(255, 107, 53, 0.1));
+    backdrop-filter: blur(10px);
+    border-radius: 12px 12px 0 0;
+    font-weight: 700;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 0;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 69, 0, 0.2);
+}
+
+.standings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .standings-row {
     display: grid;
-    grid-template-columns: 40px 1fr 40px 40px 40px 50px;
-    gap: 10px;
-    padding: 12px 15px;
+    grid-template-columns: 45px 1fr 35px 35px 35px 40px 50px;
+    gap: 8px;
+    padding: 14px 12px;
     align-items: center;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(13, 13, 13, 0.95));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.standings-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.1));
+    transition: all 0.3s ease;
+}
+
+/* Efectos de clasificación */
+.standings-row.playoff-zone::before {
+    background: linear-gradient(180deg, #10b981, #059669);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.standings-row.playin-zone::before {
+    background: linear-gradient(180deg, #f59e0b, #d97706);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.standings-row.relegation-zone::before {
+    background: linear-gradient(180deg, #ef4444, #dc2626);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
 }
 
 .standings-row:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(26, 26, 26, 0.95));
+    border-color: rgba(255, 69, 0, 0.3);
+    transform: translateX(4px) scale(1.02);
+    box-shadow: 0 4px 20px rgba(255, 69, 0, 0.2), 
+                0 0 0 1px rgba(255, 69, 0, 0.1);
 }
 
-.standings-row:last-child {
-    border-bottom: none;
+.standings-row:active {
+    transform: translateX(2px) scale(0.98);
 }
 
-.standings-header {
-    background: rgba(255, 69, 0, 0.1);
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--text-muted);
+.standings-row.header-row {
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    margin-bottom: 0;
 }
 
-.standings-pos {
-    font-weight: 600;
-    color: var(--primary);
+.standings-row.header-row::before {
+    display: none;
 }
 
-.standings-team {
+.standings-row.header-row:hover {
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* Posición con badge */
+.pos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 auto;
+}
+
+.playoff-zone .pos {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #10b981;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.playin-zone .pos {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-color: #f59e0b;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+}
+
+.relegation-zone .pos {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    border-color: #6b7280;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Equipo con logo y nombre */
+.team-cell {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
 .standings-team-logo {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-.standings-team-name {
-    font-size: 14px;
+.team-name-standings {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    letter-spacing: 0.3px;
 }
 
-.standings-stat {
+/* Estadísticas */
+.stat {
     text-align: center;
     font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.standings-pts {
-    font-weight: 700;
+.stat.points {
+    font-weight: 800;
+    font-size: 16px;
     color: var(--primary);
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(255, 69, 0, 0.05));
+    border-radius: 8px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 69, 0, 0.3);
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.2);
 }
 
 .standings-info-message {
