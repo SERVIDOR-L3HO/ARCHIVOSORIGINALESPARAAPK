@@ -197,7 +197,8 @@ function updateMetaTags(channel) {
 
 function loadSource(source) {
     const player = document.getElementById('player');
-    player.src = source;
+    const wrappedUrl = `https://golazotvhd.com/evento.html?get=${source}`;
+    player.src = wrappedUrl;
 }
 
 function closePlayer() {
