@@ -1028,7 +1028,10 @@ async function openAllTransmissionsModal() {
         // Ocultar loading
         loadingDiv.style.display = 'none';
         
-        if (!data || data.length === 0) {
+        // La API devuelve un objeto con la propiedad "transmisiones"
+        const transmisiones = data.transmisiones || data;
+        
+        if (!transmisiones || transmisiones.length === 0) {
             console.log('⚠️ No hay transmisiones disponibles');
             gridDiv.innerHTML = `
                 <div class="no-transmissions">
@@ -1041,14 +1044,14 @@ async function openAllTransmissionsModal() {
         }
         
         // Renderizar todas las transmisiones
-        console.log(`🎬 Renderizando ${data.length} transmisiones...`);
+        console.log(`🎬 Renderizando ${transmisiones.length} transmisiones...`);
         gridDiv.innerHTML = '';
-        data.forEach(transmision => {
+        transmisiones.forEach(transmision => {
             const card = createTransmissionCard(transmision);
             gridDiv.appendChild(card);
         });
         
-        console.log(`✅ Transmisiones cargadas exitosamente: ${data.length} (entre todas las ligas)`);
+        console.log(`✅ Transmisiones cargadas exitosamente: ${transmisiones.length} (entre todas las ligas)`);
         
     } catch (error) {
         console.error('❌ Error al cargar transmisiones:', error);
