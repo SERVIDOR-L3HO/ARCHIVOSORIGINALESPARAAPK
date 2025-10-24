@@ -21,11 +21,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Función principal para cargar marcadores desde la API
 async function loadMarcadores() {
     try {
-        const response = await fetch('https://ultragol-api3.onrender.com/marcadores');
+        const endpoint = leagueEndpoints[currentLeague]?.marcadores || '/marcadores';
+        const response = await fetch(`https://ultragol-api3.onrender.com${endpoint}`);
         const data = await response.json();
         marcadoresData = data;
 
-        console.log('✅ Marcadores cargados:', data);
+        console.log(`✅ Marcadores de ${currentLeague} cargados:`, data);
 
         // Actualizar featured match
         updateFeaturedMatch(data);
@@ -39,7 +40,18 @@ async function loadMarcadores() {
 
         return data;
     } catch (error) {
-        console.error('❌ Error cargando marcadores:', error);
+        console.error(`❌ Error cargando marcadores de ${currentLeague}:`, error);
+        // Mostrar mensaje de error en lugar de fallar silenciosamente
+        const container = activeTab === 'live' ? document.getElementById('liveMatches') : document.getElementById('upcomingMatches');
+        if (container) {
+            container.innerHTML = `
+                <div class="no-matches" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">⚽</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 18px; margin-bottom: 8px;">No hay marcadores disponibles</div>
+                    <div style="color: rgba(255,255,255,0.5); font-size: 14px;">Los marcadores de ${currentLeague} estarán disponibles próximamente</div>
+                </div>
+            `;
+        }
         return null;
     }
 }
@@ -277,7 +289,7 @@ function updateLiveMatches(data) {
         container.innerHTML = `
             <div class="no-matches" style="grid-column: 1/-1; text-align: center; padding: 40px;">
                 <div style="font-size: 48px; margin-bottom: 16px;">⚽</div>
-                <div style="color: rgba(255,255,255,0.8); font-size: 18px; margin-bottom: 8px;">No hay partidos de Liga MX en vivo</div>
+                <div style="color: rgba(255,255,255,0.8); font-size: 18px; margin-bottom: 8px;">No hay partidos de ${currentLeague} en vivo</div>
                 <div style="color: rgba(255,255,255,0.5); font-size: 14px;">Revisa la sección UPCOMING para próximos partidos</div>
             </div>
         `;
@@ -910,32 +922,38 @@ const leagueEndpoints = {
     'Liga MX': {
         tabla: '/tabla',
         noticias: '/noticias',
-        videos: '/videos'
+        videos: '/videos',
+        marcadores: '/marcadores'
     },
     'Premier League': {
         tabla: '/premier/tabla',
         noticias: '/premier/noticias',
-        videos: '/premier/mejores-momentos'
+        videos: '/premier/mejores-momentos',
+        marcadores: '/premier/marcadores'
     },
     'La Liga': {
         tabla: '/laliga/tabla',
         noticias: '/laliga/noticias',
-        videos: '/laliga/mejores-momentos'
+        videos: '/laliga/mejores-momentos',
+        marcadores: '/laliga/marcadores'
     },
     'Serie A': {
         tabla: '/seriea/tabla',
         noticias: '/seriea/noticias',
-        videos: '/seriea/mejores-momentos'
+        videos: '/seriea/mejores-momentos',
+        marcadores: '/seriea/marcadores'
     },
     'Bundesliga': {
         tabla: '/bundesliga/tabla',
         noticias: '/bundesliga/noticias',
-        videos: '/bundesliga/mejores-momentos'
+        videos: '/bundesliga/mejores-momentos',
+        marcadores: '/bundesliga/marcadores'
     },
     'Ligue 1': {
         tabla: '/ligue1/tabla',
         noticias: '/ligue1/noticias',
-        videos: '/ligue1/mejores-momentos'
+        videos: '/ligue1/mejores-momentos',
+        marcadores: '/ligue1/marcadores'
     }
 };
 
@@ -944,14 +962,24 @@ async function selectLeague(leagueName, element) {
     element.classList.add('active');
     currentLeague = leagueName;
 
+    // Actualizar título de la tabla
     const standingsTitle = document.getElementById('standingsLeagueName');
     if (standingsTitle) {
         standingsTitle.textContent = `TABLA DE POSICIONES - ${leagueName.toUpperCase()}`;
     }
 
+    // Cargar datos de la liga seleccionada
+    console.log(`🔄 Cambiando a ${leagueName}...`);
+    
+    // Cargar marcadores de la nueva liga
+    await loadMarcadores();
+    
+    // Cargar tabla, noticias y videos
     await loadStandings();
     await loadNews();
     await loadReplays();
+    
+    console.log(`✅ ${leagueName} cargada completamente`);
 }
 
 function showLockedLeagueMessage(leagueName) {
