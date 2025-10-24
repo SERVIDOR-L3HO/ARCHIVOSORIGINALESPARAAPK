@@ -636,7 +636,7 @@ function openStream(url) {
     const modalTitle = document.getElementById('modalTitle');
     const loader = document.getElementById('modalLoader');
 
-    const streamName = url.includes('ULTRACANALES') ? 'ULTRACANALES' : 'PANEL PREMIUM';
+    const streamName = url.toLowerCase().includes('ultracanales') ? 'ULTRACANALES' : 'PANEL PREMIUM';
     modalTitle.textContent = 'Transmisión en Vivo - ' + streamName;
 
     modal.classList.add('active');
