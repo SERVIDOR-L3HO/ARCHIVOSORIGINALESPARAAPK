@@ -91,6 +91,9 @@
                 <button class="tab" onclick="switchTab('upcoming', this)">UPCOMING</button>
                 <button class="tab" onclick="switchTab('replays', this)">LOS MEJORES MOMENTOS</button>
             </div>
+            <button class="todo-btn" onclick="openAllTransmissionsModal()">
+                <i class="fas fa-list"></i> TODO
+            </button>
         </div>
 
         <div class="content-container">
@@ -339,6 +342,24 @@
             <div class="news-modal-body">
                 <img id="newsModalImage" src="" alt="Noticia">
                 <div id="newsModalText" class="news-modal-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="allTransmissionsModal" class="all-transmissions-modal">
+        <div class="all-transmissions-content">
+            <div class="all-transmissions-header">
+                <h3><i class="fas fa-broadcast-tower"></i> Todas las Transmisiones</h3>
+                <button class="close-all-transmissions" onclick="closeAllTransmissionsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="all-transmissions-body">
+                <div class="transmissions-loading">
+                    <div class="spinner"></div>
+                    <p>Cargando transmisiones...</p>
+                </div>
+                <div id="allTransmissionsGrid" class="all-transmissions-grid"></div>
             </div>
         </div>
     </div>

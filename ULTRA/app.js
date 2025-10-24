@@ -993,3 +993,196 @@ async function selectLeague(leagueName, element) {
 function showLockedLeagueMessage(leagueName) {
     showToast(`${leagueName} estará disponible próximamente`);
 }
+
+// ===========================================
+// Modal de Todas las Transmisiones
+// ===========================================
+
+async function openAllTransmissionsModal() {
+    const modal = document.getElementById('allTransmissionsModal');
+    const loadingDiv = modal.querySelector('.transmissions-loading');
+    const gridDiv = document.getElementById('allTransmissionsGrid');
+    
+    // Mostrar modal
+    modal.classList.add('active');
+    
+    // Mostrar loading
+    loadingDiv.style.display = 'flex';
+    gridDiv.innerHTML = '';
+    
+    try {
+        // Obtener todas las transmisiones del endpoint
+        const response = await fetch('https://ultragol-api3.onrender.com/transmisiones');
+        const data = await response.json();
+        
+        // Ocultar loading
+        loadingDiv.style.display = 'none';
+        
+        if (!data || data.length === 0) {
+            gridDiv.innerHTML = `
+                <div class="no-transmissions">
+                    <i class="fas fa-satellite-dish"></i>
+                    <h4>No hay transmisiones disponibles</h4>
+                    <p>Vuelve pronto para ver las próximas transmisiones</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Renderizar todas las transmisiones
+        gridDiv.innerHTML = '';
+        data.forEach(transmision => {
+            const card = createTransmissionCard(transmision);
+            gridDiv.appendChild(card);
+        });
+        
+        console.log(`✅ Transmisiones cargadas: ${data.length} (entre todas las ligas)`);
+        
+    } catch (error) {
+        console.error('❌ Error al cargar transmisiones:', error);
+        loadingDiv.style.display = 'none';
+        gridDiv.innerHTML = `
+            <div class="no-transmissions">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h4>Error al cargar transmisiones</h4>
+                <p>Intenta de nuevo más tarde</p>
+            </div>
+        `;
+    }
+}
+
+function createTransmissionCard(transmision) {
+    const card = document.createElement('div');
+    card.className = 'transmission-item';
+    
+    // Parsear fecha
+    const fechaPartido = new Date(transmision.fecha);
+    const estado = getTransmissionStatus(fechaPartido);
+    
+    // Obtener liga del evento
+    const liga = getLeagueName(transmision.evento);
+    
+    // Formatear nombre del partido
+    const nombrePartido = formatMatchName(transmision.evento);
+    
+    // Formatear hora
+    const hora = fechaPartido.toLocaleTimeString('es-MX', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const fecha = fechaPartido.toLocaleDateString('es-MX', {
+        day: 'numeric',
+        month: 'short'
+    });
+    
+    card.innerHTML = `
+        <div class="transmission-header">
+            <span class="transmission-liga">${liga}</span>
+            <span class="transmission-status ${estado.clase}">
+                ${estado.pulso ? '<span class="status-dot"></span>' : ''}
+                ${estado.texto}
+            </span>
+        </div>
+        <div class="transmission-match">
+            <h4>${nombrePartido}</h4>
+            <div class="transmission-time">
+                <i class="fas fa-clock"></i>
+                ${fecha} - ${hora}
+            </div>
+        </div>
+        <div class="transmission-channel">
+            <div class="channel-info">
+                <i class="fas fa-tv"></i>
+                Canal ${transmision.canal}
+            </div>
+            <button class="watch-transmission-btn" onclick="watchTransmission(${transmision.canal})">
+                <i class="fas fa-play"></i>
+                Ver
+            </button>
+        </div>
+    `;
+    
+    return card;
+}
+
+function getTransmissionStatus(fechaPartido) {
+    const ahora = new Date();
+    const diff = fechaPartido - ahora;
+    const minutos = Math.floor(diff / 60000);
+    
+    if (minutos < -90) {
+        return { texto: 'Finalizado', clase: 'finalizado' };
+    } else if (minutos < 0) {
+        return { texto: 'EN VIVO', clase: 'en-vivo', pulso: true };
+    } else if (minutos < 15) {
+        return { texto: `En ${minutos} min`, clase: 'proximo' };
+    } else if (minutos < 60) {
+        return { texto: `${minutos} min`, clase: 'pronto' };
+    } else {
+        const horas = Math.floor(minutos / 60);
+        return { texto: `${horas}h`, clase: 'programado' };
+    }
+}
+
+function getLeagueName(evento) {
+    const ligaMatch = evento.match(/^([^:]+):/);
+    return ligaMatch ? ligaMatch[1].trim() : 'Fútbol';
+}
+
+function formatMatchName(evento) {
+    const ligas = ['Liga Mx', 'MLS', 'Laliga', 'Premier League', 'Serie A', 'Bundesliga', 'Ligue 1'];
+    let nombre = evento;
+    
+    for (const liga of ligas) {
+        if (evento.startsWith(liga + ' :')) {
+            nombre = evento.substring(liga.length + 2).trim();
+            break;
+        }
+    }
+    
+    return nombre;
+}
+
+function watchTransmission(numeroCanal) {
+    // Cerrar el modal
+    closeAllTransmissionsModal();
+    
+    // Abrir el canal en el modal de video
+    const channelUrls = {
+        1: 'https://vod.streams.travelingtoad.com/videos/01JB0NQMSDV88HX3BYV1K6WQE3/master.m3u8',
+        2: 'https://vod.streams.travelingtoad.com/videos/01JB0NRH8TR1JSFPR87PJGG2FP/master.m3u8',
+        3: 'https://vod.streams.travelingtoad.com/videos/01JB0NS91THFXEVR6NYP90QSVN/master.m3u8',
+        4: 'https://vod.streams.travelingtoad.com/videos/01JB0NT2ZZMZTVHB1SD82CE99Q/master.m3u8',
+        5: 'https://vod.streams.travelingtoad.com/videos/01JB0NTQ0N5HN0WQEWVYJ1YB8F/master.m3u8',
+        6: 'https://vod.streams.travelingtoad.com/videos/01JB0NV06HDQATXXFMBNSHPBY2/master.m3u8',
+        7: 'https://vod.streams.travelingtoad.com/videos/01JB0NVK74GGW1X2H27ZPGQTYK/master.m3u8',
+        8: 'https://vod.streams.travelingtoad.com/videos/01JB0NWG7XMZCQ4SE4SNXP9YMR/master.m3u8',
+        9: 'https://vod.streams.travelingtoad.com/videos/01JB0NX4HBKQMNF34ZQH2V22V0/master.m3u8',
+        10: 'https://vod.streams.travelingtoad.com/videos/01JB0NXSQHPJ59RT6ZFCJ5ZRVY/master.m3u8'
+    };
+    
+    const url = channelUrls[numeroCanal];
+    if (url) {
+        openPlayerModal(`Transmisión - Canal ${numeroCanal}`, url);
+    } else {
+        showToast(`Canal ${numeroCanal} no disponible`);
+    }
+}
+
+function closeAllTransmissionsModal() {
+    const modal = document.getElementById('allTransmissionsModal');
+    modal.classList.remove('active');
+}
+
+// Cerrar modal al hacer clic fuera
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('allTransmissionsModal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeAllTransmissionsModal();
+            }
+        });
+    }
+});

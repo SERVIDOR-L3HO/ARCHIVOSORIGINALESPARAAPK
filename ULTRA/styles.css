@@ -1213,3 +1213,432 @@ input:checked + .slider:before {
 }
 
 .news-modal-body img 
+{
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.news-modal-text {
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Botón TODO */
+.todo-btn {
+    background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    margin-left: auto;
+}
+
+.todo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 87, 34, 0.5);
+}
+
+.todo-btn:active {
+    transform: translateY(0);
+}
+
+.todo-btn i {
+    font-size: 16px;
+}
+
+/* Ajustar el tabs-container para el botón TODO */
+.tabs-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+/* Modal de Todas las Transmisiones */
+.all-transmissions-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.all-transmissions-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.all-transmissions-content {
+    background: linear-gradient(135deg, #1a1f3a 0%, #0a0e27 100%);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.all-transmissions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(255, 87, 34, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%);
+}
+
+.all-transmissions-header h3 {
+    font-size: 24px;
+    color: var(--text);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.all-transmissions-header h3 i {
+    color: #FF5722;
+    font-size: 26px;
+}
+
+.close-all-transmissions {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.3s ease;
+    font-size: 18px;
+}
+
+.close-all-transmissions:hover {
+    background: rgba(255, 69, 0, 0.3);
+    transform: rotate(90deg);
+}
+
+.all-transmissions-body {
+    padding: 30px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.transmissions-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 20px;
+}
+
+.transmissions-loading .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #FF5722;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.transmissions-loading p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+}
+
+.all-transmissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.transmission-item {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.transmission-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FF5722, #FF9800);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.transmission-item:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(255, 87, 34, 0.2);
+}
+
+.transmission-item:hover::before {
+    opacity: 1;
+}
+
+.transmission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.transmission-liga {
+    background: rgba(33, 150, 243, 0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #42A5F5;
+    text-transform: uppercase;
+}
+
+.transmission-status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.transmission-status.en-vivo {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    color: white;
+    animation: pulso-suave 2s ease-in-out infinite;
+}
+
+.transmission-status.proximo {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.transmission-status.pronto {
+    background: rgba(255, 152, 0, 0.2);
+    color: #FF9800;
+}
+
+.transmission-status.programado {
+    background: rgba(156, 39, 176, 0.2);
+    color: #9C27B0;
+}
+
+.transmission-status.finalizado {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9E9E9E;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: parpadeo 1.5s ease-in-out infinite;
+}
+
+@keyframes pulso-suave {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes parpadeo {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.transmission-match {
+    margin-bottom: 12px;
+}
+
+.transmission-match h4 {
+    color: var(--text);
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+}
+
+.transmission-time {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.transmission-time i {
+    color: #FF5722;
+}
+
+.transmission-channel {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.channel-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+}
+
+.channel-info i {
+    color: #FF5722;
+    font-size: 14px;
+}
+
+.watch-transmission-btn {
+    background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.watch-transmission-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+}
+
+.no-transmissions {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.no-transmissions i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.3;
+}
+
+.no-transmissions h4 {
+    font-size: 20px;
+    margin: 0 0 10px 0;
+}
+
+.no-transmissions p {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .all-transmissions-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .all-transmissions-header {
+        padding: 20px;
+    }
+
+    .all-transmissions-header h3 {
+        font-size: 20px;
+    }
+
+    .all-transmissions-body {
+        padding: 20px;
+    }
+
+    .all-transmissions-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .todo-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .tabs-container {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .todo-btn {
+        margin-left: 0;
+        justify-content: center;
+    }
+}
