@@ -185,6 +185,25 @@ class TransmisionesLiveUltra {
         return ligaMatch ? ligaMatch[1].trim() : 'Fútbol';
     }
 
+    obtenerImagenDeporte(evento) {
+        const eventoLower = evento.toLowerCase();
+        
+        // Detectar motos
+        if (eventoLower.includes('moto') || eventoLower.includes('motogp') || 
+            eventoLower.includes('superbike') || eventoLower.includes('motorcycle')) {
+            return '../assets/motos-banner.jpg';
+        }
+        
+        // Detectar básquetbol
+        if (eventoLower.includes('basket') || eventoLower.includes('nba') || 
+            eventoLower.includes('básquet') || eventoLower.includes('baloncesto')) {
+            return '../assets/basquet-banner.jpg';
+        }
+        
+        // Por defecto, fútbol
+        return '../assets/futbol-banner.jpg';
+    }
+
     redirigirACanal(numeroCanal) {
         const canalId = CANAL_ID_MAP[numeroCanal];
         
@@ -202,6 +221,7 @@ class TransmisionesLiveUltra {
         const estado = this.obtenerEstadoPartido(fechaPartido);
         const nombrePartido = this.formatearNombrePartido(transmision.evento);
         const liga = this.obtenerLiga(transmision.evento);
+        const imagenDeporte = this.obtenerImagenDeporte(transmision.evento);
         
         const card = document.createElement('div');
         card.className = 'match-card live-match';
@@ -212,7 +232,7 @@ class TransmisionesLiveUltra {
         
         card.innerHTML = `
             <div class="match-card-bg">
-                <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600" alt="Match">
+                <img src="${imagenDeporte}" alt="${liga}" style="object-fit: cover;">
             </div>
             <div class="match-card-content">
                 <div class="live-badge-small ${estado.pulso ? 'pulse' : ''}">
