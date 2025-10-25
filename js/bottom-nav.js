@@ -37,9 +37,9 @@ class BottomNavigation {
                 <i class="fas fa-circle-play"></i>
                 <span>Transmisiones</span>
             </a>
-            <a href="calendario.html" class="bottom-nav-item" data-page="calendario.html">
-                <i class="fas fa-calendar-days"></i>
-                <span>Calendario</span>
+            <a href="goleadores.html" class="bottom-nav-item" data-page="goleadores.html">
+                <i class="fas fa-futbol"></i>
+                <span>Goleadores</span>
             </a>
             <div class="bottom-nav-item" id="settingsBtn">
                 <i class="fas fa-ellipsis-vertical"></i>
