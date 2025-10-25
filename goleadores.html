@@ -12,14 +12,21 @@
     <link rel="stylesheet" href="css/animations.css?v=2024101702">
     <link rel="stylesheet" href="css/bottom-nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --ultra-dark: #0a0a0a;
-            --dark-bg: #121212;
+            --dark-bg: #0f0f0f;
             --dark-card: #1a1a1a;
             --dark-hover: #252525;
             --accent-orange: #ff6b35;
+            --accent-orange-dark: #e55a2b;
             --accent-orange-light: #ff8c5a;
             --text-primary: #ffffff;
             --text-secondary: #9e9e9e;
@@ -32,88 +39,110 @@
         body {
             background: var(--ultra-dark);
             color: var(--text-primary);
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
 
         .scorers-hero {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            padding: 100px 0 60px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(10, 10, 10, 1) 100%);
+            padding: 120px 0 80px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            border-bottom: 2px solid var(--accent-orange);
+            border-bottom: 3px solid var(--accent-orange);
         }
 
         .scorers-hero::before {
-            content: '⚽';
+            content: '';
             position: absolute;
-            font-size: 20rem;
-            opacity: 0.03;
-            top: -50px;
-            right: -50px;
-            animation: float 6s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
         .scorers-hero h1 {
-            font-size: 3.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-orange), var(--gold));
+            background: linear-gradient(135deg, #ffd700 0%, #ff6b35 50%, #ffd700 100%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
-            letter-spacing: -2px;
+            margin-bottom: 20px;
+            letter-spacing: -3px;
             text-transform: uppercase;
-            position: relative;
-            z-index: 1;
+            animation: shimmer 3s ease-in-out infinite;
+            text-shadow: 0 0 80px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
         }
 
         .scorers-hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-secondary);
             font-weight: 400;
-            position: relative;
-            z-index: 1;
+            letter-spacing: 1px;
         }
 
         .league-selector {
-            background: var(--dark-bg);
-            padding: 35px 0;
+            background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%);
+            padding: 40px 0;
             border-bottom: 1px solid var(--border-dark);
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .league-title {
             text-align: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .league-title i {
             color: var(--gold);
+            font-size: 1.2rem;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
         }
 
         .league-tabs {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             flex-wrap: wrap;
             padding: 0 20px;
         }
@@ -122,74 +151,97 @@
             background: transparent;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 10px;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 20px;
         }
 
         .league-icon {
-            width: 65px;
-            height: 65px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .league-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.5), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .league-tab.active .league-icon::before {
+            opacity: 1;
+            animation: rotate 3s linear infinite;
         }
 
         .league-tab.active .league-icon {
-            transform: scale(1.15);
-            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+            transform: scale(1.2);
+            box-shadow: 0 8px 40px rgba(255, 107, 53, 0.7);
         }
 
         .league-tab:hover .league-icon {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
-        .league-icon.ligamx { background: linear-gradient(135deg, #ff6b35, #ff8c5a); }
-        .league-icon.premier { background: linear-gradient(135deg, #37003c, #6c2a8f); }
-        .league-icon.laliga { background: linear-gradient(135deg, #ff6600, #ff9933); }
-        .league-icon.seriea { background: linear-gradient(135deg, #008fd7, #00b4d8); }
-        .league-icon.bundesliga { background: linear-gradient(135deg, #d20515, #ff2836); }
-        .league-icon.ligue1 { background: linear-gradient(135deg, #dae025, #f4f776); }
+        .league-icon.ligamx { background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%); }
+        .league-icon.premier { background: linear-gradient(135deg, #37003c 0%, #6c2a8f 100%); }
+        .league-icon.laliga { background: linear-gradient(135deg, #ff6600 0%, #ff9933 100%); }
+        .league-icon.seriea { background: linear-gradient(135deg, #008fd7 0%, #00b4d8 100%); }
+        .league-icon.bundesliga { background: linear-gradient(135deg, #d20515 0%, #ff2836 100%); }
+        .league-icon.ligue1 { background: linear-gradient(135deg, #dae025 0%, #f4f776 100%); }
 
         .league-name {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .league-tab.active .league-name {
             color: var(--accent-orange);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .scorers-content {
-            padding: 60px 0;
-            background: var(--ultra-dark);
+            padding: 80px 0;
+            background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%);
         }
 
         .scorers-table-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 30px;
         }
 
         .loading-spinner {
             text-align: center;
-            padding: 80px 20px;
+            padding: 100px 20px;
             color: var(--text-secondary);
         }
 
         .loading-spinner i {
-            font-size: 3rem;
+            font-size: 4rem;
             color: var(--accent-orange);
             animation: spin 1s linear infinite;
         }
@@ -198,25 +250,170 @@
             100% { transform: rotate(360deg); }
         }
 
+        .podium-section {
+            max-width: 1400px;
+            margin: 0 auto 80px;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 30px;
+            align-items: end;
+        }
+
+        .podium-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(15, 15, 15, 0.9));
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid var(--border-dark);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .podium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, var(--accent-orange), transparent);
+        }
+
+        .podium-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
+        }
+
+        .podium-card.first {
+            grid-column: 2;
+            transform: translateY(-20px);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
+            border-color: var(--gold);
+            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.4);
+        }
+
+        .podium-card.first:hover {
+            transform: translateY(-30px);
+        }
+
+        .podium-card.first::before {
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .podium-card.second {
+            border-color: var(--silver);
+            grid-column: 1;
+        }
+
+        .podium-card.second::before {
+            background: linear-gradient(90deg, transparent, var(--silver), transparent);
+        }
+
+        .podium-card.third {
+            border-color: var(--bronze);
+            grid-column: 3;
+        }
+
+        .podium-card.third::before {
+            background: linear-gradient(90deg, transparent, var(--bronze), transparent);
+        }
+
+        .podium-medal {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .podium-rank {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+        }
+
+        .podium-card.first .podium-rank {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .podium-card.second .podium-rank {
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .podium-card.third .podium-rank {
+            background: linear-gradient(135deg, #cd7f32, #e89e60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .podium-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .podium-team {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .podium-goals {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: var(--accent-orange);
+            margin-bottom: 8px;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+
+        .podium-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
         .scorers-grid {
             display: grid;
             gap: 20px;
         }
 
         .scorer-card {
-            background: var(--dark-card);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(15, 15, 15, 0.8));
             border-radius: 20px;
-            padding: 25px 30px;
-            border: 1px solid var(--border-dark);
-            transition: all 0.3s ease;
+            padding: 30px 35px;
+            border: 2px solid var(--border-dark);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        .scorer-card::before {
+        .scorer-card::after {
             content: '';
             position: absolute;
             top: 0;
@@ -224,67 +421,86 @@
             width: 5px;
             height: 100%;
             background: linear-gradient(180deg, var(--accent-orange), transparent);
+            transition: width 0.4s;
+        }
+
+        .scorer-card:hover::after {
+            width: 100%;
+            opacity: 0.05;
         }
 
         .scorer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+            transform: translateX(10px);
+            box-shadow: -5px 15px 50px rgba(255, 107, 53, 0.3);
             border-color: var(--accent-orange);
         }
 
         .scorer-rank {
-            font-size: 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
             font-weight: 900;
             color: var(--text-secondary);
-            min-width: 60px;
+            min-width: 80px;
             text-align: center;
+            position: relative;
         }
 
         .scorer-card.rank-1 .scorer-rank {
-            color: var(--gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
         }
 
         .scorer-card.rank-2 .scorer-rank {
-            color: var(--silver);
-            text-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(192, 192, 192, 0.6));
         }
 
         .scorer-card.rank-3 .scorer-rank {
-            color: var(--bronze);
-            text-shadow: 0 0 20px rgba(205, 127, 50, 0.5);
+            background: linear-gradient(135deg, #cd7f32, #e89e60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(205, 127, 50, 0.6));
         }
 
         .scorer-info {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .scorer-name {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: var(--text-primary);
             margin: 0;
+            letter-spacing: -0.5px;
         }
 
         .scorer-team {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .scorer-team i {
             color: var(--accent-orange);
+            font-size: 1rem;
         }
 
         .scorer-stats {
             display: flex;
-            gap: 25px;
+            gap: 35px;
             align-items: center;
         }
 
@@ -292,169 +508,115 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            padding: 15px 20px;
+            background: rgba(255, 107, 53, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--accent-orange);
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
             font-weight: 900;
             color: var(--accent-orange);
+            line-height: 1;
         }
 
         .stat-label {
             font-size: 0.75rem;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            letter-spacing: 1.5px;
+            font-weight: 700;
         }
 
         .no-data {
             text-align: center;
-            padding: 100px 20px;
+            padding: 120px 20px;
             color: var(--text-secondary);
         }
 
         .no-data i {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 5rem;
+            margin-bottom: 25px;
             display: block;
             color: var(--accent-orange);
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         .no-data h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-
-        .podium-section {
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .podium-card {
-            background: var(--dark-card);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            border: 2px solid var(--border-dark);
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .podium-card.first {
-            grid-column: 1 / -1;
-            grid-row: 1;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1));
-            border-color: var(--gold);
-            transform: scale(1.05);
-        }
-
-        .podium-card.first::before {
-            content: '👑';
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.5rem;
-        }
-
-        .podium-card.second {
-            border-color: var(--silver);
-        }
-
-        .podium-card.third {
-            border-color: var(--bronze);
-        }
-
-        .podium-rank {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 15px;
-        }
-
-        .podium-card.first .podium-rank { color: var(--gold); }
-        .podium-card.second .podium-rank { color: var(--silver); }
-        .podium-card.third .podium-rank { color: var(--bronze); }
-
-        .podium-name {
             font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: var(--text-primary);
+            font-weight: 700;
         }
 
-        .podium-team {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .podium-goals {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: var(--accent-orange);
-            margin-bottom: 5px;
-        }
-
-        .podium-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 968px) {
+        @media (max-width: 1200px) {
             .podium-section {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
 
-            .podium-card.first {
+            .podium-card.first,
+            .podium-card.second,
+            .podium-card.third {
                 grid-column: 1;
+                transform: translateY(0);
             }
 
-            .scorers-hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .scorer-card {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .scorer-stats {
-                justify-content: center;
+            .podium-card.first:hover {
+                transform: translateY(-10px);
             }
         }
 
         @media (max-width: 768px) {
             .scorers-hero h1 {
-                font-size: 2rem;
+                font-size: 3rem;
+                letter-spacing: -1px;
             }
 
             .league-icon {
-                width: 55px;
-                height: 55px;
-                font-size: 1.5rem;
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
+            }
+
+            .scorer-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 25px;
+            }
+
+            .scorer-stats {
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
             .scorer-rank {
-                font-size: 1.8rem;
-                min-width: 40px;
+                font-size: 2rem;
             }
 
             .scorer-name {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
             }
 
             .stat-value {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+            }
+
+            .podium-goals {
+                font-size: 3.5rem;
+            }
+
+            .podium-name {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -500,7 +662,7 @@
     </nav>
 
     <section class="scorers-hero">
-        <div class="container">
+        <div class="hero-content">
             <h1 class="fade-in">GOLEADORES</h1>
             <p class="slide-up">Los máximos artilleros de las mejores ligas del mundo</p>
         </div>
@@ -510,7 +672,7 @@
         <div class="container">
             <div class="league-title">
                 <i class="fas fa-crown"></i>
-                Selecciona una Liga
+                SELECCIONA UNA LIGA
             </div>
             <div class="league-tabs">
                 <button class="league-tab active" data-league="ligamx" data-endpoint="/goleadores">
@@ -585,13 +747,28 @@
             podiumContainer.innerHTML = '';
 
             try {
+                console.log('🌐 Fetching scorers from:', `${API_BASE}${endpoint}`);
                 const response = await fetch(`${API_BASE}${endpoint}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('✅ Scorers data received:', data);
 
-                if (!data || !Array.isArray(data) || data.length === 0) {
+                let scorersArray = [];
+                
+                if (data.goleadores && Array.isArray(data.goleadores)) {
+                    scorersArray = data.goleadores;
+                } else if (Array.isArray(data)) {
+                    scorersArray = data;
+                }
+
+                if (!scorersArray || scorersArray.length === 0) {
                     container.innerHTML = `
                         <div class="no-data">
-                            <i class="fas fa-futbol-ball"></i>
+                            <i class="fas fa-futbol"></i>
                             <h3>No hay datos disponibles</h3>
                             <p>Los goleadores de esta liga no están disponibles en este momento.</p>
                         </div>
@@ -599,45 +776,54 @@
                     return;
                 }
 
-                if (data.length >= 3) {
+                console.log('📊 Processing', scorersArray.length, 'scorers');
+
+                if (scorersArray.length >= 3) {
+                    const top1 = scorersArray[0];
+                    const top2 = scorersArray[1];
+                    const top3 = scorersArray[2];
+
                     podiumContainer.innerHTML = `
                         <div class="podium-section">
-                            <div class="podium-card first">
-                                <div class="podium-rank">🥇</div>
-                                <div class="podium-name">${data[0].jugador || data[0].nombre || 'N/A'}</div>
-                                <div class="podium-team">${data[0].equipo || 'N/A'}</div>
-                                <div class="podium-goals">${data[0].goles || data[0].goals || '0'}</div>
-                                <div class="podium-label">Goles</div>
-                            </div>
                             <div class="podium-card second">
-                                <div class="podium-rank">🥈</div>
-                                <div class="podium-name">${data[1].jugador || data[1].nombre || 'N/A'}</div>
-                                <div class="podium-team">${data[1].equipo || 'N/A'}</div>
-                                <div class="podium-goals">${data[1].goles || data[1].goals || '0'}</div>
-                                <div class="podium-label">Goles</div>
+                                <div class="podium-medal">🥈</div>
+                                <div class="podium-rank">2°</div>
+                                <div class="podium-name">${top2.jugador || top2.nombre || top2.player || 'N/A'}</div>
+                                <div class="podium-team">${top2.equipo || top2.team || 'N/A'}</div>
+                                <div class="podium-goals">${top2.goles || top2.goals || '0'}</div>
+                                <div class="podium-label">GOLES</div>
+                            </div>
+                            <div class="podium-card first">
+                                <div class="podium-medal">👑</div>
+                                <div class="podium-rank">1°</div>
+                                <div class="podium-name">${top1.jugador || top1.nombre || top1.player || 'N/A'}</div>
+                                <div class="podium-team">${top1.equipo || top1.team || 'N/A'}</div>
+                                <div class="podium-goals">${top1.goles || top1.goals || '0'}</div>
+                                <div class="podium-label">GOLES</div>
                             </div>
                             <div class="podium-card third">
-                                <div class="podium-rank">🥉</div>
-                                <div class="podium-name">${data[2].jugador || data[2].nombre || 'N/A'}</div>
-                                <div class="podium-team">${data[2].equipo || 'N/A'}</div>
-                                <div class="podium-goals">${data[2].goles || data[2].goals || '0'}</div>
-                                <div class="podium-label">Goles</div>
+                                <div class="podium-medal">🥉</div>
+                                <div class="podium-rank">3°</div>
+                                <div class="podium-name">${top3.jugador || top3.nombre || top3.player || 'N/A'}</div>
+                                <div class="podium-team">${top3.equipo || top3.team || 'N/A'}</div>
+                                <div class="podium-goals">${top3.goles || top3.goals || '0'}</div>
+                                <div class="podium-label">GOLES</div>
                             </div>
                         </div>
                     `;
                 }
 
-                const scorersHTML = data.map((scorer, index) => {
+                const scorersHTML = scorersArray.map((scorer, index) => {
                     const rank = index + 1;
                     const name = scorer.jugador || scorer.nombre || scorer.player || 'N/A';
                     const team = scorer.equipo || scorer.team || 'N/A';
                     const goals = scorer.goles || scorer.goals || '0';
                     const partidos = scorer.partidos || scorer.matches || scorer.PJ || '-';
-                    const promedio = scorer.promedio || (goals && partidos && partidos !== '-' ? (goals / partidos).toFixed(2) : '-');
+                    const promedio = partidos !== '-' && partidos > 0 ? (goals / partidos).toFixed(2) : '-';
 
                     return `
                         <div class="scorer-card rank-${rank}" data-rank="${rank}">
-                            <div class="scorer-rank">${rank}</div>
+                            <div class="scorer-rank">${rank}°</div>
                             <div class="scorer-info">
                                 <h3 class="scorer-name">${name}</h3>
                                 <div class="scorer-team">
@@ -648,16 +834,18 @@
                             <div class="scorer-stats">
                                 <div class="stat-item">
                                     <div class="stat-value">${goals}</div>
-                                    <div class="stat-label">Goles</div>
+                                    <div class="stat-label">GOLES</div>
                                 </div>
+                                ${partidos !== '-' ? `
                                 <div class="stat-item">
                                     <div class="stat-value">${partidos}</div>
-                                    <div class="stat-label">Partidos</div>
+                                    <div class="stat-label">PARTIDOS</div>
                                 </div>
+                                ` : ''}
                                 ${promedio !== '-' ? `
                                 <div class="stat-item">
                                     <div class="stat-value">${promedio}</div>
-                                    <div class="stat-label">Promedio</div>
+                                    <div class="stat-label">PROMEDIO</div>
                                 </div>
                                 ` : ''}
                             </div>
@@ -666,14 +854,16 @@
                 }).join('');
 
                 container.innerHTML = `<div class="scorers-grid">${scorersHTML}</div>`;
+                console.log('✅ Scorers displayed successfully');
 
             } catch (error) {
-                console.error('Error loading scorers:', error);
+                console.error('❌ Error loading scorers:', error);
                 container.innerHTML = `
                     <div class="no-data">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h3>Error al cargar los datos</h3>
                         <p>No se pudieron cargar los goleadores. Por favor, intenta de nuevo más tarde.</p>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Error: ${error.message}</p>
                     </div>
                 `;
             }
@@ -686,11 +876,15 @@
                 
                 currentLeague = tab.dataset.league;
                 currentEndpoint = tab.dataset.endpoint;
+                console.log('🔄 Changing to league:', currentLeague);
                 loadScorers(currentEndpoint);
             });
         });
 
-        loadScorers(currentEndpoint);
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Page loaded, fetching scorers...');
+            loadScorers(currentEndpoint);
+        });
     </script>
 </body>
 </html>
