@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/animations.css?v=2024101702">
     <link rel="stylesheet" href="css/bottom-nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -20,229 +20,130 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --ultra-dark: #0a0a0a;
-            --dark-bg: #0f0f0f;
-            --dark-card: #1a1a1a;
-            --dark-hover: #252525;
-            --accent-orange: #ff6b35;
-            --accent-orange-dark: #e55a2b;
-            --accent-orange-light: #ff8c5a;
-            --text-primary: #ffffff;
-            --text-secondary: #9e9e9e;
-            --border-dark: #2a2a2a;
-            --gold: #ffd700;
-            --silver: #c0c0c0;
-            --bronze: #cd7f32;
-        }
-
         body {
-            background: var(--ultra-dark);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding-bottom: 80px;
         }
 
-        .scorers-hero {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(10, 10, 10, 1) 100%);
-            padding: 120px 0 80px;
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 80px 20px 40px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 3px solid var(--accent-orange);
+            border-bottom: 2px solid #ff6b35;
         }
 
-        .scorers-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .scorers-hero h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 5rem;
+        .hero-title {
+            font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #ffd700 0%, #ff6b35 50%, #ffd700 100%);
-            background-size: 200% auto;
+            background: linear-gradient(135deg, #ff6b35, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 20px;
-            letter-spacing: -3px;
-            text-transform: uppercase;
-            animation: shimmer 3s ease-in-out infinite;
-            text-shadow: 0 0 80px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
         }
 
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: #9e9e9e;
+            font-weight: 500;
         }
 
-        .scorers-hero p {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-
-        .league-selector {
-            background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%);
-            padding: 40px 0;
-            border-bottom: 1px solid var(--border-dark);
+        .league-section {
+            background: #0f0f0f;
+            padding: 25px 15px;
+            border-bottom: 1px solid #2a2a2a;
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(10px);
         }
 
-        .league-title {
+        .league-label {
             text-align: center;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
+            font-size: 0.75rem;
+            color: #9e9e9e;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+
+        .league-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .league-title i {
-            color: var(--gold);
-            font-size: 1.2rem;
-            animation: rotate 3s linear infinite;
-        }
-
-        @keyframes rotate {
-            100% { transform: rotate(360deg); }
-        }
-
-        .league-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            padding: 0 20px;
-        }
-
-        .league-tab {
-            background: transparent;
-            border: none;
+        .league-btn {
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 15px 10px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            padding: 15px;
-            border-radius: 20px;
+            gap: 8px;
+        }
+
+        .league-btn.active {
+            border-color: #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .league-btn:active {
+            transform: scale(0.95);
         }
 
         .league-icon {
-            width: 75px;
-            height: 75px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: white;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .league-icon::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.5), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .league-tab.active .league-icon::before {
-            opacity: 1;
-            animation: rotate 3s linear infinite;
-        }
-
-        .league-tab.active .league-icon {
-            transform: scale(1.2);
-            box-shadow: 0 8px 40px rgba(255, 107, 53, 0.7);
-        }
-
-        .league-tab:hover .league-icon {
-            transform: scale(1.1);
-        }
-
-        .league-icon.ligamx { background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%); }
-        .league-icon.premier { background: linear-gradient(135deg, #37003c 0%, #6c2a8f 100%); }
-        .league-icon.laliga { background: linear-gradient(135deg, #ff6600 0%, #ff9933 100%); }
-        .league-icon.seriea { background: linear-gradient(135deg, #008fd7 0%, #00b4d8 100%); }
-        .league-icon.bundesliga { background: linear-gradient(135deg, #d20515 0%, #ff2836 100%); }
-        .league-icon.ligue1 { background: linear-gradient(135deg, #dae025 0%, #f4f776 100%); }
+        .league-icon.ligamx { background: linear-gradient(135deg, #ff6b35, #ff8c5a); }
+        .league-icon.premier { background: linear-gradient(135deg, #37003c, #6c2a8f); }
+        .league-icon.laliga { background: linear-gradient(135deg, #ff6600, #ff9933); }
+        .league-icon.seriea { background: linear-gradient(135deg, #008fd7, #00b4d8); }
+        .league-icon.bundesliga { background: linear-gradient(135deg, #d20515, #ff2836); }
+        .league-icon.ligue1 { background: linear-gradient(135deg, #dae025, #f4f776); }
 
         .league-name {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+            font-size: 0.7rem;
+            color: #9e9e9e;
             font-weight: 600;
-            transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
-        .league-tab.active .league-name {
-            color: var(--accent-orange);
-            font-weight: 700;
+        .league-btn.active .league-name {
+            color: #ff6b35;
         }
 
-        .scorers-content {
-            padding: 80px 0;
-            background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 50%, #0a0a0a 100%);
+        .content-section {
+            padding: 20px 15px;
         }
 
-        .scorers-table-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        .loading-spinner {
+        .loading {
             text-align: center;
-            padding: 100px 20px;
-            color: var(--text-secondary);
+            padding: 60px 20px;
+            color: #9e9e9e;
         }
 
-        .loading-spinner i {
-            font-size: 4rem;
-            color: var(--accent-orange);
+        .loading i {
+            font-size: 3rem;
+            color: #ff6b35;
             animation: spin 1s linear infinite;
         }
 
@@ -250,373 +151,246 @@
             100% { transform: rotate(360deg); }
         }
 
-        .podium-section {
-            max-width: 1400px;
-            margin: 0 auto 80px;
-            padding: 0 30px;
+        .podium {
+            margin-bottom: 30px;
+        }
+
+        .podium-grid {
             display: grid;
-            grid-template-columns: 1fr 1.2fr 1fr;
-            gap: 30px;
-            align-items: end;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .podium-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(15, 15, 15, 0.9));
-            border-radius: 25px;
-            padding: 40px 30px;
+            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            padding: 25px 20px;
             text-align: center;
-            border: 2px solid var(--border-dark);
+            border: 2px solid #2a2a2a;
             position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-        }
-
-        .podium-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, transparent, var(--accent-orange), transparent);
-        }
-
-        .podium-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
         }
 
         .podium-card.first {
-            grid-column: 2;
-            transform: translateY(-20px);
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
-            border-color: var(--gold);
-            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.4);
-        }
-
-        .podium-card.first:hover {
-            transform: translateY(-30px);
-        }
-
-        .podium-card.first::before {
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            border-color: #ffd700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.1));
         }
 
         .podium-card.second {
-            border-color: var(--silver);
-            grid-column: 1;
-        }
-
-        .podium-card.second::before {
-            background: linear-gradient(90deg, transparent, var(--silver), transparent);
+            border-color: #c0c0c0;
         }
 
         .podium-card.third {
-            border-color: var(--bronze);
-            grid-column: 3;
-        }
-
-        .podium-card.third::before {
-            background: linear-gradient(90deg, transparent, var(--bronze), transparent);
+            border-color: #cd7f32;
         }
 
         .podium-medal {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            display: inline-block;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
         .podium-rank {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-size: 1.2rem;
             font-weight: 900;
-            margin-bottom: 15px;
-            letter-spacing: -2px;
+            margin-bottom: 10px;
         }
 
-        .podium-card.first .podium-rank {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-        }
+        .podium-card.first .podium-rank { color: #ffd700; }
+        .podium-card.second .podium-rank { color: #c0c0c0; }
+        .podium-card.third .podium-rank { color: #cd7f32; }
 
-        .podium-card.second .podium-rank {
-            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .podium-card.third .podium-rank {
-            background: linear-gradient(135deg, #cd7f32, #e89e60);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .podium-name {
-            font-size: 1.8rem;
+        .podium-player {
+            font-size: 1.3rem;
             font-weight: 800;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-            line-height: 1.2;
+            margin-bottom: 8px;
+            color: #ffffff;
         }
 
         .podium-team {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            font-weight: 500;
+            font-size: 0.9rem;
+            color: #9e9e9e;
+            margin-bottom: 15px;
         }
 
         .podium-goals {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4.5rem;
+            font-size: 3rem;
             font-weight: 900;
-            color: var(--accent-orange);
-            margin-bottom: 8px;
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            color: #ff6b35;
+            margin-bottom: 5px;
         }
 
         .podium-label {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
+            font-size: 0.75rem;
+            color: #9e9e9e;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             font-weight: 600;
         }
 
-        .scorers-grid {
-            display: grid;
-            gap: 20px;
+        .scorers-list {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            padding-left: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .scorer-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(15, 15, 15, 0.8));
-            border-radius: 20px;
-            padding: 30px 35px;
-            border: 2px solid var(--border-dark);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 2px solid #2a2a2a;
             display: flex;
             align-items: center;
-            gap: 30px;
-            backdrop-filter: blur(10px);
+            gap: 15px;
+            transition: all 0.3s ease;
         }
 
-        .scorer-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--accent-orange), transparent);
-            transition: width 0.4s;
-        }
-
-        .scorer-card:hover::after {
-            width: 100%;
-            opacity: 0.05;
-        }
-
-        .scorer-card:hover {
-            transform: translateX(10px);
-            box-shadow: -5px 15px 50px rgba(255, 107, 53, 0.3);
-            border-color: var(--accent-orange);
+        .scorer-card:active {
+            transform: scale(0.98);
+            border-color: #ff6b35;
         }
 
         .scorer-rank {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             font-weight: 900;
-            color: var(--text-secondary);
-            min-width: 80px;
+            color: #9e9e9e;
+            min-width: 45px;
             text-align: center;
-            position: relative;
         }
 
-        .scorer-card.rank-1 .scorer-rank {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
-        }
-
-        .scorer-card.rank-2 .scorer-rank {
-            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 20px rgba(192, 192, 192, 0.6));
-        }
-
-        .scorer-card.rank-3 .scorer-rank {
-            background: linear-gradient(135deg, #cd7f32, #e89e60);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 20px rgba(205, 127, 50, 0.6));
-        }
+        .scorer-card.top-1 .scorer-rank { color: #ffd700; }
+        .scorer-card.top-2 .scorer-rank { color: #c0c0c0; }
+        .scorer-card.top-3 .scorer-rank { color: #cd7f32; }
 
         .scorer-info {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            min-width: 0;
         }
 
         .scorer-name {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin: 0;
-            letter-spacing: -0.5px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .scorer-team {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 500;
+            font-size: 0.85rem;
+            color: #9e9e9e;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
         }
 
         .scorer-team i {
-            color: var(--accent-orange);
-            font-size: 1rem;
+            color: #ff6b35;
+            font-size: 0.75rem;
+        }
+
+        .scorer-goals {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ff6b35;
+            text-align: center;
+            min-width: 60px;
         }
 
         .scorer-stats {
             display: flex;
-            gap: 35px;
-            align-items: center;
+            gap: 10px;
         }
 
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 15px 20px;
-            background: rgba(255, 107, 53, 0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 107, 53, 0.2);
-            transition: all 0.3s;
-        }
-
-        .stat-item:hover {
+        .stat-box {
+            text-align: center;
             background: rgba(255, 107, 53, 0.1);
-            border-color: var(--accent-orange);
+            border-radius: 10px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
         }
 
         .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--accent-orange);
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ff6b35;
             line-height: 1;
+            margin-bottom: 3px;
         }
 
         .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+            font-size: 0.65rem;
+            color: #9e9e9e;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .no-data {
             text-align: center;
-            padding: 120px 20px;
-            color: var(--text-secondary);
+            padding: 80px 20px;
+            color: #9e9e9e;
         }
 
         .no-data i {
-            font-size: 5rem;
-            margin-bottom: 25px;
+            font-size: 4rem;
+            margin-bottom: 20px;
             display: block;
-            color: var(--accent-orange);
+            color: #ff6b35;
             opacity: 0.4;
         }
 
         .no-data h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: var(--text-primary);
-            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #ffffff;
         }
 
-        @media (max-width: 1200px) {
-            .podium-section {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .podium-card.first,
-            .podium-card.second,
-            .podium-card.third {
-                grid-column: 1;
-                transform: translateY(0);
-            }
-
-            .podium-card.first:hover {
-                transform: translateY(-10px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .scorers-hero h1 {
+        @media (min-width: 480px) {
+            .hero-title {
                 font-size: 3rem;
-                letter-spacing: -1px;
+            }
+
+            .league-grid {
+                grid-template-columns: repeat(6, 1fr);
             }
 
             .league-icon {
                 width: 60px;
                 height: 60px;
-                font-size: 1.6rem;
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                padding: 100px 30px 50px;
+            }
+
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .content-section {
+                padding: 30px 20px;
             }
 
             .scorer-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 25px;
-            }
-
-            .scorer-stats {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .scorer-rank {
-                font-size: 2rem;
+                padding: 22px;
             }
 
             .scorer-name {
-                font-size: 1.4rem;
-            }
-
-            .stat-value {
-                font-size: 1.8rem;
-            }
-
-            .podium-goals {
-                font-size: 3.5rem;
-            }
-
-            .podium-name {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -661,93 +435,78 @@
         </div>
     </nav>
 
-    <section class="scorers-hero">
-        <div class="hero-content">
-            <h1 class="fade-in">GOLEADORES</h1>
-            <p class="slide-up">Los máximos artilleros de las mejores ligas del mundo</p>
-        </div>
-    </section>
+    <div class="hero-section">
+        <h1 class="hero-title">GOLEADORES</h1>
+        <p class="hero-subtitle">Los máximos artilleros de las mejores ligas</p>
+    </div>
 
-    <section class="league-selector">
-        <div class="container">
-            <div class="league-title">
-                <i class="fas fa-crown"></i>
-                SELECCIONA UNA LIGA
-            </div>
-            <div class="league-tabs">
-                <button class="league-tab active" data-league="ligamx" data-endpoint="/goleadores">
-                    <div class="league-icon ligamx">
-                        <i class="fas fa-futbol"></i>
-                    </div>
-                    <span class="league-name">Liga MX</span>
-                </button>
-                <button class="league-tab" data-league="premier" data-endpoint="/premier/goleadores">
-                    <div class="league-icon premier">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <span class="league-name">Premier</span>
-                </button>
-                <button class="league-tab" data-league="laliga" data-endpoint="/laliga/goleadores">
-                    <div class="league-icon laliga">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="league-name">La Liga</span>
-                </button>
-                <button class="league-tab" data-league="seriea" data-endpoint="/seriea/goleadores">
-                    <div class="league-icon seriea">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <span class="league-name">Serie A</span>
-                </button>
-                <button class="league-tab" data-league="bundesliga" data-endpoint="/bundesliga/goleadores">
-                    <div class="league-icon bundesliga">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <span class="league-name">Bundesliga</span>
-                </button>
-                <button class="league-tab" data-league="ligue1" data-endpoint="/ligue1/goleadores">
-                    <div class="league-icon ligue1">
-                        <i class="fas fa-flag"></i>
-                    </div>
-                    <span class="league-name">Ligue 1</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <section class="scorers-content">
-        <div id="podiumContainer"></div>
-        <div class="scorers-table-container">
-            <div id="scorersContainer">
-                <div class="loading-spinner">
+    <div class="league-section">
+        <div class="league-label">SELECCIONA UNA LIGA</div>
+        <div class="league-grid">
+            <button class="league-btn active" data-league="ligamx" data-endpoint="/goleadores">
+                <div class="league-icon ligamx">
                     <i class="fas fa-futbol"></i>
-                    <p>Cargando goleadores...</p>
                 </div>
+                <span class="league-name">Liga MX</span>
+            </button>
+            <button class="league-btn" data-league="premier" data-endpoint="/premier/goleadores">
+                <div class="league-icon premier">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <span class="league-name">Premier</span>
+            </button>
+            <button class="league-btn" data-league="laliga" data-endpoint="/laliga/goleadores">
+                <div class="league-icon laliga">
+                    <i class="fas fa-star"></i>
+                </div>
+                <span class="league-name">La Liga</span>
+            </button>
+            <button class="league-btn" data-league="seriea" data-endpoint="/seriea/goleadores">
+                <div class="league-icon seriea">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <span class="league-name">Serie A</span>
+            </button>
+            <button class="league-btn" data-league="bundesliga" data-endpoint="/bundesliga/goleadores">
+                <div class="league-icon bundesliga">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <span class="league-name">Bundesliga</span>
+            </button>
+            <button class="league-btn" data-league="ligue1" data-endpoint="/ligue1/goleadores">
+                <div class="league-icon ligue1">
+                    <i class="fas fa-flag"></i>
+                </div>
+                <span class="league-name">Ligue 1</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <div id="scorersContainer">
+            <div class="loading">
+                <i class="fas fa-futbol"></i>
+                <p>Cargando goleadores...</p>
             </div>
         </div>
-    </section>
+    </div>
 
     <script src="js/main.js"></script>
     <script src="js/bottom-nav.js"></script>
     <script>
         const API_BASE = 'https://ultragol-api3.onrender.com';
-        let currentLeague = 'ligamx';
-        let currentEndpoint = '/goleadores';
 
         async function loadScorers(endpoint) {
             const container = document.getElementById('scorersContainer');
-            const podiumContainer = document.getElementById('podiumContainer');
             
             container.innerHTML = `
-                <div class="loading-spinner">
+                <div class="loading">
                     <i class="fas fa-futbol"></i>
                     <p>Cargando goleadores...</p>
                 </div>
             `;
-            podiumContainer.innerHTML = '';
 
             try {
-                console.log('🌐 Fetching scorers from:', `${API_BASE}${endpoint}`);
                 const response = await fetch(`${API_BASE}${endpoint}`);
                 
                 if (!response.ok) {
@@ -755,7 +514,6 @@
                 }
                 
                 const data = await response.json();
-                console.log('✅ Scorers data received:', data);
 
                 let scorersArray = [];
                 
@@ -776,115 +534,99 @@
                     return;
                 }
 
-                console.log('📊 Processing', scorersArray.length, 'scorers');
+                let html = '';
 
                 if (scorersArray.length >= 3) {
-                    const top1 = scorersArray[0];
-                    const top2 = scorersArray[1];
-                    const top3 = scorersArray[2];
-
-                    podiumContainer.innerHTML = `
-                        <div class="podium-section">
-                            <div class="podium-card second">
-                                <div class="podium-medal">🥈</div>
-                                <div class="podium-rank">2°</div>
-                                <div class="podium-name">${top2.jugador || top2.nombre || top2.player || 'N/A'}</div>
-                                <div class="podium-team">${top2.equipo || top2.team || 'N/A'}</div>
-                                <div class="podium-goals">${top2.goles || top2.goals || '0'}</div>
-                                <div class="podium-label">GOLES</div>
-                            </div>
-                            <div class="podium-card first">
-                                <div class="podium-medal">👑</div>
-                                <div class="podium-rank">1°</div>
-                                <div class="podium-name">${top1.jugador || top1.nombre || top1.player || 'N/A'}</div>
-                                <div class="podium-team">${top1.equipo || top1.team || 'N/A'}</div>
-                                <div class="podium-goals">${top1.goles || top1.goals || '0'}</div>
-                                <div class="podium-label">GOLES</div>
-                            </div>
-                            <div class="podium-card third">
-                                <div class="podium-medal">🥉</div>
-                                <div class="podium-rank">3°</div>
-                                <div class="podium-name">${top3.jugador || top3.nombre || top3.player || 'N/A'}</div>
-                                <div class="podium-team">${top3.equipo || top3.team || 'N/A'}</div>
-                                <div class="podium-goals">${top3.goles || top3.goals || '0'}</div>
-                                <div class="podium-label">GOLES</div>
-                            </div>
+                    const [first, second, third] = scorersArray.slice(0, 3);
+                    
+                    html += '<div class="podium"><div class="podium-grid">';
+                    
+                    html += `
+                        <div class="podium-card first">
+                            <div class="podium-medal">👑</div>
+                            <div class="podium-rank">PRIMER LUGAR</div>
+                            <div class="podium-player">${first.jugador || first.nombre || first.player || 'N/A'}</div>
+                            <div class="podium-team">${first.equipo || first.team || 'N/A'}</div>
+                            <div class="podium-goals">${first.goles || first.goals || '0'}</div>
+                            <div class="podium-label">GOLES</div>
+                        </div>
+                        <div class="podium-card second">
+                            <div class="podium-medal">🥈</div>
+                            <div class="podium-rank">SEGUNDO LUGAR</div>
+                            <div class="podium-player">${second.jugador || second.nombre || second.player || 'N/A'}</div>
+                            <div class="podium-team">${second.equipo || second.team || 'N/A'}</div>
+                            <div class="podium-goals">${second.goles || second.goals || '0'}</div>
+                            <div class="podium-label">GOLES</div>
+                        </div>
+                        <div class="podium-card third">
+                            <div class="podium-medal">🥉</div>
+                            <div class="podium-rank">TERCER LUGAR</div>
+                            <div class="podium-player">${third.jugador || third.nombre || third.player || 'N/A'}</div>
+                            <div class="podium-team">${third.equipo || third.team || 'N/A'}</div>
+                            <div class="podium-goals">${third.goles || third.goals || '0'}</div>
+                            <div class="podium-label">GOLES</div>
                         </div>
                     `;
+                    
+                    html += '</div></div>';
                 }
 
-                const scorersHTML = scorersArray.map((scorer, index) => {
+                html += '<div class="scorers-list">';
+                html += '<div class="section-title">Tabla Completa de Goleadores</div>';
+
+                scorersArray.forEach((scorer, index) => {
                     const rank = index + 1;
                     const name = scorer.jugador || scorer.nombre || scorer.player || 'N/A';
                     const team = scorer.equipo || scorer.team || 'N/A';
                     const goals = scorer.goles || scorer.goals || '0';
-                    const partidos = scorer.partidos || scorer.matches || scorer.PJ || '-';
-                    const promedio = partidos !== '-' && partidos > 0 ? (goals / partidos).toFixed(2) : '-';
+                    
+                    let rankClass = '';
+                    if (rank === 1) rankClass = 'top-1';
+                    else if (rank === 2) rankClass = 'top-2';
+                    else if (rank === 3) rankClass = 'top-3';
 
-                    return `
-                        <div class="scorer-card rank-${rank}" data-rank="${rank}">
-                            <div class="scorer-rank">${rank}°</div>
+                    html += `
+                        <div class="scorer-card ${rankClass}">
+                            <div class="scorer-rank">${rank}</div>
                             <div class="scorer-info">
-                                <h3 class="scorer-name">${name}</h3>
+                                <div class="scorer-name">${name}</div>
                                 <div class="scorer-team">
                                     <i class="fas fa-shield-halved"></i>
                                     ${team}
                                 </div>
                             </div>
-                            <div class="scorer-stats">
-                                <div class="stat-item">
-                                    <div class="stat-value">${goals}</div>
-                                    <div class="stat-label">GOLES</div>
-                                </div>
-                                ${partidos !== '-' ? `
-                                <div class="stat-item">
-                                    <div class="stat-value">${partidos}</div>
-                                    <div class="stat-label">PARTIDOS</div>
-                                </div>
-                                ` : ''}
-                                ${promedio !== '-' ? `
-                                <div class="stat-item">
-                                    <div class="stat-value">${promedio}</div>
-                                    <div class="stat-label">PROMEDIO</div>
-                                </div>
-                                ` : ''}
-                            </div>
+                            <div class="scorer-goals">${goals}</div>
                         </div>
                     `;
-                }).join('');
+                });
 
-                container.innerHTML = `<div class="scorers-grid">${scorersHTML}</div>`;
-                console.log('✅ Scorers displayed successfully');
+                html += '</div>';
+
+                container.innerHTML = html;
 
             } catch (error) {
-                console.error('❌ Error loading scorers:', error);
+                console.error('Error loading scorers:', error);
                 container.innerHTML = `
                     <div class="no-data">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h3>Error al cargar los datos</h3>
                         <p>No se pudieron cargar los goleadores. Por favor, intenta de nuevo más tarde.</p>
-                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Error: ${error.message}</p>
                     </div>
                 `;
             }
         }
 
-        document.querySelectorAll('.league-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.league-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+        document.querySelectorAll('.league-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
                 
-                currentLeague = tab.dataset.league;
-                currentEndpoint = tab.dataset.endpoint;
-                console.log('🔄 Changing to league:', currentLeague);
-                loadScorers(currentEndpoint);
+                const endpoint = btn.dataset.endpoint;
+                loadScorers(endpoint);
             });
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 Page loaded, fetching scorers...');
-            loadScorers(currentEndpoint);
-        });
+        loadScorers('/goleadores');
     </script>
 </body>
 </html>
