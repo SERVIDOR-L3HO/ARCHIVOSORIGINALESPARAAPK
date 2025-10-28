@@ -67,10 +67,10 @@ class TransmisionesLive {
             
             // Filtrar solo transmisiones relevantes:
             // - Partidos que empezaron hace menos de 2 horas (pueden estar en curso)
-            // - Partidos que empiezan en las próximas 3 horas
+            // - Partidos que empiezan en las próximas 8 horas
             const ahora = new Date();
             const dosHorasAtras = new Date(ahora.getTime() - (2 * 60 * 60 * 1000));
-            const treHorasDespues = new Date(ahora.getTime() + (3 * 60 * 60 * 1000));
+            const treHorasDespues = new Date(ahora.getTime() + (8 * 60 * 60 * 1000));
             
             this.transmisiones = data.transmisiones
                 .filter(t => {
@@ -85,7 +85,8 @@ class TransmisionesLive {
             this.renderizarTransmisiones();
             
             console.log('✅ Transmisiones cargadas:', this.transmisiones.length, 
-                       `(entre ${dosHorasAtras.toLocaleTimeString()} y ${treHorasDespues.toLocaleTimeString()})`);
+                       `(entre ${dosHorasAtras.toLocaleTimeString()} y ${treHorasDespues.toLocaleTimeString()})`, 
+                       this.transmisiones.slice(0, 3).map(t => t.evento));
         } catch (error) {
             console.error('❌ Error al cargar transmisiones:', error);
             this.mostrarError();
@@ -176,7 +177,7 @@ class TransmisionesLive {
         card.className = 'transmision-card';
         
         // Procesar canales
-        const canales = transmision.canales.map(c => this.extraerNumeroCanal(c)).filter(c => c);
+        const canales = transmision.canales.map(c => this.extraerNumeroCanal(c.numero)).filter(c => c);
         
         let canalesHTML = '';
         if (canales.length === 1) {

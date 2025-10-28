@@ -1102,9 +1102,9 @@ function createTransmissionCard(transmision) {
         <div class="transmission-channel">
             <div class="channel-info">
                 <i class="fas fa-tv"></i>
-                Canal ${transmision.canales && transmision.canales.length > 0 ? transmision.canales[0].replace(/[a-z]+$/i, '') : 'N/A'}
+                Canal ${transmision.canales && transmision.canales.length > 0 ? transmision.canales[0].numero.replace(/[a-z]+$/i, '') : 'N/A'}
             </div>
-            <button class="watch-transmission-btn" onclick="watchTransmission('${transmision.canales && transmision.canales.length > 0 ? transmision.canales[0].replace(/[a-z]+$/i, '') : ''}')">
+            <button class="watch-transmission-btn" onclick="watchTransmission('${transmision.canales && transmision.canales.length > 0 ? transmision.canales[0].numero.replace(/[a-z]+$/i, '') : ''}')">
                 <i class="fas fa-play"></i>
                 Ver
             </button>
