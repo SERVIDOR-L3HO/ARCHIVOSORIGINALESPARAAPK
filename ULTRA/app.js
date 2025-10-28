@@ -1102,11 +1102,15 @@ function createTransmissionCard(transmision) {
         <div class="transmission-channel">
             <div class="channel-info">
                 <i class="fas fa-tv"></i>
-                Canal ${transmision.canales && transmision.canales.length > 0 ? transmision.canales[0].numero.replace(/[a-z]+$/i, '') : 'N/A'}
+                ${transmision.canales && transmision.canales.length > 0 ? 
+                    (transmision.canales.length > 1 ? 
+                        `${transmision.canales.length} canales disponibles` : 
+                        `Canal ${transmision.canales[0].numero.replace(/[a-z]+$/i, '')}`) 
+                    : 'N/A'}
             </div>
-            <button class="watch-transmission-btn" onclick="watchTransmission('${transmision.canales && transmision.canales.length > 0 ? transmision.canales[0].numero.replace(/[a-z]+$/i, '') : ''}')">
+            <button class="watch-transmission-btn" data-transmission='${JSON.stringify(transmision).replace(/'/g, "&#39;")}'>
                 <i class="fas fa-play"></i>
-                Ver
+                Ver ${transmision.canales && transmision.canales.length > 1 ? 'Opciones' : ''}
             </button>
         </div>
     `;
@@ -1171,13 +1175,103 @@ function getSportImage(evento) {
     return '../assets/futbol-banner.jpg';
 }
 
-function watchTransmission(numeroCanal) {
-    // Cerrar el modal
+// Variable global para almacenar la transmisión actual
+let currentTransmission = null;
+
+function watchTransmission(transmisionData) {
+    // Si es un string (llamada antigua), convertir a objeto simple
+    if (typeof transmisionData === 'string') {
+        currentTransmission = {
+            evento: 'Transmisión',
+            canales: [{
+                numero: transmisionData,
+                nombre: `Canal ${transmisionData}`,
+                links: {
+                    hoca: `https://bolaloca.my/player/2/${transmisionData}`,
+                    caster: `https://bolaloca.my/player/3/${transmisionData}`,
+                    wigi: `https://bolaloca.my/player/4/${transmisionData}`
+                }
+            }]
+        };
+    } else {
+        currentTransmission = transmisionData;
+    }
+    
+    // Abrir el modal de opciones
+    openStreamOptionsModal();
+}
+
+function openStreamOptionsModal() {
+    if (!currentTransmission) return;
+    
+    const modal = document.getElementById('streamOptionsModal');
+    const matchName = document.getElementById('streamMatchName');
+    const optionsGrid = document.getElementById('streamOptionsGrid');
+    
+    // Formatear el nombre del partido
+    const nombrePartido = formatMatchName(currentTransmission.evento);
+    matchName.textContent = nombrePartido;
+    
+    // Limpiar grid
+    optionsGrid.innerHTML = '';
+    
+    // Crear opciones para cada canal
+    currentTransmission.canales.forEach((canal, index) => {
+        const channelGroup = document.createElement('div');
+        channelGroup.className = 'stream-channel-group';
+        
+        const numeroCanal = canal.numero.replace(/[a-z]+$/i, '');
+        
+        channelGroup.innerHTML = `
+            <div class="channel-name">
+                <i class="fas fa-satellite-dish"></i>
+                <h4>${canal.nombre || `Canal ${numeroCanal}`}</h4>
+                <span class="channel-number">CH ${numeroCanal}</span>
+            </div>
+            <div class="stream-links">
+                ${Object.entries(canal.links).map(([provider, url]) => `
+                    <button class="stream-link-btn" onclick="selectStreamOption('${url}')">
+                        <div class="stream-link-icon">
+                            <i class="fas ${getProviderIcon(provider)}"></i>
+                        </div>
+                        <span class="stream-link-name">${provider.toUpperCase()}</span>
+                        <span class="stream-link-quality">HD</span>
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        
+        optionsGrid.appendChild(channelGroup);
+    });
+    
+    // Mostrar modal
+    modal.classList.add('active');
+}
+
+function getProviderIcon(provider) {
+    const icons = {
+        'hoca': 'fa-play-circle',
+        'caster': 'fa-broadcast-tower',
+        'wigi': 'fa-wifi'
+    };
+    return icons[provider] || 'fa-tv';
+}
+
+function selectStreamOption(streamUrl) {
+    // Cerrar el modal de opciones
+    closeStreamOptionsModal();
+    
+    // Cerrar el modal de transmisiones si está abierto
     closeAllTransmissionsModal();
     
-    // Abrir ULTRACANALES con el número de canal específico
-    const ultracanalesUrl = `ultracanales/index.html?canal=${numeroCanal}`;
-    openStream(ultracanalesUrl);
+    // Abrir la transmisión en una nueva pestaña
+    window.open(streamUrl, '_blank');
+}
+
+function closeStreamOptionsModal() {
+    const modal = document.getElementById('streamOptionsModal');
+    modal.classList.remove('active');
+    currentTransmission = null;
 }
 
 function closeAllTransmissionsModal() {
@@ -1194,5 +1288,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeAllTransmissionsModal();
             }
         });
+    }
+    
+    // Cerrar modal de opciones al hacer clic en overlay
+    const streamOptionsModal = document.getElementById('streamOptionsModal');
+    if (streamOptionsModal) {
+        streamOptionsModal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('stream-options-overlay')) {
+                closeStreamOptionsModal();
+            }
+        });
+    }
+});
+
+// Delegar eventos de clic para los botones de transmisión
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.watch-transmission-btn');
+    if (btn && btn.dataset.transmission) {
+        try {
+            const transmisionData = JSON.parse(btn.dataset.transmission.replace(/&#39;/g, "'"));
+            watchTransmission(transmisionData);
+        } catch (error) {
+            console.error('Error al parsear datos de transmisión:', error);
+        }
     }
 });

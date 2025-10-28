@@ -364,6 +364,25 @@
         </div>
     </div>
 
+    <div id="streamOptionsModal" class="stream-options-modal">
+        <div class="stream-options-overlay" onclick="closeStreamOptionsModal()"></div>
+        <div class="stream-options-content">
+            <div class="stream-options-header">
+                <div class="header-icon-wrapper">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <h3>Elige tu Transmisión</h3>
+                <p id="streamMatchName">Partido</p>
+                <button class="close-stream-options" onclick="closeStreamOptionsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="stream-options-body">
+                <div id="streamOptionsGrid" class="stream-options-grid"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

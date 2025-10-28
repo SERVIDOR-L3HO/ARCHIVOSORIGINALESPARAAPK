@@ -1799,3 +1799,337 @@ input:checked + .slider:before {
     font-size: 9px;
     color: white;
 }
+
+/* ===========================================
+   Stream Options Modal - Creative Design
+   =========================================== */
+
+.stream-options-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20000;
+    animation: fadeIn 0.3s ease;
+}
+
+.stream-options-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stream-options-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(15px);
+}
+
+.stream-options-content {
+    position: relative;
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.95));
+    border-radius: 30px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 
+        0 25px 80px rgba(255, 69, 0, 0.3),
+        0 0 100px rgba(255, 69, 0, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 69, 0, 0.2);
+    animation: modalZoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7) translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.stream-options-header {
+    position: relative;
+    padding: 35px 25px 25px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(255, 69, 0, 0.05));
+    border-bottom: 2px solid rgba(255, 69, 0, 0.3);
+}
+
+.header-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 15px;
+    background: linear-gradient(135deg, #FF5722, #FF7043);
+    border-radius: 50%;
+    box-shadow: 
+        0 10px 30px rgba(255, 69, 0, 0.4),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.header-icon-wrapper i {
+    font-size: 32px;
+    color: white;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(255, 69, 0, 0.6);
+    }
+}
+
+.stream-options-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 10px rgba(255, 69, 0, 0.3);
+}
+
+.stream-options-header p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-weight: 400;
+}
+
+.close-stream-options {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.close-stream-options:hover {
+    background: rgba(255, 69, 0, 0.4);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 5px 20px rgba(255, 69, 0, 0.5);
+}
+
+.stream-options-body {
+    padding: 25px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.stream-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stream-channel-group {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stream-channel-group:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 69, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.channel-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.channel-name i {
+    font-size: 20px;
+    color: #FF5722;
+}
+
+.channel-name h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    flex: 1;
+}
+
+.channel-number {
+    background: linear-gradient(135deg, #FF5722, #FF7043);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(255, 69, 0, 0.3);
+}
+
+.stream-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.stream-link-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stream-link-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 69, 0, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.stream-link-btn:hover::before {
+    left: 100%;
+}
+
+.stream-link-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.3), rgba(255, 69, 0, 0.2));
+    border-color: rgba(255, 69, 0, 0.5);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+}
+
+.stream-link-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.stream-link-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 69, 0, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.stream-link-btn:hover .stream-link-icon {
+    background: rgba(255, 69, 0, 0.4);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.stream-link-icon i {
+    font-size: 22px;
+    color: #FF5722;
+}
+
+.stream-link-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stream-link-quality {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Scrollbar personalizado para el modal */
+.stream-options-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.stream-options-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.stream-options-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 69, 0, 0.5);
+    border-radius: 10px;
+}
+
+.stream-options-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 69, 0, 0.7);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stream-options-content {
+        width: 95%;
+        max-height: 90vh;
+        border-radius: 25px;
+    }
+    
+    .stream-options-header {
+        padding: 30px 20px 20px;
+    }
+    
+    .header-icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .header-icon-wrapper i {
+        font-size: 28px;
+    }
+    
+    .stream-options-header h3 {
+        font-size: 20px;
+    }
+    
+    .stream-options-body {
+        padding: 20px 15px;
+    }
+    
+    .stream-links {
+        grid-template-columns: 1fr;
+    }
+}
