@@ -153,18 +153,24 @@ class TransmisionesLive {
     }
 
     redirigirACanal(numeroCanal) {
-        // Buscar el ID del canal en el mapeo
-        const canalId = CANAL_ID_MAP[numeroCanal];
+        // En lugar de abrir en nueva ventana, usar el modal system
+        const transmision = this.transmisiones.find(t => {
+            return t.canales.some(c => {
+                const num = this.extraerNumeroCanal(c.numero);
+                return num === numeroCanal;
+            });
+        });
         
-        if (canalId) {
-            // Redirige a ultracanales con el canal específico usando canales.html
-            const url = `ULTRA/ultracanales/canales.html?channel=${canalId}`;
-            window.open(url, '_blank');
+        if (transmision) {
+            watchTransmission(transmision);
         } else {
-            // Si no está en el mapeo, mostrar mensaje
-            console.warn(`Canal ${numeroCanal} no encontrado en el mapeo`);
+            console.warn(`Transmisión con canal ${numeroCanal} no encontrada`);
             alert(`Canal ${numeroCanal} no disponible en este momento`);
         }
+    }
+
+    verTransmision(transmision) {
+        watchTransmission(transmision);
     }
 
     crearTarjetaPartido(transmision) {
@@ -314,3 +320,129 @@ if (document.readyState === 'loading') {
 } else {
     transmisionesLive.init();
 }
+
+// ============================================
+// FUNCIONES GLOBALES PARA MODALES DE ULTRA
+// ============================================
+
+let currentTransmission = null;
+
+function watchTransmission(transmisionData) {
+    currentTransmission = transmisionData;
+    openStreamOptionsModal();
+}
+
+function openStreamOptionsModal() {
+    if (!currentTransmission) return;
+    
+    const modal = document.getElementById('streamOptionsModal');
+    const matchName = document.getElementById('streamMatchName');
+    const optionsGrid = document.getElementById('streamOptionsGrid');
+    
+    const nombrePartido = formatMatchName(currentTransmission.evento);
+    matchName.textContent = nombrePartido;
+    
+    optionsGrid.innerHTML = '';
+    
+    currentTransmission.canales.forEach((canal, index) => {
+        const channelGroup = document.createElement('div');
+        channelGroup.className = 'stream-channel-group';
+        
+        const numeroCanal = canal.numero.replace(/[a-z]+$/i, '');
+        
+        channelGroup.innerHTML = `
+            <div class="channel-name">
+                <i class="fas fa-satellite-dish"></i>
+                <h4>${canal.nombre || `Canal ${numeroCanal}`}</h4>
+                <span class="channel-number">CH ${numeroCanal}</span>
+            </div>
+            <div class="stream-links">
+                ${Object.entries(canal.links).map(([provider, url]) => `
+                    <button class="stream-link-btn" onclick="selectStreamOption('${url}')">
+                        <div class="stream-link-icon">
+                            <i class="fas ${getProviderIcon(provider)}"></i>
+                        </div>
+                        <span class="stream-link-name">${provider.toUpperCase()}</span>
+                        <span class="stream-link-quality">HD</span>
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        
+        optionsGrid.appendChild(channelGroup);
+    });
+    
+    modal.classList.add('active');
+}
+
+function getProviderIcon(provider) {
+    const icons = {
+        'hoca': 'fa-play-circle',
+        'caster': 'fa-broadcast-tower',
+        'wigi': 'fa-wifi'
+    };
+    return icons[provider] || 'fa-tv';
+}
+
+function formatMatchName(evento) {
+    let nombre = evento;
+    const partes = evento.split(':');
+    if (partes.length > 1) {
+        nombre = partes.slice(1).join(':').trim();
+    }
+    nombre = nombre.replace(/\s+vs\.?\s+/i, ' vs ');
+    return nombre;
+}
+
+function selectStreamOption(streamUrl) {
+    closeStreamOptionsModal();
+    openVideoPlayer(streamUrl);
+}
+
+function openVideoPlayer(streamUrl) {
+    const playerModal = document.getElementById('videoPlayerModal');
+    const iframe = document.getElementById('videoPlayerIframe');
+    
+    iframe.src = streamUrl;
+    playerModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoPlayer() {
+    const playerModal = document.getElementById('videoPlayerModal');
+    const iframe = document.getElementById('videoPlayerIframe');
+    
+    iframe.src = '';
+    playerModal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function toggleFullscreen() {
+    const videoContainer = document.querySelector('.video-player-container');
+    
+    if (!document.fullscreenElement) {
+        videoContainer.requestFullscreen().catch(err => {
+            console.error('Error al entrar en pantalla completa:', err);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+function closeStreamOptionsModal() {
+    const modal = document.getElementById('streamOptionsModal');
+    modal.classList.remove('active');
+    currentTransmission = null;
+}
+
+// Cerrar modal al hacer clic en overlay
+document.addEventListener('DOMContentLoaded', () => {
+    const streamOptionsModal = document.getElementById('streamOptionsModal');
+    if (streamOptionsModal) {
+        streamOptionsModal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('stream-options-overlay')) {
+                closeStreamOptionsModal();
+            }
+        });
+    }
+});
