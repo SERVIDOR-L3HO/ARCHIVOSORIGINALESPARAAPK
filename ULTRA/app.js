@@ -514,7 +514,7 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
             }, 500);
         };
     } else {
-        let streamUrl = null;
+        let transmision = null;
         let partido = null;
 
         if (marcadoresData && marcadoresData.partidos) {
@@ -524,7 +524,7 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
                 const nombreLocal = partido.local.nombre.toLowerCase();
                 const nombreVisitante = partido.visitante.nombre.toLowerCase();
 
-                const transmision = transmisionesData.transmisiones.find(t => {
+                transmision = transmisionesData.transmisiones.find(t => {
                     const evento = t.evento.toLowerCase();
                     return (evento.includes(nombreLocal) || evento.includes(nombreVisitante) ||
                             evento.includes(partido.local.nombreCorto.toLowerCase()) ||
@@ -532,44 +532,20 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
                 });
 
                 if (transmision && transmision.canales && transmision.canales.length > 0) {
-                    const primerCanal = transmision.canales[0];
+                    console.log(`✅ Transmisión encontrada: ${transmision.evento}`);
+                    console.log(`📺 ${transmision.canales.length} canal(es) disponible(s)`);
                     
-                    if (primerCanal.links) {
-                        streamUrl = primerCanal.links.hoca || primerCanal.links.caster || primerCanal.links.wigi;
-                        console.log(`✅ Transmisión encontrada: ${transmision.evento}`);
-                        console.log(`📺 Canal: ${primerCanal.nombre || primerCanal.numero}`);
-                        console.log(`🔗 URL: ${streamUrl}`);
-                    }
+                    const partidoNombre = `${partido.local.nombreCorto} vs ${partido.visitante.nombreCorto}`;
+                    transmision.evento = partidoNombre;
+                    
+                    watchTransmission(transmision);
+                    return;
                 }
             }
         }
 
-        if (!streamUrl) {
-            showToast('No hay transmisión disponible para este partido');
-            return;
-        }
-
-        const partidoNombre = partido ? `${partido.local.nombreCorto} vs ${partido.visitante.nombreCorto}` : matchId;
-
-        currentStreamUrl = streamUrl;
-        modalTitle.textContent = `Transmisión en Vivo - ${partidoNombre}`;
-        modal.classList.add('active');
-        loader.style.display = 'flex';
-
-        modalBody.innerHTML = `
-            <div class="loading-spinner" id="modalLoader" style="display: flex;">
-                <div class="spinner"></div>
-            </div>
-            <iframe id="modalIframe" src="${currentStreamUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture" style="width: 100%; height: 100%;"></iframe>
-        `;
-
-        const iframe = document.getElementById('modalIframe');
-        iframe.onload = () => {
-            setTimeout(() => {
-                const loaderEl = document.getElementById('modalLoader');
-                if (loaderEl) loaderEl.style.display = 'none';
-            }, 500);
-        };
+        showToast('No hay transmisión disponible para este partido');
+        return;
     }
 }
 
