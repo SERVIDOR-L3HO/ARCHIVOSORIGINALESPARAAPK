@@ -514,7 +514,7 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
             }, 500);
         };
     } else {
-        let canalNumero = null;
+        let streamUrl = null;
         let partido = null;
 
         if (marcadoresData && marcadoresData.partidos) {
@@ -532,19 +532,26 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
                 });
 
                 if (transmision && transmision.canales && transmision.canales.length > 0) {
-                    const canalRaw = transmision.canales[0];
-                    canalNumero = canalRaw.replace(/[a-z]+$/i, '');
-                    console.log(`✅ Transmisión encontrada: ${transmision.evento}, Canal: ${canalNumero} (raw: ${canalRaw})`);
+                    const primerCanal = transmision.canales[0];
+                    
+                    if (primerCanal.links) {
+                        streamUrl = primerCanal.links.hoca || primerCanal.links.caster || primerCanal.links.wigi;
+                        console.log(`✅ Transmisión encontrada: ${transmision.evento}`);
+                        console.log(`📺 Canal: ${primerCanal.nombre || primerCanal.numero}`);
+                        console.log(`🔗 URL: ${streamUrl}`);
+                    }
                 }
             }
         }
 
-        const urlParam = canalNumero || matchId;
-        console.log(`🔴 Abriendo transmisión con parámetro: ${urlParam}`);
+        if (!streamUrl) {
+            showToast('No hay transmisión disponible para este partido');
+            return;
+        }
 
         const partidoNombre = partido ? `${partido.local.nombreCorto} vs ${partido.visitante.nombreCorto}` : matchId;
 
-        currentStreamUrl = `ultracanales/index.html?canal=${urlParam}`;
+        currentStreamUrl = streamUrl;
         modalTitle.textContent = `Transmisión en Vivo - ${partidoNombre}`;
         modal.classList.add('active');
         loader.style.display = 'flex';
@@ -553,7 +560,7 @@ function watchMatch(matchId, videoUrl = null, videoTitle = null) {
             <div class="loading-spinner" id="modalLoader" style="display: flex;">
                 <div class="spinner"></div>
             </div>
-            <iframe id="modalIframe" src="${currentStreamUrl}" frameborder="0" allowfullscreen style="width: 100%; height: 100%;"></iframe>
+            <iframe id="modalIframe" src="${currentStreamUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture" style="width: 100%; height: 100%;"></iframe>
         `;
 
         const iframe = document.getElementById('modalIframe');
