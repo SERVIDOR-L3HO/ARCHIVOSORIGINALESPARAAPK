@@ -1264,8 +1264,48 @@ function selectStreamOption(streamUrl) {
     // Cerrar el modal de transmisiones si está abierto
     closeAllTransmissionsModal();
     
-    // Abrir la transmisión en una nueva pestaña
-    window.open(streamUrl, '_blank');
+    // Abrir el reproductor embebido
+    openVideoPlayer(streamUrl);
+}
+
+function openVideoPlayer(streamUrl) {
+    const playerModal = document.getElementById('videoPlayerModal');
+    const iframe = document.getElementById('videoPlayerIframe');
+    
+    // Establecer la URL del iframe
+    iframe.src = streamUrl;
+    
+    // Mostrar el modal
+    playerModal.classList.add('active');
+    
+    // Deshabilitar scroll del body
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoPlayer() {
+    const playerModal = document.getElementById('videoPlayerModal');
+    const iframe = document.getElementById('videoPlayerIframe');
+    
+    // Detener el video eliminando el src
+    iframe.src = '';
+    
+    // Ocultar el modal
+    playerModal.classList.remove('active');
+    
+    // Restaurar scroll del body
+    document.body.style.overflow = '';
+}
+
+function toggleFullscreen() {
+    const videoContainer = document.querySelector('.video-player-container');
+    
+    if (!document.fullscreenElement) {
+        videoContainer.requestFullscreen().catch(err => {
+            console.error('Error al entrar en pantalla completa:', err);
+        });
+    } else {
+        document.exitFullscreen();
+    }
 }
 
 function closeStreamOptionsModal() {

@@ -383,6 +383,40 @@
         </div>
     </div>
 
+    <!-- Video Player Modal -->
+    <div id="videoPlayerModal" class="video-player-modal">
+        <div class="video-player-overlay" onclick="closeVideoPlayer()"></div>
+        <div class="video-player-container">
+            <div class="video-player-header">
+                <div class="player-title">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Transmisión en Vivo</span>
+                </div>
+                <div class="player-controls">
+                    <button class="player-control-btn" onclick="toggleFullscreen()" title="Pantalla completa">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="player-control-btn close-player-btn" onclick="closeVideoPlayer()" title="Cerrar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="video-player-wrapper">
+                <iframe 
+                    id="videoPlayerIframe" 
+                    frameborder="0" 
+                    allowfullscreen 
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    scrolling="no">
+                </iframe>
+                <div class="video-loading">
+                    <div class="video-spinner"></div>
+                    <p>Cargando transmisión...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
