@@ -1389,6 +1389,60 @@
         });
         */
     </script>
+
+    <!-- Modal de Selección de Transmisión -->
+    <div id="streamOptionsModal" class="stream-options-modal">
+        <div class="stream-options-overlay" onclick="closeStreamOptionsModal()"></div>
+        <div class="stream-options-content">
+            <div class="stream-options-header">
+                <div class="header-icon-wrapper">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <h3>Elige tu Transmisión</h3>
+                <p id="streamMatchName">Partido</p>
+                <button class="close-stream-options" onclick="closeStreamOptionsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="stream-options-body">
+                <div id="streamOptionsGrid" class="stream-options-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal del Reproductor de Video -->
+    <div id="videoPlayerModal" class="video-player-modal">
+        <div class="video-player-overlay" onclick="closeVideoPlayer()"></div>
+        <div class="video-player-container">
+            <div class="video-player-header">
+                <div class="player-title">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Transmisión en Vivo</span>
+                </div>
+                <div class="player-controls">
+                    <button class="player-control-btn" onclick="toggleFullscreen()" title="Pantalla completa">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="player-control-btn close-player-btn" onclick="closeVideoPlayer()" title="Cerrar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="video-player-wrapper">
+                <iframe 
+                    id="videoPlayerIframe" 
+                    frameborder="0" 
+                    allowfullscreen 
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    scrolling="no">
+                </iframe>
+                <div class="video-loading">
+                    <div class="video-spinner"></div>
+                    <p>Cargando transmisión...</p>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <script src="js/gemini-chat.js"></script>
     <script src="js/simple-auth.js"></script>
