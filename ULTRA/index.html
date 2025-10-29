@@ -387,19 +387,18 @@
     <div id="videoPlayerModal" class="video-player-modal">
         <div class="video-player-overlay" onclick="closeVideoPlayer()"></div>
         <div class="video-player-container">
-            <div class="video-player-header">
-                <div class="player-title">
-                    <i class="fas fa-play-circle"></i>
-                    <span>Transmisión en Vivo</span>
+            <div class="video-player-header-new">
+                <div class="player-logo-section">
+                    <img src="assets/ultragol-logo.png" alt="ULTRAGOL" class="player-logo">
+                    <span class="live-badge-pill">
+                        <span class="live-dot-pulse"></span>
+                        LIVE
+                    </span>
                 </div>
-                <div class="player-controls">
-                    <button class="player-control-btn" onclick="toggleFullscreen()" title="Pantalla completa">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    <button class="player-control-btn close-player-btn" onclick="closeVideoPlayer()" title="Cerrar">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+                <h2 class="player-match-title" id="playerMatchTitle">LIVE MATCH</h2>
+                <button class="player-close-btn-new" onclick="closeVideoPlayer()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="video-player-wrapper">
                 <iframe 
@@ -413,6 +412,12 @@
                     <div class="video-spinner"></div>
                     <p>Cargando transmisión...</p>
                 </div>
+            </div>
+            <div class="video-player-tabs">
+                <button class="player-tab active">LIVE COMMENTARY</button>
+                <button class="player-tab">Match Stats</button>
+                <button class="player-tab">Lineups</button>
+                <button class="player-tab">Table</button>
             </div>
         </div>
     </div>
