@@ -90,7 +90,7 @@ app.get('/api/fixtures/:league', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'ULTRA', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
