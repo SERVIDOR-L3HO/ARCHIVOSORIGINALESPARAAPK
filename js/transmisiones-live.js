@@ -182,36 +182,9 @@ class TransmisionesLive {
         const card = document.createElement('div');
         card.className = 'transmision-card';
         
-        // Procesar canales
+        // Procesar canales para mostrar la cantidad
         const canales = transmision.canales.map(c => this.extraerNumeroCanal(c.numero)).filter(c => c);
-        
-        let canalesHTML = '';
-        if (canales.length === 1) {
-            canalesHTML = `
-                <button class="btn-ver-partido" onclick="transmisionesLive.redirigirACanal('${canales[0]}')">
-                    <i class="fas fa-play-circle"></i>
-                    Ver Ahora
-                </button>
-            `;
-        } else if (canales.length > 1) {
-            canalesHTML = `
-                <div class="canales-opciones">
-                    <button class="btn-opciones">
-                        <i class="fas fa-tv"></i>
-                        ${canales.length} opciones
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-canales">
-                        ${canales.map((canal, idx) => `
-                            <button class="canal-opcion" onclick="transmisionesLive.redirigirACanal('${canal}')">
-                                <i class="fas fa-satellite-dish"></i>
-                                Canal ${canal}
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
+        const numCanales = canales.length;
         
         card.innerHTML = `
             <div class="transmision-header">
@@ -235,32 +208,18 @@ class TransmisionesLive {
                 </div>
             </div>
             <div class="transmision-acciones">
-                ${canalesHTML}
+                <button class="btn-ver-partido">
+                    <i class="fas fa-play-circle"></i>
+                    ${numCanales > 1 ? `Ver Ahora (${numCanales} opciones)` : 'Ver Ahora'}
+                </button>
             </div>
         `;
         
-        // Añadir evento para el dropdown si hay múltiples canales
-        if (canales.length > 1) {
-            setTimeout(() => {
-                const btnOpciones = card.querySelector('.btn-opciones');
-                const dropdown = card.querySelector('.dropdown-canales');
-                
-                btnOpciones?.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    dropdown.classList.toggle('active');
-                    
-                    // Cerrar otros dropdowns
-                    document.querySelectorAll('.dropdown-canales.active').forEach(d => {
-                        if (d !== dropdown) d.classList.remove('active');
-                    });
-                });
-                
-                // Cerrar dropdown al hacer clic fuera
-                document.addEventListener('click', () => {
-                    dropdown?.classList.remove('active');
-                });
-            }, 0);
-        }
+        // Agregar evento al botón de forma programática
+        const btnVerPartido = card.querySelector('.btn-ver-partido');
+        btnVerPartido.addEventListener('click', () => {
+            watchTransmission(transmision);
+        });
         
         return card;
     }
