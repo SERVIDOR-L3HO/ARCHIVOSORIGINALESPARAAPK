@@ -45,7 +45,7 @@ const CANAL_ID_MAP = {
 
 class TransmisionesLive {
     constructor() {
-        this.apiUrl = '/api/transmisiones';
+        this.apiUrl = 'https://ultragol-api3.onrender.com/transmisiones';
         this.transmisiones = [];
         this.updateInterval = null;
     }

@@ -87,7 +87,6 @@
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    padding: 20px;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     position: relative;
@@ -114,6 +113,34 @@
 
 .transmision-card:hover::before {
     opacity: 1;
+}
+
+.transmision-imagen {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    margin: -1px -1px 0 -1px;
+}
+
+.transmision-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.transmision-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+}
+
+.transmision-content {
+    padding: 20px;
 }
 
 .transmision-header {
@@ -250,6 +277,32 @@
 
 .btn-ver-partido i {
     font-size: 1.2rem;
+}
+
+.btn-ver-partido.disabled {
+    background: rgba(158, 158, 158, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
+
+.btn-ver-partido.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.canales-info {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.canales-info i {
+    color: #FF9800;
 }
 
 /* Canales con opciones múltiples */

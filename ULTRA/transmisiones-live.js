@@ -188,20 +188,17 @@ class TransmisionesLiveUltra {
     obtenerImagenDeporte(evento) {
         const eventoLower = evento.toLowerCase();
         
-        // Detectar motos
         if (eventoLower.includes('moto') || eventoLower.includes('motogp') || 
             eventoLower.includes('superbike') || eventoLower.includes('motorcycle')) {
-            return '../assets/motos-banner.jpg';
+            return '../attached_assets/MOTOS_1761322925248.jpg';
         }
         
-        // Detectar básquetbol
         if (eventoLower.includes('basket') || eventoLower.includes('nba') || 
             eventoLower.includes('básquet') || eventoLower.includes('baloncesto')) {
-            return '../assets/basquet-banner.jpg';
+            return '../attached_assets/BÁSQUET_1761322925295.jpg';
         }
         
-        // Por defecto, fútbol
-        return '../assets/futbol-banner.jpg';
+        return '../attached_assets/FÚTBOL_1761322742849.jpg';
     }
 
     redirigirACanal(numeroCanal) {
