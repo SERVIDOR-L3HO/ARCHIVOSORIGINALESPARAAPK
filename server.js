@@ -89,6 +89,21 @@ app.get('/api/fixtures/:league', (req, res) => {
     res.json({ fixtures });
 });
 
+app.get('/api/transmisiones', async (req, res) => {
+    try {
+        const fetch = (await import('node-fetch')).default;
+        const response = await fetch('https://ultragol-api3.onrender.com/transmisiones');
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('❌ Error fetching transmisiones:', error);
+        res.status(500).json({ 
+            error: 'Error al cargar transmisiones',
+            transmisiones: []
+        });
+    }
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });

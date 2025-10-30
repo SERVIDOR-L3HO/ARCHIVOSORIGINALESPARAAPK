@@ -45,7 +45,7 @@ const CANAL_ID_MAP = {
 
 class TransmisionesLive {
     constructor() {
-        this.apiUrl = 'https://ultragol-api3.onrender.com/transmisiones';
+        this.apiUrl = '/api/transmisiones';
         this.transmisiones = [];
         this.updateInterval = null;
     }
@@ -173,53 +173,88 @@ class TransmisionesLive {
         watchTransmission(transmision);
     }
 
+    obtenerImagenDeporte(evento) {
+        const eventoLower = evento.toLowerCase();
+        
+        if (eventoLower.includes('moto') || eventoLower.includes('motogp') || 
+            eventoLower.includes('superbike') || eventoLower.includes('motorcycle')) {
+            return 'attached_assets/MOTOS_1761322925248.jpg';
+        }
+        
+        if (eventoLower.includes('basket') || eventoLower.includes('nba') || 
+            eventoLower.includes('básquet') || eventoLower.includes('baloncesto')) {
+            return 'attached_assets/BÁSQUET_1761322925295.jpg';
+        }
+        
+        return 'attached_assets/FÚTBOL_1761322742849.jpg';
+    }
+
     crearTarjetaPartido(transmision) {
         const fechaPartido = this.parsearFecha(transmision.fechaHora);
         const estado = this.obtenerEstadoPartido(fechaPartido);
         const nombrePartido = this.formatearNombrePartido(transmision.evento);
         const liga = this.obtenerLiga(transmision.evento);
+        const imagenDeporte = this.obtenerImagenDeporte(transmision.evento);
         
         const card = document.createElement('div');
         card.className = 'transmision-card';
         
-        // Procesar canales para mostrar la cantidad
         const canales = transmision.canales.map(c => this.extraerNumeroCanal(c.numero)).filter(c => c);
         const numCanales = canales.length;
         
         card.innerHTML = `
-            <div class="transmision-header">
-                <span class="transmision-liga">${liga}</span>
-                <span class="transmision-estado ${estado.clase} ${estado.pulso ? 'pulso-live' : ''}">
-                    ${estado.pulso ? '<span class="punto-live"></span>' : ''}
-                    ${estado.texto}
-                </span>
+            <div class="transmision-imagen">
+                <img src="${imagenDeporte}" alt="${liga}" />
+                <div class="transmision-overlay"></div>
             </div>
-            <div class="transmision-partido">
-                <h3 class="partido-nombre">${nombrePartido}</h3>
-            </div>
-            <div class="transmision-info">
-                <div class="info-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>${transmision.fecha}</span>
+            <div class="transmision-content">
+                <div class="transmision-header">
+                    <span class="transmision-liga">${liga}</span>
+                    <span class="transmision-estado ${estado.clase} ${estado.pulso ? 'pulso-live' : ''}">
+                        ${estado.pulso ? '<span class="punto-live"></span>' : ''}
+                        ${estado.texto}
+                    </span>
                 </div>
-                <div class="info-item">
-                    <i class="fas fa-clock"></i>
-                    <span>${transmision.hora}</span>
+                <div class="transmision-partido">
+                    <h3 class="partido-nombre">${nombrePartido}</h3>
                 </div>
-            </div>
-            <div class="transmision-acciones">
-                <button class="btn-ver-partido">
-                    <i class="fas fa-play-circle"></i>
-                    ${numCanales > 1 ? `Ver Ahora (${numCanales} opciones)` : 'Ver Ahora'}
-                </button>
+                <div class="transmision-info">
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>${transmision.fecha}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span>${transmision.hora}</span>
+                    </div>
+                </div>
+                <div class="transmision-acciones">
+                    ${numCanales > 0 ? `
+                        <button class="btn-ver-partido">
+                            <i class="fas fa-play-circle"></i>
+                            Ver Ahora
+                        </button>
+                        ${numCanales > 1 ? `
+                            <div class="canales-info">
+                                <i class="fas fa-tv"></i> ${numCanales} canales disponibles
+                            </div>
+                        ` : ''}
+                    ` : `
+                        <button class="btn-ver-partido disabled" disabled>
+                            <i class="fas fa-ban"></i>
+                            Sin señal disponible
+                        </button>
+                    `}
+                </div>
             </div>
         `;
         
-        // Agregar evento al botón de forma programática
-        const btnVerPartido = card.querySelector('.btn-ver-partido');
-        btnVerPartido.addEventListener('click', () => {
-            watchTransmission(transmision);
-        });
+        const btnVerPartido = card.querySelector('.btn-ver-partido:not(.disabled)');
+        if (btnVerPartido) {
+            btnVerPartido.addEventListener('click', () => {
+                watchTransmission(transmision);
+            });
+        }
         
         return card;
     }
