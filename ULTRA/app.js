@@ -643,20 +643,162 @@ function shareApp() {
 function navTo(section, element) {
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-    const button = element.closest('.nav-btn') || element;
-    button.classList.add('active');
+    if (element) {
+        const button = element.closest('.nav-btn') || element;
+        button.classList.add('active');
+    } else {
+        const targetBtn = document.querySelector(`.bottom-nav [data-section="${section}"]`);
+        if (targetBtn) {
+            targetBtn.classList.add('active');
+        }
+    }
 
-    if (section === 'search') {
-        showSearchModal();
+    if (section === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (section === 'search') {
+        openSearchModal();
     } else if (section === 'calendar') {
         window.location.href = '../calendario.html';
+    } else if (section === 'favorites') {
+        openFavoritesModal();
     } else if (section === 'profile') {
         window.location.href = '../index.html';
     }
 }
 
-function showSearchModal() {
-    showToast('Función de búsqueda próximamente');
+function openSearchModal() {
+    const modal = document.getElementById('searchModal');
+    const input = document.getElementById('searchInput');
+    modal.classList.add('active');
+    setTimeout(() => input.focus(), 300);
+    
+    input.addEventListener('input', performSearch);
+}
+
+function closeSearchModal() {
+    const modal = document.getElementById('searchModal');
+    const input = document.getElementById('searchInput');
+    modal.classList.remove('active');
+    input.value = '';
+    document.getElementById('searchResults').innerHTML = `
+        <div class="search-empty">
+            <i class="fas fa-search"></i>
+            <p>Escribe para buscar partidos, equipos o ligas</p>
+        </div>
+    `;
+}
+
+function performSearch() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const resultsContainer = document.getElementById('searchResults');
+    
+    if (!query) {
+        resultsContainer.innerHTML = `
+            <div class="search-empty">
+                <i class="fas fa-search"></i>
+                <p>Escribe para buscar partidos, equipos o ligas</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const searchableContent = [
+        { title: 'Liga MX', subtitle: 'Liga de fútbol mexicana', type: 'liga' },
+        { title: 'Premier League', subtitle: 'Liga inglesa', type: 'liga' },
+        { title: 'La Liga', subtitle: 'Liga española', type: 'liga' },
+        { title: 'Serie A', subtitle: 'Liga italiana', type: 'liga' },
+        { title: 'Bundesliga', subtitle: 'Liga alemana', type: 'liga' },
+        { title: 'Ligue 1', subtitle: 'Liga francesa', type: 'liga' },
+        { title: 'Transmisiones en Vivo', subtitle: 'Ver partidos en vivo ahora', type: 'seccion' },
+        { title: 'Calendario', subtitle: 'Ver próximos partidos', type: 'seccion' },
+    ];
+    
+    const results = searchableContent.filter(item => 
+        item.title.toLowerCase().includes(query) || 
+        item.subtitle.toLowerCase().includes(query)
+    );
+    
+    if (results.length === 0) {
+        resultsContainer.innerHTML = `
+            <div class="search-empty">
+                <i class="fas fa-search"></i>
+                <p>No se encontraron resultados para "${query}"</p>
+            </div>
+        `;
+        return;
+    }
+    
+    resultsContainer.innerHTML = results.map(result => `
+        <div class="search-result-item" onclick="handleSearchResult('${result.type}', '${result.title}')">
+            <div class="search-result-title">${result.title}</div>
+            <div class="search-result-subtitle">${result.subtitle}</div>
+        </div>
+    `).join('');
+}
+
+function handleSearchResult(type, title) {
+    closeSearchModal();
+    
+    if (type === 'liga') {
+        switchTab('live', document.querySelector('.tab'));
+        const leagueButtons = document.querySelectorAll('.league-btn');
+        leagueButtons.forEach(btn => {
+            if (btn.textContent.includes(title)) {
+                btn.click();
+            }
+        });
+        showToast(`Mostrando partidos de ${title}`);
+    } else if (type === 'seccion') {
+        if (title === 'Calendario') {
+            window.location.href = '../calendario.html';
+        } else if (title === 'Transmisiones en Vivo') {
+            switchTab('live', document.querySelector('.tab'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+}
+
+function openFavoritesModal() {
+    const modal = document.getElementById('favoritesModal');
+    modal.classList.add('active');
+    loadFavorites();
+}
+
+function closeFavoritesModal() {
+    const modal = document.getElementById('favoritesModal');
+    modal.classList.remove('active');
+}
+
+function loadFavorites() {
+    const favoritesBody = document.getElementById('favoritesBody');
+    const favorites = JSON.parse(localStorage.getItem('favoriteMatches') || '[]');
+    
+    if (favorites.length === 0) {
+        favoritesBody.innerHTML = `
+            <div class="favorites-empty">
+                <i class="fas fa-star-half-alt"></i>
+                <p>Aún no tienes partidos favoritos</p>
+                <span>Toca el ícono de estrella en cualquier partido para agregarlo a favoritos</span>
+            </div>
+        `;
+    } else {
+        favoritesBody.innerHTML = favorites.map(fav => `
+            <div class="match-card">
+                <div class="match-card-bg">
+                    <img src="${fav.image || '../attached_assets/FÚTBOL_1761322742849.jpg'}" alt="${fav.title}">
+                </div>
+                <div class="match-card-content">
+                    <h3 class="match-name">${fav.title}</h3>
+                    <div class="match-time">
+                        <i class="fas fa-clock"></i> ${fav.time || 'En vivo'}
+                    </div>
+                    <button class="watch-btn" onclick="closeFavoritesModal(); showToast('Cargando transmisión...')">
+                        <span>VER AHORA</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
 }
 
 function showToast(message) {

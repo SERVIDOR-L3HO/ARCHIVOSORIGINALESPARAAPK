@@ -205,22 +205,79 @@
         </div>
 
         <nav class="bottom-nav">
-            <button class="nav-btn active" onclick="navTo('home', this)">
-                <i class="fas fa-home"></i>
+            <button class="nav-btn active" onclick="navTo('home', this)" data-section="home">
+                <div class="nav-btn-content">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-label">Inicio</span>
+                </div>
+                <div class="nav-indicator"></div>
             </button>
-            <button class="nav-btn" onclick="navTo('search', this)">
-                <i class="fas fa-search"></i>
+            <button class="nav-btn" onclick="navTo('search', this)" data-section="search">
+                <div class="nav-btn-content">
+                    <i class="fas fa-search"></i>
+                    <span class="nav-label">Buscar</span>
+                </div>
+                <div class="nav-indicator"></div>
             </button>
-            <button class="nav-btn" onclick="navTo('calendar', this)">
-                <i class="fas fa-calendar"></i>
+            <button class="nav-btn" onclick="navTo('calendar', this)" data-section="calendar">
+                <div class="nav-btn-content">
+                    <i class="fas fa-calendar"></i>
+                    <span class="nav-label">Calendario</span>
+                </div>
+                <div class="nav-indicator"></div>
             </button>
-            <button class="nav-btn" onclick="navTo('edit', this)">
-                <i class="fas fa-edit"></i>
+            <button class="nav-btn" onclick="navTo('favorites', this)" data-section="favorites">
+                <div class="nav-btn-content">
+                    <i class="fas fa-star"></i>
+                    <span class="nav-label">Favoritos</span>
+                </div>
+                <div class="nav-indicator"></div>
             </button>
-            <button class="nav-btn" onclick="navTo('profile', this)">
-                <i class="fas fa-user"></i>
+            <button class="nav-btn" onclick="navTo('profile', this)" data-section="profile">
+                <div class="nav-btn-content">
+                    <i class="fas fa-user"></i>
+                    <span class="nav-label">Perfil</span>
+                </div>
+                <div class="nav-indicator"></div>
             </button>
         </nav>
+
+        <!-- Search Modal -->
+        <div id="searchModal" class="search-modal">
+            <div class="search-modal-content">
+                <div class="search-header">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar equipos, ligas, partidos...">
+                    <button class="search-close" onclick="closeSearchModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <div class="search-empty">
+                        <i class="fas fa-search"></i>
+                        <p>Escribe para buscar partidos, equipos o ligas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Favorites Modal -->
+        <div id="favoritesModal" class="favorites-modal">
+            <div class="favorites-modal-content">
+                <div class="favorites-header">
+                    <h3><i class="fas fa-star"></i> Mis Favoritos</h3>
+                    <button class="favorites-close" onclick="closeFavoritesModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="favorites-body" id="favoritesBody">
+                    <div class="favorites-empty">
+                        <i class="fas fa-star-half-alt"></i>
+                        <p>Aún no tienes partidos favoritos</p>
+                        <span>Toca el ícono de estrella en cualquier partido para agregarlo a favoritos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="playerModal" class="player-modal">
