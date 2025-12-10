@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>L3HO Interactive - Chat en Vivo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="groups.css">
+    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="chat-header">
+        <div class="header-left">
+            <div class="brand-container">
+                <img src="../attached_assets/375969-removebg-preview_1762273801238.png" alt="L3HO Interactive" class="brand-logo">
+                <div class="brand-info">
+                    <span class="brand-subtitle">Powered by</span>
+                    <span class="brand-name">L3HO Interactive</span>
+                </div>
+            </div>
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                <span class="live-text">EN VIVO</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="viewer-count">
+                <i class="fas fa-eye"></i>
+                <span id="viewerCount">0</span> espectadores
+            </div>
+            <button id="authBtn" class="auth-btn">
+                <i class="fab fa-google"></i>
+                Iniciar Sesión
+            </button>
+            <div id="userInfo" class="user-info" style="display: none;">
+                <img id="userAvatar" class="user-avatar" src="" alt="">
+                <span id="userName" class="user-name"></span>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+        <!-- Video/Stream Preview (Optional) -->
+        <div class="stream-preview">
+            <div class="preview-placeholder">
+                <i class="fas fa-futbol"></i>
+                <p>Transmisión en vivo de Liga MX</p>
+                <span class="match-info">⚽ América vs Chivas - Clásico Nacional</span>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <!-- Chat Toolbar -->
+            <div class="chat-toolbar">
+                <div class="chat-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-fire"></i>
+                        <span id="messageCount">0</span> mensajes
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <span id="activeUsers">0</span> activos
+                    </div>
+                    <div class="stat-item online-status">
+                        <span class="status-dot"></span>
+                        Conectado
+                    </div>
+                </div>
+                
+                <!-- Chat Options -->
+                <div class="chat-options">
+                    <button class="option-btn" id="changeNameBtn" title="Cambiar nombre">
+                        <i class="fas fa-user-edit"></i>
+                    </button>
+                    <button class="option-btn" id="anonymousBtn" title="Modo anónimo">
+                        <i class="fas fa-user-secret"></i>
+                    </button>
+                    <button class="option-btn" id="searchBtn" title="Buscar mensajes">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="option-btn" id="soundBtn" title="Sonidos">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button class="option-btn" id="settingsBtn" title="Configuración">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search Bar (Hidden by default) -->
+            <div class="search-container" id="searchContainer" style="display: none;">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar en el chat..." />
+                    <button class="search-close" id="searchClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <span class="typing-text">
+                    <span id="typingUsers">Alguien</span> está escribiendo
+                    <span class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </span>
+                </span>
+            </div>
+
+            <!-- Messages Container -->
+            <div id="messagesContainer" class="messages-container">
+                <div class="welcome-message">
+                    <i class="fas fa-comments"></i>
+                    <h2>¡Bienvenido al chat en vivo!</h2>
+                    <p>Únete a la conversación sobre la Liga MX</p>
+                </div>
+            </div>
+
+            <!-- Message Input -->
+            <div class="message-input-container">
+                <!-- Quick Reactions Bar -->
+                <div class="quick-reactions" id="quickReactions">
+                    <button class="quick-reaction" data-reaction="⚽">⚽</button>
+                    <button class="quick-reaction" data-reaction="🔥">🔥</button>
+                    <button class="quick-reaction" data-reaction="👏">👏</button>
+                    <button class="quick-reaction" data-reaction="😂">😂</button>
+                    <button class="quick-reaction" data-reaction="❤️">❤️</button>
+                    <button class="quick-reaction" data-reaction="💪">💪</button>
+                </div>
+                
+                <div class="input-wrapper">
+                    <button class="emoji-btn" id="emojiBtn">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Enviar un mensaje..."
+                        maxlength="200"
+                    />
+                    <div class="input-actions">
+                        <label for="imageInput" class="image-btn" title="Subir imagen">
+                            <i class="fas fa-image"></i>
+                        </label>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+                        <span id="charCount" class="char-count">0/200</span>
+                        <button id="sendBtn" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Emoji & Sticker Picker -->
+                <div id="emojiPicker" class="emoji-picker" style="display: none;">
+                    <div class="emoji-header">
+                        <div class="emoji-tabs">
+                            <button class="emoji-tab active" data-tab="emojis">
+                                <i class="far fa-smile"></i>
+                                <span>Emojis</span>
+                            </button>
+                            <button class="emoji-tab" data-tab="stickers">
+                                <i class="fas fa-futbol"></i>
+                                <span>Stickers</span>
+                            </button>
+                        </div>
+                        <button class="emoji-close" id="emojiClose">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Emojis Tab -->
+                    <div id="emojis-content" class="emoji-content active">
+                        <div class="emoji-categories">
+                            <button class="emoji-category active" data-category="futbol" title="Fútbol">⚽</button>
+                            <button class="emoji-category" data-category="celebracion" title="Celebración">🎉</button>
+                            <button class="emoji-category" data-category="gestos" title="Gestos">👍</button>
+                            <button class="emoji-category" data-category="emociones" title="Emociones">😊</button>
+                            <button class="emoji-category" data-category="amor" title="Amor">❤️</button>
+                        </div>
+                        <div class="emoji-grid" id="emojiGrid"></div>
+                    </div>
+                    
+                    <!-- Stickers Tab -->
+                    <div id="stickers-content" class="emoji-content">
+                        <div class="sticker-header">
+                            <span class="sticker-title">Tus Stickers</span>
+                            <label for="stickerUpload" class="add-sticker-btn" title="Agregar tu sticker">
+                                <i class="fas fa-plus"></i>
+                                <span>Subir Sticker</span>
+                            </label>
+                            <input type="file" id="stickerUpload" accept="image/*,image/gif" style="display: none;" />
+                        </div>
+                        <div class="sticker-grid" id="stickerGrid">
+                            <div class="sticker-placeholder">
+                                <i class="fas fa-images"></i>
+                                <p>Agrega tus propios stickers</p>
+                                <small>Haz clic en "Subir Sticker" para comenzar</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-hint">
+                    <i class="fas fa-info-circle"></i>
+                    Escribe tu mensaje y únete a la conversación
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="modalImage" class="modal-image" src="" alt="Vista previa">
+            <div class="image-modal-actions">
+                <button id="downloadImageBtn" class="download-image-btn">
+                    <i class="fas fa-download"></i>
+                    Descargar Imagen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Custom Dialog Modal -->
+    <div id="customDialog" class="custom-dialog-overlay">
+        <div class="custom-dialog-container">
+            <div class="custom-dialog-icon" id="dialogIcon"></div>
+            <h3 id="dialogTitle" class="custom-dialog-title"></h3>
+            <p id="dialogMessage" class="custom-dialog-message"></p>
+            <input type="text" id="dialogInput" class="custom-dialog-input" style="display: none;" />
+            <div class="custom-dialog-actions">
+                <button id="dialogCancel" class="custom-dialog-btn btn-cancel">Cancelar</button>
+                <button id="dialogConfirm" class="custom-dialog-btn btn-confirm">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Groups Modal -->
+    <div id="groupsModal" class="modal groups-modal">
+        <div class="modal-overlay" onclick="closeGroupsModal()"></div>
+        <div class="modal-content groups-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-users"></i> Grupos de Chat</h2>
+                <button class="modal-close" onclick="closeGroupsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="groups-tabs">
+                <button class="groups-tab active" data-tab="my-groups">
+                    <i class="fas fa-user-friends"></i> Mis Grupos
+                </button>
+                <button class="groups-tab" data-tab="public-groups">
+                    <i class="fas fa-globe"></i> Públicos
+                </button>
+                <button class="groups-tab" data-tab="discover">
+                    <i class="fas fa-compass"></i> Descubrir
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="groups-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="groupsSearchInput" placeholder="Buscar grupos...">
+                </div>
+
+                <button class="create-group-btn" onclick="openCreateGroupModal()">
+                    <i class="fas fa-plus-circle"></i>
+                    Crear Nuevo Grupo
+                </button>
+
+                <!-- My Groups Tab -->
+                <div class="tab-content active" id="my-groups-tab">
+                    <div id="myGroupsList" class="groups-list">
+                        <div class="empty-state">
+                            <i class="fas fa-users-slash"></i>
+                            <p>No has creado ni te has unido a ningún grupo</p>
+                            <button onclick="openCreateGroupModal()" class="empty-action-btn">
+                                Crear tu primer grupo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Public Groups Tab -->
+                <div class="tab-content" id="public-groups-tab">
+                    <div id="publicGroupsList" class="groups-list">
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>No hay grupos públicos disponibles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discover Tab -->
+                <div class="tab-content" id="discover-tab">
+                    <div id="discoverGroupsList" class="groups-list">
+                        <div class="empty-state">
+                            <i class="fas fa-compass"></i>
+                            <p>Descubre grupos recomendados para ti</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div id="createGroupModal" class="modal">
+        <div class="modal-overlay" onclick="closeCreateGroupModal()"></div>
+        <div class="modal-content create-group-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Crear Nuevo Grupo</h2>
+                <button class="modal-close" onclick="closeCreateGroupModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="createGroupForm" class="create-group-form">
+                    <!-- Group Avatar -->
+                    <div class="form-group avatar-upload">
+                        <label>Foto del Grupo</label>
+                        <div class="avatar-preview-container">
+                            <div class="avatar-preview" id="groupAvatarPreview">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <label for="groupAvatarInput" class="avatar-upload-btn">
+                                <i class="fas fa-camera"></i>
+                                Subir Foto
+                            </label>
+                            <input type="file" id="groupAvatarInput" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Group Name -->
+                    <div class="form-group">
+                        <label for="groupName">
+                            <i class="fas fa-signature"></i> Nombre del Grupo *
+                        </label>
+                        <input type="text" id="groupName" placeholder="Ej: Fans del América" maxlength="50" required>
+                        <span class="char-counter">0/50</span>
+                    </div>
+
+                    <!-- Group Description -->
+                    <div class="form-group">
+                        <label for="groupDescription">
+                            <i class="fas fa-align-left"></i> Descripción
+                        </label>
+                        <textarea id="groupDescription" placeholder="Describe de qué trata tu grupo..." maxlength="200" rows="3"></textarea>
+                        <span class="char-counter">0/200</span>
+                    </div>
+
+                    <!-- Privacy Settings -->
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Privacidad</label>
+                        <div class="privacy-options">
+                            <label class="radio-option">
+                                <input type="radio" name="privacy" value="public" checked>
+                                <div class="radio-card">
+                                    <i class="fas fa-globe"></i>
+                                    <span>Público</span>
+                                    <small>Cualquiera puede unirse</small>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="privacy" value="private">
+                                <div class="radio-card">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Privado</span>
+                                    <small>Requiere aprobación</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Group Limit -->
+                    <div class="form-group">
+                        <label for="groupLimit">
+                            <i class="fas fa-users-cog"></i> Límite de Miembros
+                        </label>
+                        <select id="groupLimit">
+                            <option value="50">50 miembros</option>
+                            <option value="100" selected>100 miembros</option>
+                            <option value="250">250 miembros</option>
+                            <option value="500">500 miembros</option>
+                            <option value="1000">1000 miembros</option>
+                            <option value="unlimited">Sin límite</option>
+                        </select>
+                    </div>
+
+                    <!-- Permissions -->
+                    <div class="form-group">
+                        <label><i class="fas fa-shield-alt"></i> Permisos</label>
+                        <div class="permissions-list">
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="allowMemberInvites" checked>
+                                <span>Permitir que miembros inviten a otros</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="allowFileSharing" checked>
+                                <span>Permitir compartir archivos/imágenes</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="moderationEnabled">
+                                <span>Activar moderación de mensajes</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeCreateGroupModal()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-create">
+                            <i class="fas fa-check"></i>
+                            Crear Grupo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Details Modal -->
+    <div id="groupDetailsModal" class="modal">
+        <div class="modal-overlay" onclick="closeGroupDetailsModal()"></div>
+        <div class="modal-content group-details-modal-content">
+            <div class="group-details-header">
+                <div class="group-cover"></div>
+                <div class="group-info">
+                    <img id="groupDetailAvatar" class="group-detail-avatar" src="" alt="">
+                    <div class="group-main-info">
+                        <h2 id="groupDetailName"></h2>
+                        <p id="groupDetailDescription"></p>
+                        <div class="group-stats">
+                            <span><i class="fas fa-users"></i> <span id="groupMemberCount">0</span> miembros</span>
+                            <span><i class="fas fa-comments"></i> <span id="groupMessageCount">0</span> mensajes</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeGroupDetailsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="group-details-tabs">
+                <button class="group-detail-tab active" data-tab="chat">
+                    <i class="fas fa-comments"></i> Chat
+                </button>
+                <button class="group-detail-tab" data-tab="members">
+                    <i class="fas fa-users"></i> Miembros
+                </button>
+                <button class="group-detail-tab" data-tab="settings" id="groupSettingsTab" style="display: none;">
+                    <i class="fas fa-cog"></i> Configuración
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Chat Tab -->
+                <div class="group-tab-content active" id="chat-tab">
+                    <div id="groupMessages" class="group-messages">
+                        <div class="welcome-message">
+                            <i class="fas fa-comments"></i>
+                            <p>¡Bienvenido al grupo! Empieza la conversación</p>
+                        </div>
+                    </div>
+                    <div class="group-message-input">
+                        <input type="text" id="groupMessageInput" placeholder="Escribe un mensaje...">
+                        <button id="sendGroupMessageBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Members Tab -->
+                <div class="group-tab-content" id="members-tab">
+                    <div class="members-header">
+                        <h3>Miembros del Grupo</h3>
+                        <button class="invite-btn" onclick="openInviteModal()">
+                            <i class="fas fa-user-plus"></i> Invitar
+                        </button>
+                    </div>
+                    <div id="groupMembersList" class="members-list">
+                    </div>
+                </div>
+
+                <!-- Settings Tab (Admin Only) -->
+                <div class="group-tab-content" id="settings-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-cog"></i> Configuración del Grupo</h3>
+                        <button class="edit-group-btn">
+                            <i class="fas fa-edit"></i> Editar Información
+                        </button>
+                        <button class="pending-requests-btn" onclick="openPendingRequestsModal()">
+                            <i class="fas fa-clock"></i> Solicitudes Pendientes
+                            <span class="badge" id="pendingRequestsBadge">0</span>
+                        </button>
+                        <button class="delete-group-btn">
+                            <i class="fas fa-trash"></i> Eliminar Grupo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group-action-bar">
+                <button id="leaveGroupBtn" class="btn-leave">
+                    <i class="fas fa-sign-out-alt"></i> Salir del Grupo
+                </button>
+                <button id="joinGroupBtn" class="btn-join" style="display: none;">
+                    <i class="fas fa-sign-in-alt"></i> Unirse al Grupo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-overlay" onclick="closeInviteModal()"></div>
+        <div class="modal-content invite-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-share-alt"></i> Invitar al Grupo</h2>
+                <button class="modal-close" onclick="closeInviteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="invite-methods">
+                    <div class="invite-method">
+                        <h3><i class="fas fa-link"></i> Link de Invitación</h3>
+                        <div class="invite-link-container">
+                            <input type="text" id="inviteLink" readonly>
+                            <button class="copy-btn" onclick="copyInviteLink()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="invite-method">
+                        <h3><i class="fas fa-qrcode"></i> Código QR</h3>
+                        <div class="qr-code-container">
+                            <canvas id="qrCodeCanvas"></canvas>
+                            <button class="download-qr-btn" onclick="downloadQR()">
+                                <i class="fas fa-download"></i> Descargar QR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Modal -->
+    <div id="pendingRequestsModal" class="modal">
+        <div class="modal-overlay" onclick="closePendingRequestsModal()"></div>
+        <div class="modal-content pending-requests-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-clock"></i> Solicitudes Pendientes</h2>
+                <button class="modal-close" onclick="closePendingRequestsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div id="pendingRequestsList" class="requests-list">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No hay solicitudes pendientes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal settings-modal">
+        <div class="modal-overlay" onclick="closeSettingsModal()"></div>
+        <div class="modal-content settings-modal-content">
+            <div class="settings-modal-header">
+                <div class="settings-header-content">
+                    <div class="settings-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div>
+                        <h2>Configuración de Apariencia</h2>
+                        <p>Personaliza tu experiencia de chat</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeSettingsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="settings-tabs">
+                <button class="settings-tab active" data-tab="typography">
+                    <i class="fas fa-font"></i>
+                    <span>Tipografía</span>
+                </button>
+                <button class="settings-tab" data-tab="colors">
+                    <i class="fas fa-palette"></i>
+                    <span>Colores</span>
+                </button>
+                <button class="settings-tab" data-tab="background">
+                    <i class="fas fa-fill-drip"></i>
+                    <span>Fondos</span>
+                </button>
+                <button class="settings-tab" data-tab="themes">
+                    <i class="fas fa-magic"></i>
+                    <span>Temas</span>
+                </button>
+            </div>
+
+            <div class="modal-body settings-body">
+                <!-- Typography Tab -->
+                <div class="settings-tab-content active" id="typography-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-text-height"></i> Tamaño de Fuente</h3>
+                        <div class="setting-group">
+                            <label for="fontSizeRange">Tamaño del texto: <span id="fontSizeValue">14</span>px</label>
+                            <input type="range" id="fontSizeRange" min="10" max="20" value="14" class="settings-range">
+                            <div class="range-labels">
+                                <span>Pequeño</span>
+                                <span>Grande</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-font"></i> Familia de Fuente</h3>
+                        <div class="font-grid">
+                            <button class="font-option active" data-font="Inter, 'Segoe UI', sans-serif">
+                                <span style="font-family: Inter, 'Segoe UI', sans-serif;">Inter</span>
+                            </button>
+                            <button class="font-option" data-font="'Arial', sans-serif">
+                                <span style="font-family: Arial, sans-serif;">Arial</span>
+                            </button>
+                            <button class="font-option" data-font="'Helvetica Neue', sans-serif">
+                                <span style="font-family: 'Helvetica Neue', sans-serif;">Helvetica</span>
+                            </button>
+                            <button class="font-option" data-font="'Courier New', monospace">
+                                <span style="font-family: 'Courier New', monospace;">Courier</span>
+                            </button>
+                            <button class="font-option" data-font="'Georgia', serif">
+                                <span style="font-family: Georgia, serif;">Georgia</span>
+                            </button>
+                            <button class="font-option" data-font="'Verdana', sans-serif">
+                                <span style="font-family: Verdana, sans-serif;">Verdana</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-adjust"></i> Grosor de Fuente</h3>
+                        <div class="weight-options">
+                            <button class="weight-option" data-weight="300">
+                                <span style="font-weight: 300;">Ligera</span>
+                            </button>
+                            <button class="weight-option active" data-weight="400">
+                                <span style="font-weight: 400;">Normal</span>
+                            </button>
+                            <button class="weight-option" data-weight="600">
+                                <span style="font-weight: 600;">Semi-negrita</span>
+                            </button>
+                            <button class="weight-option" data-weight="700">
+                                <span style="font-weight: 700;">Negrita</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colors Tab -->
+                <div class="settings-tab-content" id="colors-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-paint-brush"></i> Color del Texto</h3>
+                        <div class="color-picker-container">
+                            <input type="color" id="textColorPicker" value="#f3f0ff" class="color-input">
+                            <div class="color-presets">
+                                <button class="color-preset active" data-color="#f3f0ff" style="background: #f3f0ff;" title="Blanco"></button>
+                                <button class="color-preset" data-color="#e0e0e0" style="background: #e0e0e0;" title="Gris claro"></button>
+                                <button class="color-preset" data-color="#9d4edd" style="background: #9d4edd;" title="Púrpura"></button>
+                                <button class="color-preset" data-color="#10b981" style="background: #10b981;" title="Verde"></button>
+                                <button class="color-preset" data-color="#3b82f6" style="background: #3b82f6;" title="Azul"></button>
+                                <button class="color-preset" data-color="#f59e0b" style="background: #f59e0b;" title="Naranja"></button>
+                                <button class="color-preset" data-color="#ef4444" style="background: #ef4444;" title="Rojo"></button>
+                                <button class="color-preset" data-color="#ec4899" style="background: #ec4899;" title="Rosa"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-highlighter"></i> Color de Acento</h3>
+                        <div class="color-picker-container">
+                            <input type="color" id="accentColorPicker" value="#9d4edd" class="color-input">
+                            <div class="color-presets">
+                                <button class="color-preset active" data-color="#9d4edd" style="background: #9d4edd;" title="Púrpura"></button>
+                                <button class="color-preset" data-color="#10b981" style="background: #10b981;" title="Verde"></button>
+                                <button class="color-preset" data-color="#3b82f6" style="background: #3b82f6;" title="Azul"></button>
+                                <button class="color-preset" data-color="#f59e0b" style="background: #f59e0b;" title="Naranja"></button>
+                                <button class="color-preset" data-color="#ef4444" style="background: #ef4444;" title="Rojo"></button>
+                                <button class="color-preset" data-color="#06b6d4" style="background: #06b6d4;" title="Cyan"></button>
+                                <button class="color-preset" data-color="#8b5cf6" style="background: #8b5cf6;" title="Violeta"></button>
+                                <button class="color-preset" data-color="#ec4899" style="background: #ec4899;" title="Rosa"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Background Tab -->
+                <div class="settings-tab-content" id="background-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-fill"></i> Color de Fondo</h3>
+                        <div class="color-picker-container">
+                            <input type="color" id="bgColorPicker" value="#1a1625" class="color-input">
+                            <div class="color-presets">
+                                <button class="color-preset active" data-color="#1a1625" style="background: #1a1625;" title="Oscuro"></button>
+                                <button class="color-preset" data-color="#000000" style="background: #000000;" title="Negro"></button>
+                                <button class="color-preset" data-color="#1e1e1e" style="background: #1e1e1e;" title="Gris oscuro"></button>
+                                <button class="color-preset" data-color="#2d3748" style="background: #2d3748;" title="Azul oscuro"></button>
+                                <button class="color-preset" data-color="#1f2937" style="background: #1f2937;" title="Gris pizarra"></button>
+                                <button class="color-preset" data-color="#374151" style="background: #374151;" title="Gris medio"></button>
+                                <button class="color-preset" data-color="#4a5568" style="background: #4a5568;" title="Gris"></button>
+                                <button class="color-preset" data-color="#ffffff" style="background: #ffffff; border: 1px solid #ccc;" title="Blanco"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-layer-group"></i> Fondos con Degradado</h3>
+                        <div class="gradient-grid">
+                            <button class="gradient-option" data-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                                <div class="gradient-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                                <span>Púrpura</span>
+                            </button>
+                            <button class="gradient-option" data-gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
+                                <div class="gradient-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                                <span>Rosa</span>
+                            </button>
+                            <button class="gradient-option" data-gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
+                                <div class="gradient-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                                <span>Azul</span>
+                            </button>
+                            <button class="gradient-option" data-gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)">
+                                <div class="gradient-preview" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                                <span>Verde</span>
+                            </button>
+                            <button class="gradient-option" data-gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)">
+                                <div class="gradient-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                                <span>Atardecer</span>
+                            </button>
+                            <button class="gradient-option" data-gradient="linear-gradient(135deg, #30cfd0 0%, #330867 100%)">
+                                <div class="gradient-preview" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"></div>
+                                <span>Océano</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-paint-roller"></i> Degradado Personalizado</h3>
+                        <div class="custom-gradient">
+                            <div class="gradient-controls">
+                                <div class="gradient-input-group">
+                                    <label>Color 1:</label>
+                                    <input type="color" id="gradientColor1" value="#667eea" class="color-input-small">
+                                </div>
+                                <div class="gradient-input-group">
+                                    <label>Color 2:</label>
+                                    <input type="color" id="gradientColor2" value="#764ba2" class="color-input-small">
+                                </div>
+                                <div class="gradient-input-group">
+                                    <label>Ángulo:</label>
+                                    <input type="number" id="gradientAngle" value="135" min="0" max="360" class="angle-input">
+                                    <span>°</span>
+                                </div>
+                            </div>
+                            <button class="btn-apply-gradient" id="applyCustomGradient">
+                                <i class="fas fa-check"></i> Aplicar Degradado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Themes Tab -->
+                <div class="settings-tab-content" id="themes-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-palette"></i> Temas Predefinidos</h3>
+                        <div class="themes-grid">
+                            <button class="theme-card active" data-theme="default">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #9d4edd;"></div>
+                                    <div class="theme-color" style="background: #1a1625;"></div>
+                                    <div class="theme-color" style="background: #f3f0ff;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>UltraGol</h4>
+                                    <p>Tema original</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="dark">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #000000;"></div>
+                                    <div class="theme-color" style="background: #1a1a1a;"></div>
+                                    <div class="theme-color" style="background: #ffffff;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Oscuro</h4>
+                                    <p>Negro puro</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="ocean">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #0ea5e9;"></div>
+                                    <div class="theme-color" style="background: #0c4a6e;"></div>
+                                    <div class="theme-color" style="background: #e0f2fe;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Océano</h4>
+                                    <p>Azul profundo</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="forest">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #10b981;"></div>
+                                    <div class="theme-color" style="background: #064e3b;"></div>
+                                    <div class="theme-color" style="background: #d1fae5;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Bosque</h4>
+                                    <p>Verde natural</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="sunset">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #f59e0b;"></div>
+                                    <div class="theme-color" style="background: #78350f;"></div>
+                                    <div class="theme-color" style="background: #fef3c7;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Atardecer</h4>
+                                    <p>Naranja cálido</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="rose">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #ec4899;"></div>
+                                    <div class="theme-color" style="background: #831843;"></div>
+                                    <div class="theme-color" style="background: #fce7f3;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Rosa</h4>
+                                    <p>Vibrante</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="minimal">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #6b7280;"></div>
+                                    <div class="theme-color" style="background: #f3f4f6;"></div>
+                                    <div class="theme-color" style="background: #111827;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Minimalista</h4>
+                                    <p>Gris elegante</p>
+                                </div>
+                            </button>
+
+                            <button class="theme-card" data-theme="neon">
+                                <div class="theme-preview">
+                                    <div class="theme-color" style="background: #22d3ee;"></div>
+                                    <div class="theme-color" style="background: #0f172a;"></div>
+                                    <div class="theme-color" style="background: #67e8f9;"></div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Neón</h4>
+                                    <p>Cyan brillante</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <button class="btn-reset-settings" id="resetSettings">
+                    <i class="fas fa-undo"></i>
+                    Restaurar Predeterminado
+                </button>
+                <button class="btn-close-settings" onclick="closeSettingsModal()">
+                    <i class="fas fa-check"></i>
+                    Aplicar y Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QRCode Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Firebase Config - Inline para evitar conflictos -->
+    <script>
+        console.log('🔥 Firebase Configuration loading...');
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAneyRjnZzvhIFLzykATmW4ShN3IVuf5E0",
+            authDomain: "ligamx-daf3d.firebaseapp.com",
+            projectId: "ligamx-daf3d",
+            storageBucket: "ligamx-daf3d.appspot.com", 
+            messagingSenderId: "437421248316",
+            appId: "1:437421248316:web:38e9f436a57389d2c49839",
+            measurementId: "G-LKVTFN2463"
+        };
+        
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+            console.log('✅ Firebase initialized successfully');
+            console.log('✅ UltraGol Live Chat ready!');
+        }
+    </script>
+    
+    <script src="chat.js"></script>
+    <script src="groups.js"></script>
+    <script src="settings.js"></script>
+</body>
+</html>

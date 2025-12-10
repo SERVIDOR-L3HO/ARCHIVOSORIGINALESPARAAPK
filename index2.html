@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UltraGol - Enlaces Oficiales</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-box {
+            display: inline-block;
+            padding: 24px 40px;
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #ff6b00;
+            color: white;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .title h1 span {
+            color: #ff6b00;
+        }
+
+        .title p {
+            color: #888;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .link-item:hover {
+            background: #222;
+            border-color: #3a3a3a;
+        }
+
+        .link-item.whatsapp:hover { border-color: #25d366; }
+        .link-item.facebook:hover { border-color: #1877f2; }
+        .link-item.website:hover { border-color: #22c55e; }
+        .link-item.tiktok:hover { border-color: #ff0050; }
+        .link-item.telegram:hover { border-color: #0088cc; }
+        .link-item.company:hover { border-color: #ff6b00; }
+
+        .link-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .whatsapp .link-icon { background: #25d366; }
+        .facebook .link-icon { background: #1877f2; }
+        .website .link-icon { background: #22c55e; }
+        .tiktok .link-icon { background: linear-gradient(135deg, #ff0050, #00f2ea); }
+        .telegram .link-icon { background: #0088cc; }
+        .company .link-icon { background: #ff6b00; }
+
+        .link-text {
+            flex: 1;
+        }
+
+        .link-title {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .link-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .link-arrow {
+            color: #444;
+            font-size: 14px;
+        }
+
+        .link-item:hover .link-arrow {
+            color: #666;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .footer-icon {
+            font-size: 24px;
+            color: #ff6b00;
+            margin-bottom: 12px;
+        }
+
+        .footer p {
+            color: #555;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        .footer .copyright {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            .logo-box {
+                padding: 20px 32px;
+            }
+
+            .logo-img {
+                height: 60px;
+            }
+
+            .title h1 {
+                font-size: 24px;
+            }
+
+            .link-item {
+                padding: 14px 16px;
+                gap: 14px;
+            }
+
+            .link-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .link-title {
+                font-size: 14px;
+            }
+
+            .link-desc {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-box">
+                <img src="attached_assets/1001854642-removebg-preview_1764575635170.png" alt="UltraGol" class="logo-img">
+            </div>
+            <div class="brand-tag">by L3HO</div>
+        </div>
+
+        <div class="title">
+            <h1>Ultra<span>Gol</span></h1>
+            <p>Plataforma oficial de transmisiones deportivas</p>
+        </div>
+
+        <div class="links">
+            <a href="https://chat.whatsapp.com/JPZ8c9P4cBV9SgjWISBppJ?mode=hqrt1" target="_blank" class="link-item whatsapp">
+                <div class="link-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Grupo de WhatsApp</span>
+                    <span class="link-desc">Comunidad oficial UltraGol</span>
+                </div>
+                <i class="fas fa-chevron-right link-arrow"></i>
+            </a>
+
+            <a href="https://www.facebook.com/share/1EnBr7R98Y/" target="_blank" class="link-item facebook">
+                <div class="link-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Pagina de UltraGol</span>
+                    <span class="link-desc">Siguenos en Facebook</span>
+                </div>
+                <i class="fas fa-chevron-right link-arrow"></i>
+            </a>
+
+            <a href="https://ultragol-l3ho.com.mx/ULTRA/index.html" target="_blank" class="link-item website">
+                <div class="link-icon">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Transmisiones en Vivo</span>
+                    <span class="link-desc">Ver partidos en directo</span>
+                </div>
+                <i class="fas fa-chevron-right link-arrow"></i>
+            </a>
+
+            <a href="https://www.tiktok.com/@ultragol.nacional?_r=1&_t=ZS-91KNojuwnkG" target="_blank" class="link-item tiktok">
+                <div class="link-icon">
+                    <i class="fab fa-tiktok"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Canal de TikTok</span>
+                    <span class="link-desc">Contenido exclusivo</span>
+                </div>
+                <i class="fas fa-chevron-right link-arrow"></i>
+            </a>
+
+            <a href="https://t.me/+TZ0lMDwXfAoyZDg5" target="_blank" class="link-item telegram">
+                <div class="link-icon">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Canal de Telegram</span>
+                    <span class="link-desc">Noticias y actualizaciones</span>
+                </div>
+                <i class="fas fa-chevron-right link-arrow"></i>
+            </a>
+
+            <a href="https://www.facebook.com/share/1CjTbCvkfY/" target="_blank" class="link-item company">
+                <div class="link-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="link-text">
+                    <span class="link-title">Pagina de Empresa</span>
+                    <span class="link-desc">Contacto y colaboraciones</span>
+                </div>
+                <i class="fas fa-chevron-right link-arrow"></i>
+            </a>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-futbol footer-icon"></i>
+            <p><strong>UltraGol</strong></p>
+            <p>Plataforma Deportiva Profesional</p>
+            <p class="copyright">© 2025 Todos los derechos reservados</p>
+        </div>
+    </div>
+</body>
+</html>

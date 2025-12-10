@@ -1,88 +1,4 @@
-// Enhanced Multi-League Calendar JavaScript for UltraGol by L3HO
-const CALENDARIO_API = {
-    BASE_URL: 'https://ultragol-api3.onrender.com',
-    
-    LEAGUES: {
-        'ligamx': {
-            prefix: '',
-            displayName: 'Liga MX'
-        },
-        'premier': {
-            prefix: '/premier',
-            displayName: 'Premier League'
-        },
-        'laliga': {
-            prefix: '/laliga',
-            displayName: 'La Liga'
-        },
-        'seriea': {
-            prefix: '/seriea',
-            displayName: 'Serie A'
-        },
-        'bundesliga': {
-            prefix: '/bundesliga',
-            displayName: 'Bundesliga'
-        },
-        'ligue1': {
-            prefix: '/ligue1',
-            displayName: 'Ligue 1'
-        }
-    },
-    
-    cache: {},
-    cacheTimestamps: {},
-    CACHE_DURATION: 5 * 60 * 1000, // 5 minutos
-
-    async fetchWithCache(endpoint) {
-        const now = Date.now();
-        const cacheKey = endpoint.replace(/\//g, '_');
-
-        if (this.cache[cacheKey] && (now - this.cacheTimestamps[cacheKey]) < this.CACHE_DURATION) {
-            console.log(`✅ Using cached data for ${endpoint}`);
-            return this.cache[cacheKey];
-        }
-
-        try {
-            console.log(`🌐 Fetching calendario from API: ${endpoint}`);
-            const response = await fetch(`${this.BASE_URL}${endpoint}`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            this.cache[cacheKey] = data;
-            this.cacheTimestamps[cacheKey] = now;
-            
-            return data;
-        } catch (error) {
-            console.error(`❌ Error fetching ${endpoint}:`, error);
-            
-            if (this.cache[cacheKey]) {
-                console.log(`⚠️ Using stale cache for ${endpoint}`);
-                return this.cache[cacheKey];
-            }
-            
-            return { calendario: [] };
-        }
-    },
-
-    async getCalendarioPorLiga(leagueKey) {
-        const league = this.LEAGUES[leagueKey];
-        if (!league) return [];
-        
-        try {
-            const endpoint = `${league.prefix}/calendario`;
-            const data = await this.fetchWithCache(endpoint);
-            return data.calendario || [];
-        } catch (error) {
-            console.warn(`⚠️ Calendario not available for ${leagueKey}`);
-            return [];
-        }
-    }
-};
-
+// Enhanced Calendar JavaScript for Liga MX Website by L3HO
 document.addEventListener('DOMContentLoaded', function() {
     initializeCalendar();
 });
@@ -91,96 +7,130 @@ document.addEventListener('DOMContentLoaded', function() {
 let currentJornada = 1;
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
-let currentView = 'jornada';
-let currentLeague = 'ligamx';
-let allLeagueMatches = {};
+let currentView = 'jornada'; // 'jornada' or 'month'
+let jornadasData = [];
+let calendarTeamsData = [];
+let allMatches = [];
+let filteredMatches = [];
 let selectedTeam = '';
+let selectedMatchType = '';
 
 const months = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+    'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'
 ];
 
-const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+const days = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
 
 // Inicializar sistema de calendario
 async function initializeCalendar() {
     try {
-        console.log('🚀 Inicializando calendario multi-liga...');
-        await loadLeagueData(currentLeague);
-        setupLeagueTabs();
+        // Cargar jornadas primero, luego el resto
+        await loadJornadasData();
+        await Promise.all([
+            loadTeamsData(),
+            loadFixturesData()
+        ]);
+        
+        setupCalendarControls();
         setupViewControls();
         setupFilters();
         populateTeamFilter();
-        displayCurrentView();
+        generateJornadasSelector();
+        displayJornada(currentJornada);
     } catch (error) {
-        console.error('❌ Error inicializando calendario:', error);
+        console.error('Error inicializando calendario:', error);
         showErrorMessage('Error al cargar el calendario');
     }
 }
 
-// Cargar datos de una liga específica
-async function loadLeagueData(leagueKey) {
+// Cargar datos de jornadas
+async function loadJornadasData() {
     try {
-        const data = await CALENDARIO_API.getCalendarioPorLiga(leagueKey);
-        allLeagueMatches[leagueKey] = data;
-        console.log(`✅ Datos de ${leagueKey} cargados:`, data.length, 'partidos');
-        return data;
+        const response = await fetch('data/jornadas.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const data = await response.json();
+        jornadasData = data.jornadas;
+        return jornadasData;
     } catch (error) {
-        console.error(`❌ Error cargando datos de ${leagueKey}:`, error);
-        allLeagueMatches[leagueKey] = [];
+        console.error('Error cargando datos de jornadas:', error);
+        // Datos de fallback si no se puede cargar el JSON
+        jornadasData = generateFallbackJornadas();
+        return jornadasData;
+    }
+}
+
+// Cargar datos de equipos
+async function loadTeamsData() {
+    try {
+        const response = await fetch('data/teams.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        calendarTeamsData = await response.json();
+        return calendarTeamsData;
+    } catch (error) {
+        console.error('Error cargando datos de equipos:', error);
+        calendarTeamsData = [];
         return [];
     }
 }
 
-// Configurar tabs de ligas
-function setupLeagueTabs() {
-    const leagueTabs = document.querySelectorAll('.league-tab');
-    
-    leagueTabs.forEach(tab => {
-        tab.addEventListener('click', async () => {
-            const league = tab.dataset.league;
-            if (league && league !== currentLeague) {
-                currentLeague = league;
-                
-                // Actualizar tabs activos
-                leagueTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Cargar datos si no existen
-                if (!allLeagueMatches[currentLeague]) {
-                    await loadLeagueData(currentLeague);
-                }
-                
-                // Resetear a jornada 1
-                currentJornada = 1;
-                
-                // Actualizar vista
-                populateTeamFilter();
-                displayCurrentView();
-            }
+// Cargar datos de partidos
+async function loadFixturesData() {
+    try {
+        const response = await fetch('data/fixtures.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const fixtures = await response.json();
+        
+        // Combinar partidos de jornadas y fixtures
+        allMatches = [];
+        
+        // Agregar partidos de jornadas
+        jornadasData.forEach(jornada => {
+            jornada.partidos?.forEach(partido => {
+                allMatches.push({
+                    ...partido,
+                    jornada: jornada.numero,
+                    date: parseMatchDate(partido.dia, partido.hora)
+                });
+            });
         });
-    });
+        
+        // Agregar fixtures si existen
+        if (fixtures && Array.isArray(fixtures)) {
+            fixtures.forEach(match => {
+                allMatches.push({
+                    ...match,
+                    date: new Date(match.date)
+                });
+            });
+        }
+        
+        filteredMatches = [...allMatches];
+        return allMatches;
+    } catch (error) {
+        console.error('Error cargando datos de partidos:', error);
+        allMatches = [];
+        filteredMatches = [];
+        return [];
+    }
 }
 
-// Configurar controles de vista
-function setupViewControls() {
-    const jornadaViewBtn = document.getElementById('jornadaView');
-    const monthViewBtn = document.getElementById('monthView');
-    
-    if (jornadaViewBtn) {
-        jornadaViewBtn.addEventListener('click', () => {
-            switchView('jornada');
+// Generar jornadas de fallback
+function generateFallbackJornadas() {
+    const fallbackJornadas = [];
+    for (let i = 1; i <= 17; i++) {
+        fallbackJornadas.push({
+            numero: i,
+            fechas: `Jornada ${i}`,
+            partidos: []
         });
     }
-    
-    if (monthViewBtn) {
-        monthViewBtn.addEventListener('click', () => {
-            switchView('month');
-        });
-    }
-    
-    // Controles de navegación de jornada
+    return fallbackJornadas;
+}
+
+// Configurar controles de calendario
+function setupCalendarControls() {
+    // Controles de jornadas
     const prevButton = document.getElementById('prevJornada');
     const nextButton = document.getElementById('nextJornada');
     
@@ -188,17 +138,18 @@ function setupViewControls() {
         prevButton.addEventListener('click', () => {
             if (currentJornada > 1) {
                 currentJornada--;
-                displayJornadaView();
+                displayJornada(currentJornada);
+                updateNavButtons();
             }
         });
     }
     
     if (nextButton) {
         nextButton.addEventListener('click', () => {
-            const maxJornada = getMaxJornada();
-            if (currentJornada < maxJornada) {
+            if (currentJornada < jornadasData.length) {
                 currentJornada++;
-                displayJornadaView();
+                displayJornada(currentJornada);
+                updateNavButtons();
             }
         });
     }
@@ -230,15 +181,41 @@ function setupViewControls() {
     }
 }
 
+// Configurar controles de vista
+function setupViewControls() {
+    const jornadaViewBtn = document.getElementById('jornadaView');
+    const monthViewBtn = document.getElementById('monthView');
+    
+    if (jornadaViewBtn) {
+        jornadaViewBtn.addEventListener('click', () => {
+            switchView('jornada');
+        });
+    }
+    
+    if (monthViewBtn) {
+        monthViewBtn.addEventListener('click', () => {
+            switchView('month');
+        });
+    }
+}
+
 // Configurar filtros
 function setupFilters() {
     const teamFilter = document.getElementById('teamFilter');
+    const matchTypeFilter = document.getElementById('matchTypeFilter');
     const clearFiltersBtn = document.getElementById('clearFilters');
     
     if (teamFilter) {
         teamFilter.addEventListener('change', (e) => {
             selectedTeam = e.target.value;
-            displayCurrentView();
+            applyFilters();
+        });
+    }
+    
+    if (matchTypeFilter) {
+        matchTypeFilter.addEventListener('change', (e) => {
+            selectedMatchType = e.target.value;
+            applyFilters();
         });
     }
     
@@ -249,170 +226,499 @@ function setupFilters() {
     }
 }
 
-// Obtener partidos de la liga actual
-function getCurrentLeagueMatches() {
-    return allLeagueMatches[currentLeague] || [];
+// Generar selector de jornadas
+function generateJornadasSelector() {
+    const selector = document.getElementById('jornadasSelector');
+    if (!selector || !jornadasData.length) return;
+    
+    selector.innerHTML = '';
+    
+    jornadasData.forEach((jornada, index) => {
+        const button = document.createElement('button');
+        button.className = 'jornada-btn';
+        if (index + 1 === currentJornada) {
+            button.classList.add('active');
+        }
+        
+        // Manejar jornadas especiales (dobles)
+        if (jornada.tipo === 'DOBLE') {
+            button.textContent = `J${jornada.numero} DOBLE`;
+        } else {
+            button.textContent = `J${jornada.numero}`;
+        }
+        
+        button.addEventListener('click', () => {
+            currentJornada = index + 1;
+            displayJornada(currentJornada);
+            updateJornadaSelector();
+            updateNavButtons();
+        });
+        
+        selector.appendChild(button);
+    });
 }
 
-// Obtener máxima jornada
-function getMaxJornada() {
-    const matches = getCurrentLeagueMatches();
-    if (matches.length === 0) return 1;
-    
-    const jornadas = matches.map(m => m.jornada || 1);
-    return Math.max(...jornadas);
-}
-
-// Obtener partidos por jornada
-function getMatchesByJornada(jornadaNum) {
-    const matches = getCurrentLeagueMatches();
-    let jornadaMatches = matches.filter(m => m.jornada === jornadaNum);
-    
-    // Aplicar filtro de equipo si está seleccionado
-    if (selectedTeam) {
-        jornadaMatches = jornadaMatches.filter(m => 
-            m.equipoLocal === selectedTeam || m.equipoVisitante === selectedTeam
-        );
+// Mostrar jornada específica
+function displayJornada(jornadaNum) {
+    console.log('🏟️ DisplayJornada llamado con jornada:', jornadaNum);
+    const jornada = jornadasData[jornadaNum - 1];
+    if (!jornada) {
+        console.error('❌ Jornada no encontrada:', jornadaNum, 'Total jornadas:', jornadasData.length);
+        return;
     }
-    
-    return jornadaMatches;
-}
-
-// Mostrar vista actual
-function displayCurrentView() {
-    if (currentView === 'jornada') {
-        displayJornadaView();
-    } else {
-        displayMonthView();
-    }
-}
-
-// Mostrar vista de jornadas
-function displayJornadaView() {
-    const matches = getMatchesByJornada(currentJornada);
+    console.log('✅ Jornada encontrada:', jornada.numero, 'con', jornada.partidos?.length || 0, 'partidos');
     
     // Actualizar título
     const currentJornadaElement = document.getElementById('currentJornada');
     if (currentJornadaElement) {
-        currentJornadaElement.textContent = `JORNADA ${currentJornada}`;
+        if (jornada.tipo === 'DOBLE') {
+            currentJornadaElement.textContent = `JORNADA ${jornada.numero} DOBLE`;
+        } else {
+            currentJornadaElement.textContent = `JORNADA ${jornada.numero}`;
+        }
     }
     
     // Actualizar fechas
     const jornadaDatesElement = document.getElementById('jornadaDates');
-    if (jornadaDatesElement && matches.length > 0) {
-        const firstMatch = matches[0];
-        jornadaDatesElement.textContent = firstMatch.fecha || 'Por confirmar';
-    } else if (jornadaDatesElement) {
-        jornadaDatesElement.textContent = '';
+    if (jornadaDatesElement) {
+        jornadaDatesElement.textContent = jornada.fechas;
     }
     
-    // Generar selector de jornadas
-    generateJornadasSelector();
-    
     // Mostrar partidos
-    displayPartidos(matches);
+    console.log('🎯 Llamando displayPartidos con:', jornada.partidos?.length || 0, 'partidos');
+    displayPartidos(jornada.partidos || []);
     
-    // Actualizar botones de navegación
+    // Actualizar controles
+    updateJornadaSelector();
     updateNavButtons();
 }
 
-// Generar selector de jornadas
-function generateJornadasSelector() {
-    const selector = document.getElementById('jornadasSelector');
-    if (!selector) return;
-    
-    selector.innerHTML = '';
-    
-    const maxJornada = getMaxJornada();
-    
-    for (let i = 1; i <= maxJornada; i++) {
-        const button = document.createElement('button');
-        button.className = 'jornada-btn';
-        if (i === currentJornada) {
-            button.classList.add('active');
-        }
-        button.textContent = `J${i}`;
-        
-        button.addEventListener('click', () => {
-            currentJornada = i;
-            displayJornadaView();
-        });
-        
-        selector.appendChild(button);
-    }
-}
-
-// Mostrar partidos
-function displayPartidos(matches) {
+// Mostrar partidos de la jornada
+function displayPartidos(partidos) {
+    console.log('📅 DisplayPartidos llamado con:', partidos?.length || 0, 'partidos');
     const matchesGrid = document.getElementById('matchesGrid');
-    if (!matchesGrid) return;
-    
-    matchesGrid.innerHTML = '';
-    
-    if (matches.length === 0) {
-        matchesGrid.innerHTML = `
-            <div class="no-matches">
-                <i class="fas fa-calendar-times"></i>
-                <h3>No hay partidos</h3>
-                <p>No se encontraron partidos para esta jornada</p>
-            </div>
-        `;
+    if (!matchesGrid) {
+        console.error('❌ Elemento matchesGrid no encontrado');
         return;
     }
     
-    matches.forEach(match => {
-        const card = createPartidoCard(match);
-        matchesGrid.appendChild(card);
+    console.log('✅ matchesGrid encontrado, limpiando contenido');
+    matchesGrid.innerHTML = '';
+    
+    // Filtrar partidos si hay filtros aplicados
+    let partidosToShow = partidos;
+    if (selectedTeam || selectedMatchType) {
+        partidosToShow = partidos.filter(partido => {
+            let includeMatch = true;
+            
+            if (selectedTeam) {
+                const teamMatch = partido.local === selectedTeam || partido.visitante === selectedTeam;
+                includeMatch = includeMatch && teamMatch;
+            }
+            
+            if (selectedMatchType && selectedTeam) {
+                if (selectedMatchType === 'local') {
+                    includeMatch = includeMatch && partido.local === selectedTeam;
+                } else if (selectedMatchType === 'visitante') {
+                    includeMatch = includeMatch && partido.visitante === selectedTeam;
+                }
+            }
+            
+            return includeMatch;
+        });
+    }
+    
+    if (partidosToShow.length === 0) {
+        const noMatches = document.createElement('div');
+        noMatches.className = 'no-matches';
+        noMatches.innerHTML = `
+            <div class="no-matches-content">
+                <i class="fas fa-calendar-times"></i>
+                <h3>No hay partidos</h3>
+                <p>No se encontraron partidos con los filtros aplicados</p>
+            </div>
+        `;
+        noMatches.style.cssText = `
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        `;
+        matchesGrid.appendChild(noMatches);
+        return;
+    }
+    
+    partidosToShow.forEach(partido => {
+        const partidoCard = createPartidoCard(partido);
+        matchesGrid.appendChild(partidoCard);
     });
 }
 
 // Crear tarjeta de partido
-function createPartidoCard(match) {
+function createPartidoCard(partido) {
     const card = document.createElement('div');
     card.className = 'partido-card';
     
     card.innerHTML = `
         <div class="partido-header">
-            <div class="partido-dia">${match.fecha || 'Por confirmar'}</div>
-            <div class="partido-hora">${match.hora || 'TBC'}</div>
+            <div class="partido-dia">${partido.dia}</div>
+            <div class="partido-hora">${partido.hora}</div>
         </div>
         <div class="partido-teams">
             <div class="team-partido">
                 <div class="team-logo-small">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="team-name-small">${match.equipoLocal}</div>
+                <div class="team-name-small">${partido.local}</div>
             </div>
             <div class="vs-small">VS</div>
             <div class="team-partido">
                 <div class="team-logo-small">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="team-name-small">${match.equipoVisitante}</div>
+                <div class="team-name-small">${partido.visitante}</div>
             </div>
         </div>
-        ${match.contador ? `
         <div class="partido-estadio">
-            <i class="fas fa-clock"></i>
-            ${match.contador.mensaje || 'Próximamente'}
+            <i class="fas fa-map-marker-alt"></i>
+            ${partido.estadio}
         </div>
-        ` : ''}
     `;
     
+    // Agregar evento click para mostrar detalles
+    card.addEventListener('click', () => {
+        showPartidoDetails(partido);
+    });
+    
     return card;
+}
+
+// Actualizar selector de jornadas
+function updateJornadaSelector() {
+    const buttons = document.querySelectorAll('.jornada-btn');
+    buttons.forEach((button, index) => {
+        if (index + 1 === currentJornada) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+}
+
+// Cambiar vista
+function switchView(viewType) {
+    currentView = viewType;
+    
+    const jornadaViewBtn = document.getElementById('jornadaView');
+    const monthViewBtn = document.getElementById('monthView');
+    const jornadaSection = document.getElementById('jornadaSection');
+    const monthSection = document.getElementById('monthSection');
+    const matchesSection = document.querySelector('.jornada-matches');
+    
+    // Actualizar botones
+    if (jornadaViewBtn && jornadaViewBtn.classList && monthViewBtn && monthViewBtn.classList) {
+        jornadaViewBtn.classList.toggle('active', viewType === 'jornada');
+        monthViewBtn.classList.toggle('active', viewType === 'month');
+    }
+    
+    // Mostrar/ocultar secciones
+    if (jornadaSection && monthSection && matchesSection) {
+        if (viewType === 'jornada') {
+            jornadaSection.style.display = 'block';
+            monthSection.style.display = 'none';
+            matchesSection.style.display = 'block';
+            displayJornada(currentJornada);
+        } else {
+            jornadaSection.style.display = 'none';
+            monthSection.style.display = 'block';
+            matchesSection.style.display = 'none';
+            displayMonthView();
+        }
+    }
+}
+
+// Poblar filtro de equipos
+function populateTeamFilter() {
+    const teamFilter = document.getElementById('teamFilter');
+    if (!teamFilter || !calendarTeamsData.length) return;
+    
+    // Limpiar opciones existentes (excepto la primera)
+    teamFilter.innerHTML = '<option value="">Todos los equipos</option>';
+    
+    // Agregar equipos
+    calendarTeamsData.forEach(team => {
+        const option = document.createElement('option');
+        option.value = team.name;
+        option.textContent = team.name;
+        teamFilter.appendChild(option);
+    });
+}
+
+// Aplicar filtros
+function applyFilters() {
+    filteredMatches = allMatches.filter(match => {
+        let includeMatch = true;
+        
+        // Filtro por equipo
+        if (selectedTeam) {
+            const teamMatch = match.local === selectedTeam || 
+                             match.visitante === selectedTeam ||
+                             match.homeTeam === selectedTeam ||
+                             match.awayTeam === selectedTeam;
+            includeMatch = includeMatch && teamMatch;
+        }
+        
+        // Filtro por tipo de partido
+        if (selectedMatchType && selectedTeam) {
+            if (selectedMatchType === 'local') {
+                includeMatch = includeMatch && 
+                              (match.local === selectedTeam || match.homeTeam === selectedTeam);
+            } else if (selectedMatchType === 'visitante') {
+                includeMatch = includeMatch && 
+                              (match.visitante === selectedTeam || match.awayTeam === selectedTeam);
+            }
+        }
+        
+        return includeMatch;
+    });
+    
+    // Actualizar vista actual
+    if (currentView === 'jornada') {
+        displayJornada(currentJornada);
+    } else {
+        displayMonthView();
+    }
+}
+
+// Limpiar filtros
+function clearAllFilters() {
+    selectedTeam = '';
+    selectedMatchType = '';
+    
+    const teamFilter = document.getElementById('teamFilter');
+    const matchTypeFilter = document.getElementById('matchTypeFilter');
+    
+    if (teamFilter) teamFilter.value = '';
+    if (matchTypeFilter) matchTypeFilter.value = '';
+    
+    filteredMatches = [...allMatches];
+    
+    // Actualizar vista actual
+    if (currentView === 'jornada') {
+        displayJornada(currentJornada);
+    } else {
+        displayMonthView();
+    }
+}
+
+// Actualizar botones de navegación
+function updateNavButtons() {
+    const prevButton = document.getElementById('prevJornada');
+    const nextButton = document.getElementById('nextJornada');
+    
+    if (prevButton) {
+        prevButton.disabled = currentJornada <= 1;
+    }
+    
+    if (nextButton) {
+        nextButton.disabled = currentJornada >= jornadasData.length;
+    }
+}
+
+// Mostrar detalles del partido
+function showPartidoDetails(partido) {
+    const modal = document.createElement('div');
+    modal.className = 'partido-modal';
+    modal.innerHTML = `
+        <div class="partido-modal-content">
+            <div class="modal-header">
+                <h3>Detalles del Partido</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="partido-teams-detail">
+                    <div class="team-detail">
+                        <div class="team-logo-large">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>${partido.local}</h4>
+                        <span class="team-type">Local</span>
+                    </div>
+                    <div class="vs-large">VS</div>
+                    <div class="team-detail">
+                        <div class="team-logo-large">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>${partido.visitante}</h4>
+                        <span class="team-type">Visitante</span>
+                    </div>
+                </div>
+                <div class="partido-details">
+                    <p><i class="fas fa-calendar-alt"></i> <strong>Día:</strong> ${partido.dia}</p>
+                    <p><i class="fas fa-clock"></i> <strong>Hora:</strong> ${partido.hora}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Estadio:</strong> ${partido.estadio}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Estilos del modal
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    `;
+    
+    const modalContent = modal.querySelector('.partido-modal-content');
+    modalContent.style.cssText = `
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+    `;
+    
+    // Estilos adicionales para el contenido
+    const style = document.createElement('style');
+    style.textContent = `
+        .partido-teams-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .team-detail {
+            flex: 1;
+        }
+        
+        .team-logo-large {
+            width: 80px;
+            height: 80px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #2c5aa0;
+        }
+        
+        .team-detail h4 {
+            color: #2c5aa0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+        
+        .team-type {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .vs-large {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #666;
+            padding: 0 30px;
+        }
+        
+        .partido-details {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .partido-details p {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .close-modal:hover {
+            color: #666;
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c5aa0;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    
+    // Cerrar modal
+    const closeButton = modal.querySelector('.close-modal');
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        document.head.removeChild(style);
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+            document.head.removeChild(style);
+        }
+    });
+    
+    document.body.appendChild(modal);
+}
+
+// Ir a jornada específica (función de utilidad)
+function goToJornada(jornadaNum) {
+    if (jornadaNum >= 1 && jornadaNum <= jornadasData.length) {
+        currentJornada = jornadaNum;
+        displayJornada(currentJornada);
+        updateJornadaSelector();
+        updateNavButtons();
+    }
+}
+
+// Obtener jornada actual (función de utilidad)
+function getCurrentJornada() {
+    return currentJornada;
 }
 
 // Mostrar vista mensual
 function displayMonthView() {
     const currentMonthElement = document.getElementById('currentMonth');
+    const calendarGrid = document.getElementById('calendarGrid');
+    
     if (currentMonthElement) {
         currentMonthElement.textContent = `${months[currentMonth]} ${currentYear}`;
     }
     
-    generateCalendarGrid();
+    if (calendarGrid) {
+        generateCalendarGrid();
+    }
 }
 
-// Generar cuadrícula del calendario
+// Generar grilla del calendario
 function generateCalendarGrid() {
     const calendarGrid = document.getElementById('calendarGrid');
     if (!calendarGrid) return;
@@ -427,55 +733,47 @@ function generateCalendarGrid() {
         calendarGrid.appendChild(header);
     });
     
-    // Obtener primer día del mes
+    // Obtener primer día del mes y días en el mes
     const firstDay = new Date(currentYear, currentMonth, 1);
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
-    const startingDayOfWeek = firstDay.getDay();
+    const daysInMonth = lastDay.getDate();
+    const startDate = firstDay.getDay();
     
     // Días del mes anterior
-    const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
-    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-        const day = prevMonthLastDay - i;
-        const dayElement = createCalendarDay(day, true);
+    const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0).getDate();
+    
+    for (let i = startDate - 1; i >= 0; i--) {
+        const dayElement = createCalendarDay(
+            prevMonthLastDay - i, 
+            prevMonth, 
+            prevYear, 
+            true
+        );
         calendarGrid.appendChild(dayElement);
     }
     
     // Días del mes actual
-    const today = new Date();
-    const matches = getCurrentLeagueMatches();
-    
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-        const date = new Date(currentYear, currentMonth, day);
-        const isToday = date.toDateString() === today.toDateString();
-        
-        // Filtrar partidos del día
-        let dayMatches = matches.filter(match => {
-            if (!match.fechaCompleta) return false;
-            const matchDate = new Date(match.fechaCompleta);
-            return matchDate.toDateString() === date.toDateString();
-        });
-        
-        // Aplicar filtro de equipo
-        if (selectedTeam) {
-            dayMatches = dayMatches.filter(m => 
-                m.equipoLocal === selectedTeam || m.equipoVisitante === selectedTeam
-            );
-        }
-        
-        const dayElement = createCalendarDay(day, false, isToday, dayMatches);
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = createCalendarDay(day, currentMonth, currentYear, false);
         calendarGrid.appendChild(dayElement);
     }
     
     // Días del siguiente mes
-    const remainingCells = 42 - calendarGrid.children.length + 7; // +7 para los headers
-    for (let day = 1; day <= remainingCells - 7; day++) {
-        const dayElement = createCalendarDay(day, true);
+    const totalCells = calendarGrid.children.length - 7; // -7 por los headers
+    const remainingCells = 42 - totalCells; // 6 semanas * 7 días
+    const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+    
+    for (let day = 1; day <= remainingCells; day++) {
+        const dayElement = createCalendarDay(day, nextMonth, nextYear, true);
         calendarGrid.appendChild(dayElement);
     }
 }
 
-// Crear día del calendario
-function createCalendarDay(day, otherMonth = false, isToday = false, matches = []) {
+// Crear elemento de día del calendario
+function createCalendarDay(day, month, year, otherMonth) {
     const dayElement = document.createElement('div');
     dayElement.className = 'calendar-day';
     
@@ -483,126 +781,164 @@ function createCalendarDay(day, otherMonth = false, isToday = false, matches = [
         dayElement.classList.add('other-month');
     }
     
-    if (isToday) {
+    // Verificar si es hoy
+    const today = new Date();
+    const dayDate = new Date(year, month, day);
+    if (dayDate.toDateString() === today.toDateString()) {
         dayElement.classList.add('today');
     }
     
+    // Número del día
     const dayNumber = document.createElement('div');
     dayNumber.className = 'day-number';
     dayNumber.textContent = day;
     dayElement.appendChild(dayNumber);
     
-    if (matches.length > 0 && !otherMonth) {
-        const matchesContainer = document.createElement('div');
-        matchesContainer.className = 'day-matches';
+    // Partidos del día
+    const dayMatches = document.createElement('div');
+    dayMatches.className = 'day-matches';
+    
+    // Buscar partidos para este día
+    const dayMatchesData = filteredMatches.filter(match => {
+        const matchDate = match.date || parseMatchDate(match.dia, match.hora);
+        if (!matchDate) return false;
         
-        matches.slice(0, 3).forEach(match => {
-            const matchElement = document.createElement('div');
-            matchElement.className = 'day-match';
-            matchElement.textContent = `${match.equipoLocal.substring(0, 3)} vs ${match.equipoVisitante.substring(0, 3)}`;
-            matchesContainer.appendChild(matchElement);
+        return matchDate.getDate() === day &&
+               matchDate.getMonth() === month &&
+               matchDate.getFullYear() === year;
+    });
+    
+    dayMatchesData.forEach(match => {
+        const matchElement = document.createElement('div');
+        matchElement.className = 'day-match';
+        
+        const homeTeam = match.local || match.homeTeam || 'TBD';
+        const awayTeam = match.visitante || match.awayTeam || 'TBD';
+        
+        matchElement.textContent = `${homeTeam.substring(0, 3)} vs ${awayTeam.substring(0, 3)}`;
+        matchElement.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showMatchDetails(match);
         });
         
-        if (matches.length > 3) {
-            const moreElement = document.createElement('div');
-            moreElement.className = 'day-match';
-            moreElement.textContent = `+${matches.length - 3} más`;
-            matchesContainer.appendChild(moreElement);
-        }
-        
-        dayElement.appendChild(matchesContainer);
-    }
+        dayMatches.appendChild(matchElement);
+    });
+    
+    dayElement.appendChild(dayMatches);
     
     return dayElement;
 }
 
-// Cambiar vista
-function switchView(viewType) {
-    currentView = viewType;
+// Parsear fecha de partido
+function parseMatchDate(dia, hora) {
+    if (!dia || !hora) return null;
     
-    const jornadaViewBtn = document.getElementById('jornadaView');
-    const monthViewBtn = document.getElementById('monthView');
-    const jornadaSection = document.getElementById('jornadaSection');
-    const monthSection = document.getElementById('monthSection');
-    
-    // Actualizar botones
-    if (jornadaViewBtn && monthViewBtn) {
-        jornadaViewBtn.classList.toggle('active', viewType === 'jornada');
-        monthViewBtn.classList.toggle('active', viewType === 'month');
+    try {
+        // Asumiendo formato básico - esto debería mejorarse con datos reales
+        const currentDate = new Date();
+        return new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(dia));
+    } catch (error) {
+        return null;
     }
+}
+
+// Mostrar detalles del partido
+function showMatchDetails(match) {
+    const modal = document.createElement('div');
+    modal.className = 'match-details-modal';
     
-    // Mostrar/ocultar secciones
-    if (jornadaSection && monthSection) {
-        if (viewType === 'jornada') {
-            jornadaSection.style.display = 'block';
-            monthSection.classList.remove('active');
-            displayJornadaView();
-        } else {
-            jornadaSection.style.display = 'none';
-            monthSection.classList.add('active');
-            displayMonthView();
+    const homeTeam = match.local || match.homeTeam || 'TBD';
+    const awayTeam = match.visitante || match.awayTeam || 'TBD';
+    const stadium = match.estadio || match.stadium || 'Estadio por confirmar';
+    const time = match.hora || match.time || 'Hora por confirmar';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalles del Partido</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="match-teams-detail">
+                    <div class="team-detail">
+                        <div class="team-logo-large">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>${homeTeam}</h4>
+                        <span class="team-type">Local</span>
+                    </div>
+                    <div class="vs-large">VS</div>
+                    <div class="team-detail">
+                        <div class="team-logo-large">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>${awayTeam}</h4>
+                        <span class="team-type">Visitante</span>
+                    </div>
+                </div>
+                <div class="match-details">
+                    <p><i class="fas fa-clock"></i> <strong>Hora:</strong> ${time}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Estadio:</strong> ${stadium}</p>
+                    ${match.jornada ? `<p><i class="fas fa-calendar-alt"></i> <strong>Jornada:</strong> ${match.jornada}</p>` : ''}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    `;
+    
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.style.cssText = `
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+    `;
+    
+    // Cerrar modal
+    const closeButton = modal.querySelector('.close-modal');
+    closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
         }
-    }
-}
-
-// Poblar filtro de equipos
-function populateTeamFilter() {
-    const teamFilter = document.getElementById('teamFilter');
-    if (!teamFilter) return;
-    
-    teamFilter.innerHTML = '<option value="">Todos los equipos</option>';
-    
-    const matches = getCurrentLeagueMatches();
-    const teams = new Set();
-    
-    matches.forEach(match => {
-        teams.add(match.equipoLocal);
-        teams.add(match.equipoVisitante);
     });
     
-    Array.from(teams).sort().forEach(team => {
-        const option = document.createElement('option');
-        option.value = team;
-        option.textContent = team;
-        teamFilter.appendChild(option);
-    });
-}
-
-// Limpiar filtros
-function clearAllFilters() {
-    selectedTeam = '';
-    
-    const teamFilter = document.getElementById('teamFilter');
-    if (teamFilter) teamFilter.value = '';
-    
-    displayCurrentView();
-}
-
-// Actualizar botones de navegación
-function updateNavButtons() {
-    const prevButton = document.getElementById('prevJornada');
-    const nextButton = document.getElementById('nextJornada');
-    
-    if (prevButton) {
-        prevButton.disabled = currentJornada <= 1;
-    }
-    
-    if (nextButton) {
-        const maxJornada = getMaxJornada();
-        nextButton.disabled = currentJornada >= maxJornada;
-    }
+    document.body.appendChild(modal);
 }
 
 // Mostrar mensaje de error
 function showErrorMessage(message) {
-    const matchesGrid = document.getElementById('matchesGrid');
-    if (matchesGrid) {
-        matchesGrid.innerHTML = `
-            <div class="no-matches">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Error</h3>
-                <p>${message}</p>
-            </div>
-        `;
-    }
+    console.error(message);
+    // Implementar notificación visual si es necesario
 }
+
+// Exportar funciones para uso global
+window.calendarApp = {
+    switchView,
+    goToJornada,
+    getCurrentJornada,
+    displayJornada,
+    displayMonthView,
+    applyFilters,
+    clearAllFilters,
+    jornadasData: () => jornadasData,
+    teamsData: () => calendarTeamsData,
+    allMatches: () => allMatches
+};

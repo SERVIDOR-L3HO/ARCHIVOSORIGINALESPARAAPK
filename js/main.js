@@ -159,8 +159,8 @@ async function loadInitialData() {
         if (document.getElementById('recentMatches')) {
             loadRecentMatches();
         }
-        if (document.getElementById('lideresGoleo')) {
-            loadLideresGoleo();
+        if (document.getElementById('topScorersHome')) {
+            loadHomeScorers();
         }
     } catch (error) {
         console.error('Error loading initial data:', error);
@@ -168,43 +168,90 @@ async function loadInitialData() {
     }
 }
 
+// Cargar goleadores en página principal
+async function loadHomeScorers() {
+    const container = document.getElementById('topScorersHome');
+    if (!container) return;
+
+    try {
+        const goleadores = await ultraGolAPI.getGoleadores();
+        
+        if (!goleadores || goleadores.length === 0) {
+            container.innerHTML = `
+                <div class="scorer-item">
+                    <span class="name" style="text-align: center; width: 100%; color: #999;">
+                        No hay datos disponibles
+                    </span>
+                </div>
+            `;
+            return;
+        }
+
+        // Mostrar top 5 goleadores
+        const topScorers = goleadores.slice(0, 5);
+        
+        container.innerHTML = topScorers.map((scorer, index) => `
+            <div class="scorer-item" style="animation: fadeInUp ${index * 0.1}s ease-out;">
+                <span class="position">${index + 1}</span>
+                <span class="name">${scorer.jugador}</span>
+                <span class="goals">${scorer.goles}</span>
+            </div>
+        `).join('');
+
+        console.log('✅ Top goleadores cargados en home:', topScorers.length);
+    } catch (error) {
+        console.error('❌ Error cargando goleadores en home:', error);
+        container.innerHTML = `
+            <div class="scorer-item">
+                <span class="name" style="text-align: center; width: 100%; color: #dc3545;">
+                    Error al cargar goleadores
+                </span>
+            </div>
+        `;
+    }
+}
+
 async function loadTeamsData() {
     try {
-        if (window.ULTRAGOL_API) {
-            teamsData = await window.ULTRAGOL_API.getEquipos();
-            console.log('✅ Teams data loaded from API:', teamsData.length, 'teams');
-        } else {
-            const response = await fetch('data/teams.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            teamsData = await response.json();
-            console.log('✅ Teams data loaded from JSON:', teamsData.length, 'teams');
-        }
+        // Usar API de UltraGol
+        teamsData = await ultraGolAPI.getEquipos();
+        console.log('✅ Teams data loaded from API:', teamsData.length, 'teams');
         return teamsData;
     } catch (error) {
-        console.error('Error loading teams data:', error);
-        return [];
+        console.error('Error loading teams data from API:', error);
+        // Fallback a JSON local si la API falla
+        try {
+            const response = await fetch('data/teams.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            teamsData = await response.json();
+            console.log('⚠️ Teams data loaded from local JSON fallback');
+            return teamsData;
+        } catch (fallbackError) {
+            console.error('Error in fallback:', fallbackError);
+            return [];
+        }
     }
 }
 
 async function loadStandingsData() {
     try {
-        if (window.ULTRAGOL_API) {
-            standingsData = await window.ULTRAGOL_API.getTabla();
-            console.log('✅ Standings data loaded from API:', standingsData.length, 'teams');
-        } else {
-            const response = await fetch('data/standings.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            standingsData = await response.json();
-            console.log('✅ Standings data loaded from JSON:', standingsData.length, 'teams');
-        }
+        // Usar API de UltraGol
+        standingsData = await ultraGolAPI.getTabla();
+        console.log('✅ Standings data loaded from API:', standingsData.length, 'teams');
         return standingsData;
     } catch (error) {
-        console.error('Error loading standings data:', error);
-        return [];
+        console.error('Error loading standings data from API:', error);
+        // Fallback a JSON local si la API falla
+        try {
+            const response = await fetch('data/standings.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            standingsData = await response.json();
+            console.log('⚠️ Standings data loaded from local JSON fallback');
+            return standingsData;
+        } catch (fallbackError) {
+            console.error('Error in fallback:', fallbackError);
+            return [];
+        }
     }
 }
 
@@ -275,70 +322,6 @@ function loadRecentMatches() {
             </div>
         </div>
     `).join('');
-}
-
-// Load Líderes de Goleo from API
-async function loadLideresGoleo() {
-    const container = document.getElementById('lideresGoleo');
-    if (!container) return;
-
-    try {
-        if (!window.ULTRAGOL_API) {
-            container.innerHTML = `
-                <div class="loading-scorers">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>API no disponible</p>
-                </div>
-            `;
-            return;
-        }
-
-        const goleadores = await window.ULTRAGOL_API.getGoleadores();
-        
-        if (!goleadores || goleadores.length === 0) {
-            container.innerHTML = `
-                <div class="loading-scorers">
-                    <i class="fas fa-info-circle"></i>
-                    <p>No hay datos de goleadores disponibles</p>
-                </div>
-            `;
-            return;
-        }
-
-        // Mostrar top 6 goleadores
-        const topScorers = goleadores.slice(0, 6);
-        
-        container.innerHTML = topScorers.map((scorer, index) => `
-            <div class="scorer-card" style="animation-delay: ${index * 0.1}s">
-                <div class="scorer-rank">${index + 1}</div>
-                <div class="scorer-info">
-                    <div class="scorer-name">${scorer.jugador || scorer.nombre || 'N/A'}</div>
-                    <div class="scorer-team">
-                        <i class="fas fa-shield-alt"></i>
-                        ${scorer.equipo || scorer.team || 'N/A'}
-                    </div>
-                </div>
-                <div class="scorer-stats">
-                    <div class="scorer-goals">
-                        <span class="goals-number">${scorer.goles || scorer.goals || 0}</span>
-                        <span class="goals-label">Goles</span>
-                    </div>
-                    <div class="scorer-icon">
-                        <i class="fas fa-futbol"></i>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-    } catch (error) {
-        console.error('Error loading goleadores:', error);
-        container.innerHTML = `
-            <div class="loading-scorers">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Error al cargar los goleadores</p>
-            </div>
-        `;
-    }
 }
 
 // Utility functions
@@ -476,10 +459,6 @@ function setupCarousel() {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
     
-    if (slides.length === 0 || indicators.length === 0) {
-        return;
-    }
-    
     let currentSlide = 0;
     let isTransitioning = false;
     let autoSlideInterval;
@@ -496,7 +475,7 @@ function setupCarousel() {
     }
     
     function showSlide(index) {
-        if (isTransitioning || !slides.length) return;
+        if (isTransitioning) return;
         isTransitioning = true;
         
         // Remove active class from all slides and indicators
@@ -517,10 +496,8 @@ function setupCarousel() {
         
         // Show new slide
         setTimeout(() => {
-            if (slides[currentSlide] && indicators[currentSlide]) {
-                slides[currentSlide].classList.add('active');
-                indicators[currentSlide].classList.add('active');
-            }
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
             isTransitioning = false;
         }, 100);
     }

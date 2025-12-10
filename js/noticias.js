@@ -1,114 +1,54 @@
+// Enhanced News JavaScript for Liga MX Website by L3HO
 document.addEventListener('DOMContentLoaded', function() {
     initializeNews();
 });
 
+// Variables globales
 let newsData = [];
 let filteredNews = [];
 let currentCategory = 'all';
 
-async function initializeNews() {
-    await loadNewsData();
+// Inicializar sistema de noticias
+function initializeNews() {
+    loadNewsData();
     setupNewsControls();
     setupSearchFunctionality();
     displayNews();
-    updateFeaturedNews();
-    updateHeroImages();
 }
 
+// Cargar datos de noticias
 async function loadNewsData() {
     try {
-        console.log('📰 Loading news from UltraGol API...');
-        const apiNews = await ULTRAGOL_API.getNoticias();
+        // Cargar noticias desde la API
+        const apiNews = await ultraGolAPI.getNoticias();
         
-        if (apiNews && apiNews.length > 0) {
-            newsData = apiNews.map((news, index) => ({
-                id: `news-${index}`,
-                title: news.titulo,
-                excerpt: news.descripcion || news.texto || '',
-                content: news.texto || news.descripcion || '',
-                category: categorizeNews(news.titulo, news.descripcion || news.texto),
-                author: news.fuente || 'UltraGol',
-                date: parseNewsDate(news.fecha, news.hora),
-                image: news.imagen || '',
-                url: news.url || '',
-                featured: index === 0
-            }));
-            
-            console.log(`✅ Loaded ${newsData.length} news from API`);
-        } else {
-            console.warn('⚠️ No news from API, using fallback data');
-            loadFallbackNews();
-        }
+        // Mapear noticias de API al formato esperado
+        newsData = apiNews.map((noticia, index) => ({
+            id: `news-api-${index}`,
+            title: noticia.titulo,
+            excerpt: noticia.descripcion,
+            category: 'general',
+            author: 'UltraGol',
+            date: noticia.fecha,
+            image: noticia.imagen,
+            url: noticia.url,
+            featured: index === 0
+        }));
+        
+        console.log('✅ Noticias cargadas desde API:', newsData.length, 'artículos');
+        filteredNews = [...newsData];
+        displayNews();
     } catch (error) {
-        console.error('❌ Error loading news from API:', error);
-        loadFallbackNews();
-    }
-    
-    filteredNews = [...newsData];
-}
-
-function categorizeNews(title, description) {
-    const text = `${title} ${description}`.toLowerCase();
-    
-    if (text.includes('traspaso') || text.includes('fichaje') || text.includes('refuerzo') || 
-        text.includes('llega') || text.includes('contrata') || text.includes('firma')) {
-        return 'transfers';
-    }
-    
-    if (text.includes('partido') || text.includes('jornada') || text.includes('clásico') || 
-        text.includes('vs') || text.includes('gol') || text.includes('victoria') || text.includes('derrota')) {
-        return 'matches';
-    }
-    
-    if (text.includes('américa') || text.includes('chivas') || text.includes('cruz azul') || 
-        text.includes('tigres') || text.includes('monterrey') || text.includes('pumas') ||
-        text.includes('león') || text.includes('santos') || text.includes('atlas') || 
-        text.includes('toluca') || text.includes('pachuca') || text.includes('puebla') ||
-        text.includes('necaxa') || text.includes('querétaro') || text.includes('tijuana') ||
-        text.includes('juárez') || text.includes('mazatlán') || text.includes('san luis')) {
-        return 'teams';
-    }
-    
-    if (text.includes('jugador') || text.includes('goleador') || text.includes('delantero') || 
-        text.includes('portero') || text.includes('defensa') || text.includes('mediocampista') ||
-        text.includes('récord') || text.includes('marca')) {
-        return 'players';
-    }
-    
-    if (text.includes('liga mx') || text.includes('liguilla') || text.includes('torneo') || 
-        text.includes('campeonato') || text.includes('tabla') || text.includes('clasificación')) {
-        return 'league';
-    }
-    
-    return 'teams';
-}
-
-function parseNewsDate(dateStr, timeStr) {
-    try {
-        const [day, month, year] = dateStr.split('/');
-        const dateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        
-        if (timeStr) {
-            const cleanTime = timeStr.replace(/\s*(a\.m\.|p\.m\.)/i, '');
-            const isPM = /p\.m\./i.test(timeStr);
-            const [hours, minutes] = cleanTime.trim().split(':');
-            let hour = parseInt(hours);
-            
-            if (isPM && hour !== 12) hour += 12;
-            if (!isPM && hour === 12) hour = 0;
-            
-            return new Date(`${dateString}T${hour.toString().padStart(2, '0')}:${minutes}:00`).toISOString();
-        }
-        
-        return new Date(dateString).toISOString();
-    } catch (error) {
-        console.error('Error parsing date:', error);
-        return new Date().toISOString();
+        console.error('Error cargando noticias desde API:', error);
+        // Fallback a noticias de ejemplo
+        newsData = getFallbackNews();
+        filteredNews = [...newsData];
+        displayNews();
     }
 }
 
-function loadFallbackNews() {
-    newsData = [
+function getFallbackNews() {
+    return [
         {
             id: 'news-1',
             title: 'América refuerza su plantilla con nuevo delantero internacional',
@@ -116,7 +56,7 @@ function loadFallbackNews() {
             category: 'transfers',
             author: 'Juan Carlos Pérez',
             date: '2025-09-02T14:30:00Z',
-            image: '',
+            image: 'america-transfer.jpg',
             featured: false
         },
         {
@@ -126,22 +66,13 @@ function loadFallbackNews() {
             category: 'teams',
             author: 'María González',
             date: '2025-09-02T12:15:00Z',
-            image: '',
+            image: 'tigres-comeback.jpg',
             featured: false
-        },
-        {
-            id: 'news-3',
-            title: 'Clásico Nacional: Todo listo para el América vs Chivas',
-            excerpt: 'El partido más esperado del fútbol mexicano se acerca. Ambos equipos llegan en gran forma y prometen un espectáculo inolvidable para los aficionados.',
-            category: 'matches',
-            author: 'Roberto Martínez',
-            date: '2025-09-02T10:45:00Z',
-            image: '',
-            featured: true
         }
     ];
 }
 
+// Configurar controles de noticias
 function setupNewsControls() {
     const filterButtons = document.querySelectorAll('.filter-tag');
     
@@ -154,6 +85,7 @@ function setupNewsControls() {
     });
 }
 
+// Configurar funcionalidad de búsqueda
 function setupSearchFunctionality() {
     const searchInput = document.getElementById('newsSearch');
     
@@ -165,6 +97,7 @@ function setupSearchFunctionality() {
     }
 }
 
+// Filtrar noticias por categoría
 function filterNewsByCategory(category) {
     currentCategory = category;
     
@@ -177,6 +110,7 @@ function filterNewsByCategory(category) {
     displayNews();
 }
 
+// Buscar noticias
 function searchNews(query) {
     if (!query) {
         filterNewsByCategory(currentCategory);
@@ -195,6 +129,7 @@ function searchNews(query) {
     displayNews();
 }
 
+// Actualizar filtro activo
 function updateActiveFilter(activeButton) {
     document.querySelectorAll('.filter-tag').forEach(btn => {
         btn.classList.remove('active');
@@ -202,6 +137,7 @@ function updateActiveFilter(activeButton) {
     activeButton.classList.add('active');
 }
 
+// Mostrar noticias
 function displayNews() {
     const newsGrid = document.getElementById('newsGrid');
     if (!newsGrid) return;
@@ -215,6 +151,7 @@ function displayNews() {
             </div>
         `;
         
+        // Estilos para el mensaje de no noticias
         const style = document.createElement('style');
         style.textContent = `
             .no-news {
@@ -238,9 +175,11 @@ function displayNews() {
         createNewsCard(news, index)
     ).join('');
     
+    // Animar las tarjetas
     animateNewsCards();
 }
 
+// Crear tarjeta de noticia
 function createNewsCard(news, index) {
     const categoryIcons = {
         transfers: 'fas fa-exchange-alt',
@@ -259,14 +198,11 @@ function createNewsCard(news, index) {
     };
     
     const timeAgo = calculateTimeAgo(news.date);
-    const imageStyle = news.image ? 
-        `background: url('${news.image}') center/cover; position: relative;` : 
-        `background: linear-gradient(45deg, #ff9933, #ffaa44);`;
     
     return `
         <div class="news-card stagger-item" style="animation-delay: ${index * 0.1}s" onclick="openNewsDetail('${news.id}')">
-            <div class="news-image" style="${imageStyle}">
-                ${!news.image ? `<i class="${categoryIcons[news.category] || 'fas fa-newspaper'}"></i>` : ''}
+            <div class="news-image">
+                <i class="${categoryIcons[news.category] || 'fas fa-newspaper'}"></i>
                 <div class="news-category">${categoryNames[news.category] || 'NOTICIAS'}</div>
             </div>
             <div class="news-content">
@@ -284,72 +220,7 @@ function createNewsCard(news, index) {
     `;
 }
 
-function updateFeaturedNews() {
-    if (newsData.length === 0) return;
-    
-    const featuredNews = newsData[0];
-    const featuredArticle = document.querySelector('.featured-article');
-    
-    if (!featuredArticle) return;
-    
-    const categoryNames = {
-        transfers: 'TRASPASOS',
-        matches: 'PARTIDOS',
-        teams: 'EQUIPOS',
-        players: 'JUGADORES',
-        league: 'LIGA'
-    };
-    
-    const imageStyle = featuredNews.image ? 
-        `background: url('${featuredNews.image}') center/cover;` : 
-        `background: linear-gradient(45deg, #ff9933, #ffaa44);`;
-    
-    featuredArticle.innerHTML = `
-        <div class="featured-image" style="${imageStyle}">
-            ${!featuredNews.image ? '<i class="fas fa-newspaper"></i>' : ''}
-            <div class="featured-category">DESTACADO</div>
-        </div>
-        <div class="featured-content">
-            <div class="featured-category">${categoryNames[featuredNews.category] || 'NOTICIAS'}</div>
-            <h2 class="featured-title">${featuredNews.title}</h2>
-            <p class="featured-excerpt">${featuredNews.excerpt}</p>
-            <button class="read-more-btn" onclick="openNewsDetail('${featuredNews.id}')">
-                Leer más <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-    `;
-}
-
-function updateHeroImages() {
-    const heroImagesContainer = document.getElementById('heroImages');
-    if (!heroImagesContainer) return;
-    
-    const newsWithImages = newsData.filter(news => news.image);
-    
-    if (newsWithImages.length === 0) {
-        console.log('No hay imágenes de noticias disponibles para el hero');
-        return;
-    }
-    
-    const imagesToShow = 10;
-    const selectedImages = [];
-    
-    for (let i = 0; i < imagesToShow; i++) {
-        const randomIndex = Math.floor(Math.random() * newsWithImages.length);
-        selectedImages.push(newsWithImages[randomIndex].image);
-    }
-    
-    heroImagesContainer.innerHTML = selectedImages.map((image, index) => `
-        <img src="${image}" 
-             alt="Noticia ${index + 1}" 
-             class="news-hero-image"
-             style="animation-delay: ${index * 0.1}s"
-             onerror="this.style.display='none'">
-    `).join('');
-    
-    console.log(`✅ Hero actualizado con ${selectedImages.length} imágenes de noticias`);
-}
-
+// Animar tarjetas de noticias
 function animateNewsCards() {
     const cards = document.querySelectorAll('.news-card.stagger-item');
     
@@ -365,6 +236,7 @@ function animateNewsCards() {
     });
 }
 
+// Calcular tiempo transcurrido
 function calculateTimeAgo(dateString) {
     const now = new Date();
     const newsDate = new Date(dateString);
@@ -382,8 +254,9 @@ function calculateTimeAgo(dateString) {
     }
 }
 
+// Abrir detalle de noticia
 function openNewsDetail(newsId) {
-    const news = newsData.find(n => n.id === newsId);
+    const news = newsData.find(n => n.id === newsId) || getTrendingNews(newsId);
     
     if (!news) {
         showNewsMessage('Noticia no encontrada', 'error');
@@ -392,60 +265,40 @@ function openNewsDetail(newsId) {
     
     const modal = document.createElement('div');
     modal.className = 'news-modal';
-    
-    const categoryNames = {
-        transfers: 'TRASPASOS',
-        matches: 'PARTIDOS',
-        teams: 'EQUIPOS',
-        players: 'JUGADORES',
-        league: 'LIGA'
-    };
-    
-    const imageStyle = news.image ? 
-        `background: url('${news.image}') center/cover;` : 
-        `background: linear-gradient(45deg, #ff9933, #ffaa44);`;
-    
     modal.innerHTML = `
         <div class="news-modal-content">
             <div class="news-modal-header">
                 <button class="close-news-modal">&times;</button>
             </div>
             <div class="news-modal-body">
-                <div class="news-modal-category">${categoryNames[news.category] || 'NOTICIAS'}</div>
+                <div class="news-modal-category">${getCategoryName(news.category)}</div>
                 <h2 class="news-modal-title">${news.title}</h2>
                 <div class="news-modal-meta">
                     <span class="news-modal-author">Por ${news.author}</span>
                     <span class="news-modal-date">${formatDate(news.date)}</span>
                 </div>
-                <div class="news-modal-image" style="${imageStyle}">
-                    ${!news.image ? '<i class="fas fa-newspaper"></i>' : ''}
+                <div class="news-modal-image">
+                    <i class="fas fa-newspaper"></i>
                 </div>
                 <div class="news-modal-content-text">
                     <p>${news.excerpt}</p>
-                    ${news.content ? `<p>${news.content}</p>` : ''}
+                    <p>Esta es una noticia de ejemplo que muestra cómo se vería el contenido completo de una noticia en el sistema de UltraGol. El contenido real vendría de una base de datos o sistema de gestión de contenidos.</p>
+                    <p>La plataforma está diseñada para mostrar noticias de manera profesional y atractiva, con todas las funcionalidades necesarias para una experiencia de usuario óptima.</p>
                     
-                    ${news.url ? `
-                        <div style="margin: 25px 0;">
-                            <a href="${news.url}" target="_blank" rel="noopener noreferrer" 
-                               style="display: inline-block; padding: 12px 25px; background: linear-gradient(45deg, #ff9933, #ffaa44); 
-                               color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease;">
-                                Ver noticia completa <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    ` : ''}
+                    <h3>Aspectos Destacados:</h3>
+                    <ul>
+                        <li>Sistema de categorización avanzado</li>
+                        <li>Búsqueda en tiempo real</li>
+                        <li>Diseño responsivo y profesional</li>
+                        <li>Integración con redes sociales</li>
+                    </ul>
                     
                     <div class="news-modal-share">
                         <h4>Compartir esta noticia:</h4>
                         <div class="share-buttons">
-                            <button class="share-btn facebook" onclick="shareOnFacebook('${news.url || window.location.href}')">
-                                <i class="fab fa-facebook"></i> Facebook
-                            </button>
-                            <button class="share-btn twitter" onclick="shareOnTwitter('${news.title}', '${news.url || window.location.href}')">
-                                <i class="fab fa-twitter"></i> Twitter
-                            </button>
-                            <button class="share-btn whatsapp" onclick="shareOnWhatsApp('${news.title}', '${news.url || window.location.href}')">
-                                <i class="fab fa-whatsapp"></i> WhatsApp
-                            </button>
+                            <button class="share-btn facebook"><i class="fab fa-facebook"></i> Facebook</button>
+                            <button class="share-btn twitter"><i class="fab fa-twitter"></i> Twitter</button>
+                            <button class="share-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
                         </div>
                     </div>
                 </div>
@@ -453,6 +306,7 @@ function openNewsDetail(newsId) {
         </div>
     `;
     
+    // Estilos del modal
     modal.style.cssText = `
         position: fixed;
         top: 0;
@@ -479,10 +333,12 @@ function openNewsDetail(newsId) {
         position: relative;
     `;
     
+    // Agregar estilos del modal
     if (!document.getElementById('news-modal-styles')) {
         addNewsModalStyles();
     }
     
+    // Cerrar modal
     const closeButton = modal.querySelector('.close-news-modal');
     closeButton.addEventListener('click', () => {
         document.body.removeChild(modal);
@@ -497,18 +353,51 @@ function openNewsDetail(newsId) {
     document.body.appendChild(modal);
 }
 
-function shareOnFacebook(url) {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+// Obtener noticias de tendencias
+function getTrendingNews(trendingId) {
+    const trendingNews = {
+        'trending-1': {
+            id: 'trending-1',
+            title: 'América presenta a su nuevo delantero',
+            excerpt: 'Las Águilas del América han hecho oficial la contratación de su nuevo delantero estrella.',
+            category: 'transfers',
+            author: 'Redacción UltraGol',
+            date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        },
+        'trending-2': {
+            id: 'trending-2',
+            title: 'Tigres busca reforzar su defensa',
+            excerpt: 'Los felinos están en búsqueda activa de un defensor central para completar su plantilla.',
+            category: 'transfers',
+            author: 'Redacción UltraGol',
+            date: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+        },
+        'featured-1': {
+            id: 'featured-1',
+            title: 'Nuevo refuerzo estrella llega a la Liga MX',
+            excerpt: 'El mercado de traspasos sigue movido en la Liga MX con la llegada de una nueva estrella internacional.',
+            category: 'transfers',
+            author: 'Editor Principal',
+            date: new Date().toISOString()
+        }
+    };
+    
+    return trendingNews[trendingId];
 }
 
-function shareOnTwitter(title, url) {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
+// Obtener nombre de categoría
+function getCategoryName(category) {
+    const names = {
+        transfers: 'TRASPASOS',
+        matches: 'PARTIDOS',
+        teams: 'EQUIPOS',
+        players: 'JUGADORES',
+        league: 'LIGA'
+    };
+    return names[category] || 'NOTICIAS';
 }
 
-function shareOnWhatsApp(title, url) {
-    window.open(`https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`, '_blank');
-}
-
+// Formatear fecha
 function formatDate(dateString) {
     const date = new Date(dateString);
     const options = { 
@@ -521,6 +410,7 @@ function formatDate(dateString) {
     return date.toLocaleDateString('es-ES', options);
 }
 
+// Agregar estilos del modal
 function addNewsModalStyles() {
     const style = document.createElement('style');
     style.id = 'news-modal-styles';
@@ -587,6 +477,7 @@ function addNewsModalStyles() {
         
         .news-modal-image {
             height: 200px;
+            background: linear-gradient(45deg, #ff9933, #ffaa44);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -684,6 +575,7 @@ function addNewsModalStyles() {
     document.head.appendChild(style);
 }
 
+// Mostrar mensaje
 function showNewsMessage(message, type) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `news-message news-message-${type}`;
@@ -711,6 +603,7 @@ function showNewsMessage(message, type) {
     }, 3000);
 }
 
+// Exportar funciones
 window.newsApp = {
     filterNewsByCategory,
     searchNews,

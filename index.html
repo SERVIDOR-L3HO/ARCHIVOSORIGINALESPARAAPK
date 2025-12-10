@@ -11,56 +11,32 @@
     <link rel="apple-touch-icon" href="favicon.png">
     <link rel="shortcut icon" href="favicon.png">
     <title>UltraGol - Plataforma Deportiva Profesional</title>
-    <link rel="stylesheet" href="css/main.css?v=2024091801">
-    <link rel="stylesheet" href="css/animations.css?v=2024091801">
-    <link rel="stylesheet" href="css/firebase-features.css?v=2024091801">
-    <link rel="stylesheet" href="css/cookie-banner.css?v=2025091201">
-    <link rel="stylesheet" href="css/app-download-banner.css?v=2025091201">
-    <link rel="stylesheet" href="css/professional-hero.css?v=2025091401">
-    <link rel="stylesheet" href="css/gemini-chat.css">
-    <link rel="stylesheet" href="css/splash-screen.css">
-    <link rel="stylesheet" href="css/bottom-nav.css">
-    <link rel="stylesheet" href="css/transmisiones-live.css">
-    <link rel="stylesheet" href="css/modales-ultra.css">
+    <link rel="stylesheet" href="css/main.css?v=20251112">
+    <link rel="stylesheet" href="css/animations.css?v=20251109">
+    <link rel="stylesheet" href="css/firebase-features.css?v=20251109">
+    <link rel="stylesheet" href="css/cookie-banner.css?v=20251109">
+    <link rel="stylesheet" href="css/app-download-banner.css?v=20251109">
+    <link rel="stylesheet" href="css/professional-hero.css?v=20251109">
+    <link rel="stylesheet" href="css/gemini-chat.css?v=20251109">
+    <link rel="stylesheet" href="css/live-scoreboard.css?v=20251109">
+    <link rel="stylesheet" href="css/pwa-install-banner.css?v=20251109">
+    <link rel="stylesheet" href="css/notifications.css?v=20251109">
+    <link rel="stylesheet" href="css/tv-styles.css?v=20251109">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f3460">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UltraGol">
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3612607805789879"
      crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- Splash Screen -->
-    <div class="splash-screen" id="splashScreen">
-        <!-- Barras diagonales -->
-        <div class="splash-rings">
-            <div class="ring"></div>
-            <div class="ring"></div>
-        </div>
-        
-        <!-- Logo Container -->
-        <div class="splash-logo-container">
-            <img src="attached_assets/IMG_20250908_185312_(512_x_512_píxel)_1760333939937.png" alt="UltraGol" class="splash-logo">
-        </div>
-        
-        <!-- Loading Text -->
-        <div class="splash-text">ULTRAGOL</div>
-        
-        <!-- Percentage Counter -->
-        <div class="splash-percentage" id="splashPercentage">0%</div>
-        
-        <!-- Loading Bar -->
-        <div class="splash-loading-bar">
-            <div class="splash-loading-progress"></div>
-        </div>
-    </div>
-
     <!-- Header Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -68,36 +44,6 @@
                 <img src="attached_assets/1001721720-removebg-preview_1759201879566.png" alt="UltraGol" class="logo">
                 <span class="company-tag">by L3HO</span>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link active">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a href="standings.html" class="nav-link">Tabla de Posiciones</a>
-                </li>
-                <li class="nav-item">
-                    <a href="teams.html" class="nav-link">Equipos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="goleadores.html" class="nav-link">Goleadores</a>
-                </li>
-                <li class="nav-item">
-                    <a href="calendario.html" class="nav-link">Calendario</a>
-                </li>
-                <li class="nav-item">
-                    <a href="estadisticas.html" class="nav-link">Estadísticas</a>
-                </li>
-                <li class="nav-item">
-                    <a href="donaciones.html" class="nav-link">
-                        <i class="fas fa-heart"></i> Donaciones
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="ULTRA/index.html" class="nav-link live-link" target="_blank">
-                        <i class="fas fa-play-circle"></i> UltraGol LIVE
-                    </a>
-                </li>
-            </ul>
             
             <!-- Auth Section (igual que ULTRA) -->
             <div class="auth-section">
@@ -113,12 +59,6 @@
                 <button id="login-btn" class="login-btn">
                     <i class="fab fa-google"></i> Iniciar Sesión
                 </button>
-            </div>
-            
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
             </div>
         </div>
     </nav>
@@ -183,13 +123,44 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Scroll Indicator -->
-            <div class="scroll-indicator">
-                <div class="scroll-arrow">
-                    <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Live Scoreboard Section -->
+    <section class="live-scoreboard-section">
+        <div class="scoreboard-container">
+            <div class="scoreboard-header">
+                <h2 class="scoreboard-title">
+                    <i class="fas fa-broadcast-tower"></i>
+                    Marcadores en Vivo
+                </h2>
+                <p class="scoreboard-subtitle">Sigue todos los partidos de la Liga MX en tiempo real</p>
+            </div>
+
+            <div class="scoreboard-tabs">
+                <button class="scoreboard-tab active" data-filter="live">
+                    <i class="fas fa-circle"></i> EN VIVO
+                </button>
+                <button class="scoreboard-tab" data-filter="upcoming">
+                    <i class="far fa-clock"></i> PRÓXIMOS
+                </button>
+                <button class="scoreboard-tab" data-filter="all">
+                    <i class="fas fa-list"></i> TODOS
+                </button>
+            </div>
+
+            <div class="scoreboard-grid" id="scoreboard-grid">
+                <!-- Los partidos se cargarán aquí dinámicamente -->
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>Cargando partidos...</h3>
+                    <p>Por favor espera un momento</p>
                 </div>
-                <span>Explorar</span>
+            </div>
+
+            <div class="last-updated">
+                <i class="fas fa-sync-alt"></i>
+                Última actualización: <span id="last-updated-time">--</span>
             </div>
         </div>
     </section>
@@ -244,25 +215,59 @@
         </div>
     </section>
 
-    <!-- Transmisiones EN VIVO Section -->
-    <section class="transmisiones-live-section">
+    <!-- Live Streams Section -->
+    <section class="live-streams-hero">
         <div class="container">
-            <div class="transmisiones-header">
-                <h2 class="transmisiones-title">
-                    <span class="live-indicator">
-                        <span class="live-dot"></span>
-                        EN VIVO
-                    </span>
-                    Partidos Disponibles
-                </h2>
-                <p class="transmisiones-subtitle">Accede a las transmisiones en vivo con un solo clic</p>
-            </div>
-            
-            <div id="transmisiones-live-container">
-                <!-- Los partidos se cargan dinámicamente desde la API -->
-                <div class="no-transmisiones">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Cargando transmisiones...</p>
+            <div class="live-streams-card">
+                <div class="live-streams-header">
+                    <h2 class="live-title">
+                        <span class="live-icon">
+                            <i class="fas fa-play-circle"></i>
+                            <span class="pulse"></span>
+                        </span>
+                        🔴 TRANSMISIONES EN VIVO
+                    </h2>
+                    <p class="live-subtitle">Disfruta los partidos de Liga MX en tiempo real</p>
+                </div>
+                
+                <div class="live-streams-content">
+                    <div class="live-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-broadcast-tower"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Enlaces de Calidad</h3>
+                            <p>Links verificados de transmisiones en vivo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="live-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Comunidad Activa</h3>
+                            <p>Comparte y encuentra los mejores streams</p>
+                        </div>
+                    </div>
+                    
+                    <div class="live-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Multiplataforma</h3>
+                            <p>YouTube, Facebook, Instagram y más</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="live-cta">
+                    <a href="ULTRA/index.html" class="btn btn-live" target="_blank">
+                        <i class="fas fa-play"></i>
+                        <span>ACCEDER A UltraGol LIVE</span>
+                        <div class="btn-glow"></div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -273,17 +278,14 @@
     <!-- Analytics Dashboard -->
     <section class="analytics-dashboard">
         <div class="container">
-            <h2 class="section-title">Analytics Profesional</h2>
             <div class="analytics-grid">
-                <div class="analytics-card full-width-card">
-                    <div class="scorers-header">
-                        <h3>⚽ LÍDERES DE GOLEO</h3>
-                        <p class="scorers-subtitle">Los máximos artilleros de la Liga MX</p>
-                    </div>
-                    <div id="lideresGoleo" class="lideres-goleo-container">
-                        <div class="loading-scorers">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <p>Cargando goleadores...</p>
+                <div class="analytics-card">
+                    <h3><i class="fas fa-trophy"></i> Top Goleadores</h3>
+                    <div id="topScorersHome" class="scorers-list">
+                        <div class="scorer-item">
+                            <span class="name" style="text-align: center; width: 100%; color: #999;">
+                                <i class="fas fa-spinner fa-spin"></i> Cargando goleadores...
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -588,39 +590,61 @@
         </div>
     </section>
 
-    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>UltraGol</h3>
+                    <p>Plataforma deportiva profesional by L3HO</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <ul>
+                        <li><a href="standings.html">Tabla de Posiciones</a></li>
+                        <li><a href="teams.html">Equipos</a></li>
+                        <li><a href="fixtures.html">Partidos</a></li>
+                        <li><a href="calendario.html">Calendario</a></li>
+                        <li><a href="estadisticas.html">Estadísticas</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul>
+                        <li><a href="#">Reglamento</a></li>
+                        <li><a href="#">Estadísticas</a></li>
+                        <li><a href="#">Noticias</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 UltraGol by L3HO. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
-    <!-- Firebase Configuration -->
-    <script type="module" src="js/firebase-config.js"></script>
-    
     <!-- Enhanced Main Scripts -->
     <script>
-        // Simple initialization without errors
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('UltraGol loaded with Firebase features');
+            console.log('UltraGol loaded with new authentication system');
             
-            // Show auth buttons by ensuring they're visible
             const authButtons = document.getElementById('authButtons');
             if (authButtons) {
                 authButtons.style.display = 'flex';
                 authButtons.style.gap = '10px';
                 authButtons.style.alignItems = 'center';
             }
-            
-            // Basic functionality loaded
         });
     </script>
     
-    <!-- Simplified Firebase Loading -->
+    <!-- Authentication Modal Functions -->
     <script>
-        // Load Firebase modules safely
-        setTimeout(() => {
-            if (typeof firebase !== 'undefined') {
-                console.log('Firebase loaded successfully');
-            } else {
-                console.log('Firebase loading in demo mode');
-            }
-        }, 2000);
         
         // Global functions for authentication modal
         window.openAuthModal = function(mode = 'login') {
@@ -764,7 +788,7 @@
     </script>
     
     <!-- Cookie Banner Script -->
-    <script src="js/cookie-banner.js?v=2025091201"></script>
+    <script src="js/cookie-banner.js?v=20251109"></script>
     
     <!-- App Download Banner Script -->
     <script>
@@ -993,46 +1017,70 @@
         });
     </script>
     
-    <!-- Splash Screen Animation Script -->
-    <script>
-        // Simple percentage counter animation
-        function animatePercentage() {
-            const percentageElement = document.getElementById('splashPercentage');
-            let currentPercent = 0;
-            const duration = 2000; // 2 seconds
-            const increment = 100 / (duration / 40); // Update every 40ms
-            
-            const interval = setInterval(() => {
-                currentPercent += increment;
-                if (currentPercent >= 100) {
-                    currentPercent = 100;
-                    clearInterval(interval);
-                }
-                percentageElement.textContent = Math.floor(currentPercent) + '%';
-            }, 40);
-        }
-        
-        // Initialize splash screen
-        document.addEventListener('DOMContentLoaded', () => {
-            animatePercentage();
-            
-            // Remove splash screen after animation
-            setTimeout(() => {
-                const splashScreen = document.getElementById('splashScreen');
-                splashScreen.style.display = 'none';
-            }, 3000);
-        });
-    </script>
-    
-    <!-- UltraGol API Module -->
-    <script src="js/ultragol-api.js"></script>
+    <!-- UltraGol API Service -->
+    <script src="js/api-service.js?v=20251109"></script>
     
     <!-- Original main.js -->
-    <script src="js/main.js?v=2024091801"></script>
+    <script src="js/main.js?v=20251109"></script>
+    
+    <!-- Live Scoreboard -->
+    <script src="js/live-scoreboard.js?v=20251110c"></script>
+    
+    <!-- Mini Banner de Aplicación UltraGol -->
+    <div id="ultraGolMiniAppBanner" class="mini-app-banner">
+        <div class="mini-banner-content">
+            <div class="mini-banner-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div class="mini-banner-text">
+                <span class="mini-banner-title">ABRIR APLICACION DE ULTRAGOL</span>
+            </div>
+            <button id="closeMiniAppBanner" class="mini-banner-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
 
-    <!-- Video Carousel 3D with Dynamic Data Loading - DISABLED (usando nuevo carrusel API) -->
     <script>
-        /* COMENTADO - Usando nuevo carrusel con API
+        // Mini App Banner functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const miniAppBanner = document.getElementById('ultraGolMiniAppBanner');
+            const closeBannerBtn = document.getElementById('closeMiniAppBanner');
+            
+            // Check if banner was previously closed
+            const bannerClosed = localStorage.getItem('ultraGolMiniAppBannerClosed');
+            if (bannerClosed === 'true') {
+                miniAppBanner.style.display = 'none';
+            } else {
+                // Show banner after 2 seconds
+                setTimeout(() => {
+                    miniAppBanner.classList.add('show');
+                }, 2000);
+            }
+            
+            // Close banner functionality
+            closeBannerBtn.addEventListener('click', function() {
+                miniAppBanner.classList.add('hide');
+                localStorage.setItem('ultraGolMiniAppBannerClosed', 'true');
+                setTimeout(() => {
+                    miniAppBanner.style.display = 'none';
+                }, 300);
+            });
+            
+            // Banner click to open app (you can customize this action)
+            miniAppBanner.addEventListener('click', function(e) {
+                if (e.target === closeBannerBtn || e.target.parentNode === closeBannerBtn) {
+                    return; // Don't trigger if clicking close button
+                }
+                // Here you can add action to open the app
+                // For example: window.open('/ULTRA/index.html', '_blank');
+                window.open('/ULTRA/index.html', '_blank');
+            });
+        });
+    </script>
+
+    <!-- Video Carousel 3D with Dynamic Data Loading -->
+    <script>
         class VideoCarousel3D {
             constructor() {
                 this.carousel = document.getElementById('videoCarousel');
@@ -1391,66 +1439,92 @@
                 }
             }, 1000); // Wait for carousel to fully initialize
         });
-        */
     </script>
-
-    <!-- Modal de Selección de Transmisión -->
-    <div id="streamOptionsModal" class="stream-options-modal">
-        <div class="stream-options-overlay" onclick="closeStreamOptionsModal()"></div>
-        <div class="stream-options-content">
-            <div class="stream-options-header">
-                <div class="header-icon-wrapper">
-                    <i class="fas fa-satellite-dish"></i>
-                </div>
-                <h3>Elige tu Transmisión</h3>
-                <p id="streamMatchName">Partido</p>
-                <button class="close-stream-options" onclick="closeStreamOptionsModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Firebase Configuration -->
+    <script src="js/firebase-config.js?v=20251109"></script>
+    
+    <!-- Firebase Authentication -->
+    <script src="js/firebase-auth.js?v=20251109"></script>
+    
+    <script src="js/gemini-chat.js?v=20251109"></script>
+    
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner" class="pwa-install-banner">
+        <div class="pwa-banner-content">
+            <div class="pwa-banner-icon">
+                <img src="app-icon.png" alt="UltraGol">
             </div>
-            <div class="stream-options-body">
-                <div id="streamOptionsGrid" class="stream-options-grid"></div>
+            <div class="pwa-banner-text">
+                <h3 class="pwa-banner-title">Instalar UltraGol</h3>
+                <p class="pwa-banner-description">Accede más rápido desde tu pantalla de inicio</p>
             </div>
         </div>
-    </div>
-
-    <!-- Modal del Reproductor de Video -->
-    <div id="videoPlayerModal" class="video-player-modal">
-        <div class="video-player-overlay" onclick="closeVideoPlayer()"></div>
-        <div class="video-player-container">
-            <div class="video-player-header">
-                <div class="player-title">
-                    <i class="fas fa-play-circle"></i>
-                    <span>Transmisión en Vivo</span>
-                </div>
-                <div class="player-controls">
-                    <button class="player-control-btn" onclick="toggleFullscreen()" title="Pantalla completa">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    <button class="player-control-btn close-player-btn" onclick="closeVideoPlayer()" title="Cerrar">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="video-player-wrapper">
-                <iframe 
-                    id="videoPlayerIframe" 
-                    frameborder="0" 
-                    allowfullscreen 
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    scrolling="no">
-                </iframe>
-                <div class="video-loading">
-                    <div class="video-spinner"></div>
-                    <p>Cargando transmisión...</p>
-                </div>
-            </div>
+        <div class="pwa-banner-actions">
+            <button class="pwa-install-btn" onclick="installPWA()">
+                <i class="fas fa-download"></i>
+                Instalar App
+            </button>
+            <button class="pwa-close-btn" onclick="closePWABanner()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     </div>
     
-    <script src="js/gemini-chat.js"></script>
-    <script src="js/simple-auth.js"></script>
-    <script src="js/bottom-nav.js"></script>
-    <script src="js/transmisiones-live.js"></script>
+    <!-- PWA Install Script -->
+    <script src="js/pwa-install.js?v=20251109"></script>
+    
+    <!-- Notifications System -->
+    <script src="js/notifications.js?v=20251109"></script>
+    
+    <!-- TV Remote Navigation -->
+    <script src="js/tv-remote-navigation.js?v=20251109"></script>
+    
+    <!-- Service Worker Registration with Auto-Update -->
+    <script>
+    if ('serviceWorker' in navigator) {
+      // Registrar el Service Worker con versión
+      navigator.serviceWorker.register('/sw.js?v=20251109')
+        .then(registration => {
+          console.log('✅ Service Worker registrado:', registration.scope);
+          
+          // Verificar actualizaciones cada 60 segundos
+          setInterval(() => {
+            registration.update();
+          }, 60000);
+          
+          // Escuchar cuando hay un nuevo Service Worker esperando
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            console.log('🔄 Nueva versión del Service Worker encontrada');
+            
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('✨ Nueva versión disponible. Recarga la página para actualizar.');
+              }
+            });
+          });
+        })
+        .catch(err => console.error('❌ Error al registrar el SW:', err));
+
+      // Service Worker actualizado (sin recarga automática)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('🔄 Service Worker actualizado.');
+      });
+      
+      // Escuchar mensajes del Service Worker
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'CACHE_UPDATED') {
+          console.log('📦 Caché actualizada a versión:', event.data.version);
+        }
+      });
+    }
+    </script>
 </body>
 </html>
